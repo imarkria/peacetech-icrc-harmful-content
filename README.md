@@ -11,7 +11,7 @@ Challenge given by the International Committee of the Red Cross (ICRC) for the P
 ## Getting started
 
 ```bash
-git clone https://github.com/I-MRK/peacetech-icrc-harmful-content.git
+git clone https://github.com/imarkria/peacetech-icrc-harmful-content.git
 cd peacetech-icrc-harmful-content
 ```
 
