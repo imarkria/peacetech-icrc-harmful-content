@@ -16,5 +16,5 @@ MMPROJ=${MMPROJ-$(dirname "$MODEL")/mmproj-F16.gguf}
 LOG_DIR="$(dirname "$0")/../data/logs"
 mkdir -p "$LOG_DIR"
 
-exec "$LLAMA_SERVER" -m "$MODEL" --alias qwen3.5-9b -ngl 99 -c 163840 --parallel 8 --jinja ${MMPROJ:+--mmproj "$MMPROJ"} \
+exec "$LLAMA_SERVER" -m "$MODEL" --alias "${ALIAS:-qwen3.5-9b}" -ngl 99 -c "${CTX:-163840}" --parallel "${PARALLEL:-8}" --jinja ${MMPROJ:+--mmproj "$MMPROJ"} \
   --host 127.0.0.1 --port "${PORT:-8080}" -fa auto --metrics 2>&1 | tee "$LOG_DIR/llama-server.log"
