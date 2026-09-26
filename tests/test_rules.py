@@ -240,7 +240,8 @@ def sv_out(**overrides):
 
     base = dict(possible_minor=False, scores={"sexual_violence": 80, "sexual_harassment": 30, "hate": 10,
                                               "misogyny": 70, "other_violence": 0},
-                sexual=True, primary_relation="SV-REL-4", category="rape_joke_glorification", reason="r")
+                sexual=True, hateful=False, misogynous=True, primary_relation="SV-REL-4",
+                category="rape_joke_glorification", reason="r")
     return SVScoreOutput(**{**base, **overrides})
 
 
@@ -266,3 +267,16 @@ def test_sv_scores_age_indicator_without_sexual_element_is_not_restricted():
     o = sv_out(sexual=False, primary_relation=None, category="none",
                scores={"sexual_violence": 0, "sexual_harassment": 0, "hate": 0, "misogyny": 0, "other_violence": 0})
     assert finalize_scores(o, item_id="t", embedded_text="Ученица 9 класса").restricted_reason is None
+
+
+def test_p_true_after_sums_raw_candidates():
+    from types import SimpleNamespace as T
+
+    from harmwatch.sv_scores import p_true_after
+
+    c = lambda tok, lp: T(token=tok, logprob=lp)  # noqa: E731
+    toks = [T(token='{"sexual":', logprob=0, top_logprobs=[]),
+            T(token=" false", logprob=-0.01, top_logprobs=[c(" false", -0.01), c(" true", -5.0), c("\tfalse", -15.0)])]
+    p = p_true_after(toks, "sexual")
+    assert p is not None and p < 0.01
+    assert p_true_after(toks, "hateful") is None

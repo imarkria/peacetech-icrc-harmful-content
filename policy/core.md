@@ -1,6 +1,6 @@
 # Core policy: conflict-related sexual violence (CRSV) content
 
-**Version: core v1.1** (changelog at the end)
+**Version: core v1.2** (changelog at the end)
 
 Sources: ICRC policy brief "Addressing sexual violence during armed conflict and other situations of violence" (Feb 2026), Murad Code (2022), ICRC "Harmful information: Q&A". Two team documents merged ("Definitions and Limiting Barriers" + "CRSV Content Classification Specification for AI").
 
@@ -48,6 +48,16 @@ Exactly one primary, others secondary. Tie-break order: **SV-REL-2 > SV-REL-5 > 
 - **SV-REL-5 Stigmatisation or exposure:** blames, shames, mocks or exposes victims/survivors, their children or supporters, incl. identity or location (not survivors/support groups sharing their own experience).
 
 **Content types** (from the spec, keep for reporting): 1 Depiction, 2 Account, 3 Threat/incitement, 4 Perpetrator glorification, 5 Harassment/stigmatisation, 6 Sexualised ill-treatment in detention (use 6 whenever the setting is detention/captivity/interrogation). Stigmatisation is a real harm ("social death"), as serious as the others.
+
+## Sexual harassment (SH-DEF)
+
+**SH-DEF.** Content that sexually harasses a person or a group: it targets them with sexual content that degrades, humiliates or intimidates, without necessarily relating to an act of sexual violence (Axis 1). Any person or group, any gender. Assessed on its own; it is NOT a third axis of the flag rule and does not change it.
+
+- **SH-1 Sexualised insult:** a sexual slur or insult aimed at a person or group ("whore", "slut", bestiality slurs against a group).
+- **SH-2 Degrading sexualisation:** attributes sexual availability, acts or appetite to a person or group in order to demean them (e.g. implying a woman got a job through sex).
+- **SH-3 Humiliating objectification:** reduces a person or group to body parts or a sexual object in a demeaning way (mild compliments or neutral depictions of attractiveness do not count).
+
+Rape jokes, mockery or glorification of sexual violence are Axis 1 (SV-REL-4), not SH. Sexist or hateful content WITHOUT a sexual dimension ("back to the kitchen", racist jokes, non-sexual violence against women) is not SH: it is Axis 2 only (e.g. HI-TYPE-04). Possible minor with any sexual element → B1-1, as everywhere.
 
 ## Harmful information (Axis 2)
 
@@ -156,5 +166,6 @@ Element values: `likely` | `possible` | `unlikely` | `unclear`, confidence 0-1, 
 
 ## Changelog
 
+- **v1.2 (2026-09-26, gmikou):** adds SH-DEF sexual harassment (SH-1 sexualised insult, SH-2 degrading sexualisation, SH-3 humiliating objectification), assessed separately from the flag rule.
 - **v1.1 (2026-09-26, gmikou):** FT-STANCE `reports` requires an attributed source and a neutral/condemning posture; unsourced rumour = `unclear` (SV-REL-1 possible). Element C gets the ID SV-EL-C (= CONF-DEF). Testimony (B2-1) is no longer recorded as a lead; only B2-3 is.
 - **v1.0 (2026-09-26):** initial text from the team brief.

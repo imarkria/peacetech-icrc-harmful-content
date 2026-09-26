@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 POLICY = ROOT / "policy"
 
 REQUIRED_CORE = (
-    ["SV-DEF", "SV-EL-A", "SV-EL-B", "SV-EL-C", "CONF-DEF", "HI-DEF", "AFF-DEF", "AGE-DEF"]
+    ["SV-DEF", "SV-EL-A", "SV-EL-B", "SV-EL-C", "CONF-DEF", "HI-DEF", "AFF-DEF", "AGE-DEF", "SH-DEF", "SH-1", "SH-2", "SH-3"]
     + [f"SV-CO-{i}" for i in range(1, 7)]
     + [f"SV-FORM-{i:02d}" for i in range(1, 11)]
     + [f"SV-REL-{i}" for i in range(1, 6)]
@@ -39,12 +39,13 @@ REQUIRED_SECTIONS = {
     "barriers B1-B6": r"## Barriers",
     "v1.1 'reports' clarification": r"Clarification \(v1\.1\)[\s\S]*attributed source",
     "v1.1 SV-EL-C": r"SV-EL-C = CONF-DEF",
+    "v1.2 SH-DEF": r"## Sexual harassment \(SH-DEF\)",
 }
 REQUIRED_FILES = ["core.md", "children.md", "modalities.md", "platforms/telegram.md", "platforms/generic.md"]
 
 # Policy IDs only (known prefixes), so that e.g. "UTF-8" or "GPT-4" in code is not taken for one.
 CITED = re.compile(r"(?<![\w-])(?:SV-(?:EL-[ABC]|CO-\d|FORM-\d\d|REL-\d|DEF)|HI-(?:TYPE-\d\d|DEF)|HP-\d\d|AFF-(?:\d|DEF)"
-                   r"|AGE-DEF|CONF-(?:\d|DEF)|FT-[A-Z]+|CH-\d[ab]?|TG-L\d|GEN-L\d|MOD-[A-Z]+|B\d(?:-\d)?"
+                   r"|AGE-DEF|SH-(?:\d|DEF)|CONF-(?:\d|DEF)|FT-[A-Z]+|CH-\d[ab]?|TG-L\d|GEN-L\d|MOD-[A-Z]+|B\d(?:-\d)?"
                    r"|RG-[A-Z]+(?:-\d{3})?)(?![\w-])")
 def main() -> int:
     rows: list[tuple[str, bool, str]] = []
