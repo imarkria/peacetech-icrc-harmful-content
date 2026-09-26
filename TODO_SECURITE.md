@@ -21,7 +21,7 @@ Mesures sur les 10 images explicites trouvées à la revue (c044, c066, c085, c0
 | LukeJacob2023 (porn+hentai+sexy) | 0,5 | 2 / 10 | 20 (9) |
 | giacomoarienti (porn+hentai) | 0,5 | 1 / 10 | 0 |
 | CLIP ViT-L/14 zero-shot | 0,9 | 8 / 10 | 32 (15) |
-| CLIP zero-shot | 0,8 | 9 / 10 | ~57 |
+| CLIP zero-shot | 0,8 | 9 / 10 | 58 (26) |
 | **OR(CLIP ≥ 0,9, AdamCodd ≥ 0,7, Falconsai ≥ 0,3)** (défaut proposé) | | **8 / 10** | **36 (≈ 14 %)** |
 | OR(CLIP ≥ 0,8, AdamCodd ≥ 0,7, Falconsai ≥ 0,3) | | 9 / 10 | 61 (≈ 24 %) |
 
