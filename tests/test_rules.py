@@ -231,3 +231,38 @@ def test_generic_platform_and_global_profile_never_load_proposed():
     p = load_policy("global", "generic", allow_no_approved=True)
     assert p.entries == [] or all(e["status"] == "approved" for e in p.entries)
     assert "platform: generic" in p.system_prompt(p.examples[:2])
+
+
+# --- Sexual-character scores judge ----------------------------------------------------
+
+def sv_out(**overrides):
+    from harmwatch.sv_scores import SVScoreOutput
+
+    base = dict(possible_minor=False, scores={"sexual_violence": 80, "sexual_harassment": 30, "hate": 10,
+                                              "misogyny": 70, "other_violence": 0},
+                sexual=True, primary_relation="SV-REL-4", category="rape_joke_glorification", reason="r")
+    return SVScoreOutput(**{**base, **overrides})
+
+
+def test_sv_scores_possible_minor_blanks_scores():
+    from harmwatch.sv_scores import finalize_scores
+
+    a = finalize_scores(sv_out(possible_minor=True), item_id="t")
+    assert a.scores is None and a.reason == "" and a.sexual and a.restricted_reason == "model"
+    assert finalize_scores(sv_out(), item_id="t", embedded_text="Ученица 9 класса").restricted_reason == "rule_age"
+
+
+def test_sv_scores_not_sexual_clears_relation():
+    from harmwatch.sv_scores import finalize_scores
+
+    a = finalize_scores(sv_out(sexual=False, scores={"sexual_violence": 5, "sexual_harassment": 5, "hate": 80,
+                                                      "misogyny": 0, "other_violence": 0}), item_id="t")
+    assert a.primary_relation is None and a.category == "none" and a.rule_notes
+
+
+def test_sv_scores_age_indicator_without_sexual_element_is_not_restricted():
+    from harmwatch.sv_scores import finalize_scores
+
+    o = sv_out(sexual=False, primary_relation=None, category="none",
+               scores={"sexual_violence": 0, "sexual_harassment": 0, "hate": 0, "misogyny": 0, "other_violence": 0})
+    assert finalize_scores(o, item_id="t", embedded_text="Ученица 9 класса").restricted_reason is None
