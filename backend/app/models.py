@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 
-from sqlalchemy import DateTime, Float, ForeignKey, Index, String, Text, UniqueConstraint
+from sqlalchemy import JSON, DateTime, Float, ForeignKey, Index, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
@@ -83,6 +83,7 @@ class Review(Base):
     detected_link_id: Mapped[str] = mapped_column(ForeignKey("detected_links.id"), index=True)
     reviewer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     decision: Mapped[str] = mapped_column(String(64))
+    evidence: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
 
     detected_link: Mapped[DetectedLink] = relationship(back_populates="review")

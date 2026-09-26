@@ -52,8 +52,9 @@ def to_link_response(link: DetectedLink) -> DetectedLinkResponse:
     if link.review:
         review = ReviewSummary(
             decision=link.review.decision,
-            created_at=link.review.created_at,
+            reviewed_at=link.review.created_at,
             reviewer_id=link.review.reviewer_id,
+            evidence=link.review.evidence,
         )
     return DetectedLinkResponse(
         id=link.id,
@@ -131,20 +132,40 @@ def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> Repor
 def review_queue(
     status_filter: ReviewStatus | None = Query(default=None, alias="status"),
     query: str | None = Query(default=None, min_length=1, max_length=200),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
     _: User = Depends(require_reviewer),
     db: Session = Depends(get_db),
 ) -> ReviewQueueResponse:
-    base_query = select(DetectedLink).options(joinedload(DetectedLink.review)).order_by(DetectedLink.detected_at.desc())
+    filters = []
     if status_filter:
-        base_query = base_query.where(DetectedLink.status == status_filter.value)
+        filters.append(DetectedLink.status == status_filter.value)
     if query:
         search = f"%{query.lower()}%"
-        base_query = base_query.where(func.lower(DetectedLink.url).like(search) | func.lower(DetectedLink.channel).like(search))
+        filters.append(func.lower(DetectedLink.url).like(search) | func.lower(DetectedLink.channel).like(search))
 
+    total = db.scalar(select(func.count()).select_from(DetectedLink).where(*filters)) or 0
+    total_pages = max(1, (total + page_size - 1) // page_size)
+    base_query = (
+        select(DetectedLink)
+        .options(joinedload(DetectedLink.review))
+        .where(*filters)
+        .order_by(DetectedLink.detected_at.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
     links = list(db.scalars(base_query).unique().all())
     pending_count = db.scalar(select(func.count()).select_from(DetectedLink).where(DetectedLink.status == ReviewStatus.PENDING.value)) or 0
     reviewed_count = db.scalar(select(func.count()).select_from(DetectedLink).where(DetectedLink.status == ReviewStatus.REVIEWED.value)) or 0
-    return ReviewQueueResponse(items=[to_link_response(link) for link in links], total=len(links), pending_count=pending_count, reviewed_count=reviewed_count)
+    return ReviewQueueResponse(
+        items=[to_link_response(link) for link in links],
+        total=total,
+        page=page,
+        page_size=page_size,
+        total_pages=total_pages,
+        pending_count=pending_count,
+        reviewed_count=reviewed_count,
+    )
 
 
 @app.get("/api/reviews/{link_id}", response_model=DetectedLinkResponse, tags=["reviews"])
@@ -164,7 +185,13 @@ def submit_review(link_id: str, payload: ReviewSubmit, reviewer: User = Depends(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This link has already been reviewed")
 
     link.status = ReviewStatus.REVIEWED.value
-    link.review = Review(detected_link_id=link.id, reviewer_id=reviewer.id, decision=payload.decision.value, created_at=datetime.now(timezone.utc))
+    link.review = Review(
+        detected_link_id=link.id,
+        reviewer_id=reviewer.id,
+        decision=payload.decision.value,
+        evidence=payload.evidence.model_dump() if payload.evidence else None,
+        created_at=datetime.now(timezone.utc),
+    )
     try:
         db.commit()
     except IntegrityError as exc:

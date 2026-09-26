@@ -38,12 +38,19 @@ class ReportResponse(BaseModel):
     created_at: datetime
 
 
+class ReviewEvidence(BaseModel):
+    sexualElements: list[str] = Field(default_factory=list)
+    coerciveCircumstances: list[str] = Field(default_factory=list)
+    sexualForms: list[str] = Field(default_factory=list)
+    harmfulTypes: list[str] = Field(default_factory=list)
+    harmPathways: list[str] = Field(default_factory=list)
+
+
 class ReviewSummary(BaseModel):
     decision: ReviewDecision
-    reviewed_at: datetime = Field(alias="created_at")
+    reviewed_at: datetime
     reviewer_id: int
-
-    model_config = ConfigDict(populate_by_name=True)
+    evidence: ReviewEvidence | None = None
 
 
 class DetectedLinkResponse(BaseModel):
@@ -62,12 +69,16 @@ class DetectedLinkResponse(BaseModel):
 class ReviewQueueResponse(BaseModel):
     items: list[DetectedLinkResponse]
     total: int
+    page: int
+    page_size: int
+    total_pages: int
     pending_count: int
     reviewed_count: int
 
 
 class ReviewSubmit(BaseModel):
     decision: ReviewDecision
+    evidence: ReviewEvidence | None = None
 
 
 class HealthResponse(BaseModel):

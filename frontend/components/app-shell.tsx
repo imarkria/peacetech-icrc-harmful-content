@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogIn, LogOut, Menu, X } from "./icons";
 import { Logo } from "./logo";
+import { logoutRequest } from "../lib/api";
 
 const AUTH_KEY = "icrc-reviewer-auth";
 
@@ -24,20 +25,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     setAuthenticated(isReviewerAuthenticated());
   }, [pathname]);
 
-  function signOut() {
+  async function signOut() {
+    try {
+      await logoutRequest();
+    } catch {
+      // Clear the local marker even when the backend session has already expired.
+    }
     setReviewerAuthenticated(false);
     setAuthenticated(false);
     setMobileOpen(false);
     router.push("/");
   }
 
-  const isReviewArea = pathname.startsWith("/review") || pathname === "/login";
+  const isReviewArea = pathname.startsWith("/reviewer") || pathname.startsWith("/review") || pathname === "/login";
 
   return (
     <div className="site-frame">
@@ -56,10 +64,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link className={pathname.startsWith("/report") ? "nav-link nav-link-active" : "nav-link"} href="/report" onClick={() => setMobileOpen(false)}>
               Report a link
             </Link>
-            {authenticated ? (
+            {mounted && authenticated ? (
               <>
-                <Link className={isReviewArea ? "nav-link nav-link-active" : "nav-link"} href="/review" onClick={() => setMobileOpen(false)}>
-                  Review workspace
+                <Link className={isReviewArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
+                  Reviewer workspace
                 </Link>
                 <button className="nav-button" onClick={signOut}>
                   <LogOut size={15} />
@@ -67,7 +75,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </button>
               </>
             ) : (
-              <Link className="nav-button nav-button-dark" href="/login" onClick={() => setMobileOpen(false)}>
+              <Link className="nav-button nav-button-dark" href="/reviewer/login" onClick={() => setMobileOpen(false)}>
                 <LogIn size={15} />
                 Reviewer login
               </Link>
@@ -79,7 +87,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <footer className="site-footer">
         <div className="footer-inner">
           <Logo compact />
-          <p>Built for safer humanitarian information spaces.</p>
+          <p>Public reporting and ICRC review.</p>
           <span>PeaceTech ICRC challenge · MVP</span>
         </div>
       </footer>

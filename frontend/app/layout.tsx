@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "SignalSafe | Harmful content reporting",
-  description: "A safer way to report and review potentially harmful online content.",
+  description: "Report links and review system-detected harmful information.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

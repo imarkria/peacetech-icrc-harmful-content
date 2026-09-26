@@ -37,3 +37,7 @@ def initialize_database() -> None:
     if "reason" not in columns:
         with engine.begin() as connection:
             connection.execute(text("ALTER TABLE public_reports ADD COLUMN reason TEXT"))
+    review_columns = {column["name"] for column in inspect(engine).get_columns("reviews")}
+    if "evidence" not in review_columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE reviews ADD COLUMN evidence JSON"))
