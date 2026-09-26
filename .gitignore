@@ -19,3 +19,6 @@ venv/
 
 # Policy few-shot examples are part of the policy layers (synthetic, non-graphic)
 !policy/regions/*.jsonl
+
+# Evaluation outputs (predictions, per-item descriptions): never committed
+results/
