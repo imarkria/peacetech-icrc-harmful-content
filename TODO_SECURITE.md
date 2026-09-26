@@ -10,7 +10,7 @@ Relevé le 2026-09-26 pendant la construction du benchmark `sv_images_v1` (revue
 - [x] négatifs : « only 15 minutes », « top 12 items », « the 1990s », « I'm 34 », « 12 years ago », « a 5-year plan » ;
 - [ ] mots de parenté (« daughter », « son ») : laissés de côté volontairement, trop larges seuls.
 
-## 2. Filtre d'images explicites — MESURÉ, seuils à décider
+## 2. Filtre d'images explicites — DÉCIDÉ (gmikou, 2026-09-26)
 
 Mesures sur les 10 images explicites trouvées à la revue (c044, c066, c085, c094, c102, c133, c144, c147, c197, c211), toutes ratées par Falconsai à 0,3, et sur les 255 autres candidats de sv_images_v1 (non explicites à la revue) :
 
@@ -28,8 +28,9 @@ Mesures sur les 10 images explicites trouvées à la revue (c044, c066, c085, c0
 - Code : `harmwatch/safety.py` (cascade OR, seuils configurables), tests dans `tests/test_safety.py` (scores précalculés dans `data/`, jamais d'image dans le dépôt).
 - **Limite majeure :** CLIP lit le texte incrusté. 26 des 32 images bloquées à tort au seuil 0,9 sont des positifs confirmés (mèmes qui PARLENT de sexe ou de viol). Un seuil strict affame donc le benchmark en positifs et le biaise vers les mèmes au texte neutre.
 - Les seuils ont été choisis sur 10 cas seulement : c'est optimiste. À revérifier sur les nouveaux candidats de sv_images_v2.
-- [ ] c094 (0,85) et c144 (légende pornographique sur une image anodine, 0,34) restent ratés au défaut. **Filtre sur le texte** pour les légendes pornographiques : non fait (un filtre par mots-clés bloquerait aussi les positifs SH ; à discuter).
-- [ ] **Décision à prendre :** seuil CLIP 0,9 (plus de mèmes gardés) ou 0,8 (plus sûr), ou deux niveaux (« explicite » en quarantaine, « suggestif » montré flouté aux humains).
+- c094 (0,85) et c144 (0,34) restent ratés par le défaut.
+- **Limite connue (décision : pas de filtre texte) :** une légende pornographique sur une image anodine (type c144) n'est pas mise en quarantaine. Un filtre par mots-clés bloquerait aussi les positifs SH.
+- [x] **Décision :** combinaison OR(CLIP ≥ 0,9, AdamCodd ≥ 0,7, Falconsai ≥ 0,3) retenue comme défaut (`harmwatch/safety.THRESHOLDS`). **Mise en garde : choisie sur 10 cas seulement.** Elle n'est PAS réappliquée au benchmark sv_images_v1, qui reste tel qu'il a été figé.
 
 ## 3. Apparence enfantine (images) — MESURÉ, insuffisant
 
@@ -39,7 +40,8 @@ Mesures sur les 25 candidats exclus pour « mineur possible » à la revue, plus
 - **Juge Qwen3.5-9B avec sv_prompt_v3** (children.md v1.3 mentionne les dessins) :
   - 9 sur 18 cas « mineur + élément sexuel » ont levé `possible_minor`, **dont b6da7941, raté par la v1** ;
   - mais 5 sur 8 cas « enfant sans élément sexuel » l'ont aussi levé, à tort (CH-1b).
-- Code : signal `child_visual` dans `harmwatch/safety.py` et règle « apparence enfantine + élément sexuel → possible_minor » (`restricted_reason = "rule_visual"`) dans `sv_scores.finalize_scores`. Elle ne fait que relever, jamais bloquer seule, et n'est pas encore branchée dans les runs d'évaluation.
+- Code : signal `child_visual` dans `harmwatch/safety.py` et règle « apparence enfantine + élément sexuel → possible_minor » (`restricted_reason = "rule_visual"`) dans `sv_scores.finalize_scores`. Elle ne fait que relever, jamais bloquer seule.
+- [ ] **Décision (gmikou, 2026-09-26) : non branché pour l'instant**, ni dans la construction de jeux, ni dans les runs d'évaluation. À reprendre plus tard.
 - [ ] Rappel combiné (juge OU CLIP) encore loin de la cible de 100 % (CH-5). Les cas ratés, ce sont des acteurs mineurs connus ou des personnages de dessins animés, sont impossibles à voir sans identifier la personne (interdit, B1-3). **La protection principale reste l'exclusion à la revue humaine et la règle « quand on doute, restreindre ».**
 
 ## 4. Autres
