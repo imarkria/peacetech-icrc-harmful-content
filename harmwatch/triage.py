@@ -26,7 +26,7 @@ def triage(c: Classification) -> str:
     return NOT_HARMFUL
 
 
-def priority(c: Classification, views: int | None = None) -> float:
+def priority(c: Classification, views: int | None = None, bucket: str | None = None) -> float:
     """Higher = review sooner. Bucket dominates, then severity, then reach."""
     reach = math.log10((views or 0) + 1)  # 0..~7
-    return BUCKET_RANK[triage(c)] * 100 + max(0, min(3, c.harm_potential)) * 10 + reach
+    return BUCKET_RANK[bucket or triage(c)] * 100 + max(0, min(3, c.harm_potential)) * 10 + reach

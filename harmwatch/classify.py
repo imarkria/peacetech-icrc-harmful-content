@@ -62,11 +62,11 @@ def classify_claude(text: str) -> tuple[Classification, str]:
         extra_body={"fallbacks": "default"},
     )
     if response.stop_reason == "refusal" or response.parsed_output is None:
-        return _needs_human("The model declined or returned no label; review manually."), f"{model} (declined)"
+        return needs_human("The model declined or returned no label; review manually."), f"{model} (declined)"
     return response.parsed_output, model
 
 
-def _needs_human(reason: str) -> Classification:
+def needs_human(reason: str) -> Classification:
     return Classification(
         harm_types=[],
         tone="other",
