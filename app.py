@@ -106,7 +106,11 @@ def review_queue():
         "Show", list(BUCKET_STYLE), default=[ESCALATE, HARMFUL, POTENTIAL],
         format_func=lambda b: BUCKET_STYLE[b][0], key="bucket_filter",
     )
-    for item in (i for i in items if i["bucket"] in shown):
+    restricted = counts.get(ESCALATE, 0)
+    if restricted and ESCALATE in shown:
+        st.error(f"{restricted} item(s) routed to restricted escalation (possible minor). They are never shown "
+                 "here: escalate to the legal team through the agreed channel.")
+    for item in (i for i in items if i["bucket"] in shown and i["bucket"] != ESCALATE):
         c = item["result"]
         with st.container(border=True):
             meta = " · ".join(filter(None, [

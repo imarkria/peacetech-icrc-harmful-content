@@ -5,3 +5,5 @@ streamlit>=1.40
 pandas
 telethon
 python-telegram-bot>=21
+pyyaml
+openai>=1.50

@@ -16,3 +16,6 @@ venv/
 
 # OS
 .DS_Store
+
+# Policy few-shot examples are part of the policy layers (synthetic, non-graphic)
+!policy/regions/*.jsonl
