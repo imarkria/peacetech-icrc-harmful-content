@@ -1,0 +1,39 @@
+from collections.abc import Generator
+from pathlib import Path
+
+from sqlalchemy import create_engine, inspect, text
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+
+from .config import get_settings
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+settings = get_settings()
+
+if settings.database_url.startswith("sqlite:///") and ":memory:" not in settings.database_url:
+    sqlite_path = Path(settings.database_url.removeprefix("sqlite:///"))
+    sqlite_path.parent.mkdir(parents=True, exist_ok=True)
+
+connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
+engine = create_engine(settings.database_url, connect_args=connect_args, pool_pre_ping=True)
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, expire_on_commit=False)
+
+
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def initialize_database() -> None:
+    """Create MVP tables and apply the small additive migrations we need for local development."""
+    Base.metadata.create_all(bind=engine)
+    columns = {column["name"] for column in inspect(engine).get_columns("public_reports")}
+    if "reason" not in columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE public_reports ADD COLUMN reason TEXT"))
