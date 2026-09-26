@@ -1,6 +1,6 @@
 # Core policy: conflict-related sexual violence (CRSV) content
 
-**Version: core v1.3** (changelog at the end)
+**Version: core v1.4** (changelog at the end)
 
 Sources: ICRC policy brief "Addressing sexual violence during armed conflict and other situations of violence" (Feb 2026), Murad Code (2022), ICRC "Harmful information: Q&A". Two team documents merged ("Definitions and Limiting Barriers" + "CRSV Content Classification Specification for AI").
 
@@ -34,8 +34,20 @@ Core (this file) > platform profile > region profile. Lower layers can ADD meani
 
   If absent but Axis 1 and 2 are met: `conflict_link = unclear`, still send to review.
 
-**Named forms** (always satisfy SV-EL-A):
-SV-FORM-01 rape; SV-FORM-02 sexual slavery; SV-FORM-03 enforced prostitution; SV-FORM-04 forced pregnancy; SV-FORM-05 forced abortion; SV-FORM-06 enforced sterilization; SV-FORM-07 forced marriage; SV-FORM-08 trafficking for sexual exploitation; SV-FORM-09 sexualised torture or ill-treatment (sexual acts or forced nudity to punish, humiliate, extract information, incl. detention); SV-FORM-10 other SV of comparable gravity. Forced nudity, sexual humiliation and threats of SV can themselves be SV (FORM-09/10).
+**Named forms** (always satisfy SV-EL-A). Working definitions:
+
+- **SV-FORM-01 Rape:** sexual penetration of any kind, of any person, without genuine consent.
+- **SV-FORM-02 Sexual slavery:** exercising ownership over a person, including sexual access to them.
+- **SV-FORM-03 Enforced prostitution:** forcing a person into sexual acts in exchange for money, goods or survival.
+- **SV-FORM-04 Forced pregnancy:** confining a person made pregnant by force, with intent to affect a group or commit other violations.
+- **SV-FORM-05 Forced abortion:** terminating a pregnancy without consent.
+- **SV-FORM-06 Enforced sterilization:** removing reproductive capacity without consent.
+- **SV-FORM-07 Forced marriage:** forcing a person into marriage or a marriage-like union.
+- **SV-FORM-08 Trafficking for sexual exploitation:** moving or holding a person for the purpose of sexual violence or exploitation.
+- **SV-FORM-09 Sexualised torture or ill-treatment:** sexual acts or forced nudity used to punish, humiliate or extract information, including in detention.
+- **SV-FORM-10 Other sexual violence of comparable gravity:** any other coercive sexual act of similar seriousness.
+
+Forced nudity, sexual humiliation and threats of SV can themselves be SV (FORM-09/10).
 
 ## Relation of the content to sexual violence (Axis 1)
 
@@ -53,7 +65,7 @@ Exactly one primary, others secondary. Tie-break order: **SV-REL-2 > SV-REL-5 > 
 
 **SH-DEF.** Content that sexually harasses a person or a group: it targets them with sexual content that degrades, humiliates or intimidates, without necessarily relating to an act of sexual violence (Axis 1). Any person or group, any gender. Assessed on its own; it is NOT a third axis of the flag rule and does not change it.
 
-- **SH-1 Sexualised insult:** a sexual slur or insult aimed at a person or group ("whore", "slut", bestiality slurs against a group).
+- **SH-1 Sexualised insult:** a sexual slur or insult aimed at a person or group ("whore", "slut"). Bestiality slurs aimed at a group count as SH-1 (borderline case: they are also hate, HI-TYPE-04; judge both).
 - **SH-2 Degrading sexualisation:** attributes sexual availability, acts or appetite to a person or group in order to demean them (e.g. implying a woman got a job through sex).
 - **SH-3 Humiliating objectification:** reduces a person or group to body parts or a sexual object in a demeaning way (mild compliments or neutral depictions of attractiveness do not count).
 
@@ -166,6 +178,7 @@ Element values: `likely` | `possible` | `unlikely` | `unclear`, confidence 0-1, 
 
 ## Changelog
 
+- **v1.4 (2026-09-26, gmikou):** working definitions of SV-FORM-01..10 (from "Definitions and Limiting Barriers" §2); bestiality slurs aimed at a group = SH-1, marked as a borderline case.
 - **v1.3 (2026-09-26, gmikou):** the core is universal: no country, language or local term. Rumour markers are neutral examples (local equivalents move to region profiles); children.md CH-2 describes only the types of age indicators (word lists move to the `age_terms` of each region profile); CH-3 moves to the ru_ua profile.
 - **v1.2 (2026-09-26, gmikou):** adds SH-DEF sexual harassment (SH-1 sexualised insult, SH-2 degrading sexualisation, SH-3 humiliating objectification), assessed separately from the flag rule.
 - **v1.1 (2026-09-26, gmikou):** FT-STANCE `reports` requires an attributed source and a neutral/condemning posture; unsourced rumour = `unclear` (SV-REL-1 possible). Element C gets the ID SV-EL-C (= CONF-DEF). Testimony (B2-1) is no longer recorded as a lead; only B2-3 is.

@@ -33,12 +33,18 @@ DOCS_PROMPTS = ROOT / "docs" / "prompts"
 PROMPTS = {
     "v1": {"sha256": "ecaefeee7cb18e9883f09e417e5fc20dbb115014b138dd62d26bd506b6445101",
            "system_file": DOCS_PROMPTS / "sv_prompt_v1_system.txt", "results": ROOT / "results" / "sv_benchmark"},
+    # v2 (core v1.3): ABANDONED before any evaluation (superseded by v3: SV-FORM working definitions, core v1.4).
     "v2": {"sha256": "965c8d1a70cd88b0526fbb475efbd3ab12454a026529706ba7df775b6800d886",
+           "status": "abandoned before any evaluation",
            "system_file": DOCS_PROMPTS / "sv_prompt_v2_system.txt", "results": ROOT / "results" / "sv_benchmark_v2"},
+    # v3 (2026-09-26, core v1.4: SV-FORM working definitions, bestiality slurs = SH-1 borderline; shots as v2).
+    "v3": {"sha256": "9160fe72836938169116baa9c1edf68918fd4e5c598c50bb1b5c7cb354760386",
+           "system_file": DOCS_PROMPTS / "sv_prompt_v3_system.txt", "results": ROOT / "results" / "sv_benchmark_v3"},
 }
 # Few-shot examples per prompt version (synthetic, described in text; never benchmark images).
 SHOTS = {"v1": ["G03", "G05", "G06", "G09"],
-         "v2": ["G13", "G03", "G11", "G15", "G16", "G10", "G05", "G06", "G18", "G21"]}  # 5 positives / 5 negatives
+         "v2": ["G13", "G03", "G11", "G15", "G16", "G10", "G05", "G06", "G18", "G21"],  # 5 positives / 5 negatives
+         "v3": ["G13", "G03", "G11", "G15", "G16", "G10", "G05", "G06", "G18", "G21"]}  # same shots as v2
 THRESHOLD = 50
 MODES = ("image_text", "text_only", "ambiguous")
 
@@ -85,6 +91,8 @@ def cmd_freeze(args):
 
 
 def check_prompt(scorer, prompt: str = "v1"):
+    if PROMPTS[prompt].get("status"):
+        sys.exit(f"sv_prompt_{prompt}: {PROMPTS[prompt]['status']}; refusing to run.")
     frozen = PROMPTS[prompt]["sha256"]
     if not frozen:
         sys.exit(f"sv_prompt_{prompt} is not frozen yet: run `freeze --prompt {prompt}` and pin the fingerprint.")
