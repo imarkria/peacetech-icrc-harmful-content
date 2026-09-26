@@ -71,22 +71,27 @@ class SVScoreAssessment(BaseModel):
     category: Category
     reason: str
     possible_minor: bool
-    restricted_reason: Literal["model", "rule_age"] | None = None
+    restricted_reason: Literal["model", "rule_age", "rule_visual"] | None = None
     rule_notes: list[str] = []
     p_true: dict[str, float | None] = {}  # P("true") from the logprobs for sexual / hateful / misogynous
 
 
-def finalize_scores(o: SVScoreOutput, *, item_id: str, embedded_text: str = "", age_matcher=None) -> SVScoreAssessment:
+def finalize_scores(o: SVScoreOutput, *, item_id: str, embedded_text: str = "", age_matcher=None,
+                    child_visual: bool = False) -> SVScoreAssessment:
+    """`child_visual` = childlike-appearance signal from harmwatch.safety (raise-only, CH-2 images)."""
     notes = []
     sexual_element = o.sexual or o.primary_relation is not None or o.scores.sexual_violence >= 50 \
         or o.scores.sexual_harassment >= 50
-    if o.possible_minor or (sexual_element and age_indicators(embedded_text, age_matcher)):
+    age_rule = sexual_element and bool(age_indicators(embedded_text, age_matcher))
+    visual_rule = sexual_element and child_visual
+    if o.possible_minor or age_rule or visual_rule:
         if not o.possible_minor:
-            notes.append("possible_minor raised by rule (age indicator + sexual element)")
+            notes.append("possible_minor raised by rule ("
+                         + ("age indicator" if age_rule else "childlike appearance") + " + sexual element)")
         return SVScoreAssessment(item_id=item_id, scores=None, sexual=True, hateful=None, misogynous=None,
                                  primary_relation=None, category="none",
                                  reason="", possible_minor=True, rule_notes=notes,
-                                 restricted_reason="model" if o.possible_minor else "rule_age")
+                                 restricted_reason="model" if o.possible_minor else "rule_age" if age_rule else "rule_visual")
     rel, cat = o.primary_relation, o.category
     if not o.sexual and (rel or cat != "none"):
         notes.append(f"sexual=false: relation/category {rel}/{cat} cleared")
