@@ -31,6 +31,9 @@ def _get_client():
     return _client
 
 
+_QUOTE = re.compile(r'[«»"“”„]')
+
+
 def guess_lang(text: str) -> str:
     if re.search(r"[іїєґ]", text, re.IGNORECASE):
         return "uk"
@@ -91,6 +94,7 @@ class Assessor:
             profile_version=self.policy.profile_version, valid_ids=self.policy.valid_ids,
             age_indicator=bool(age_indicators(full_text)), sv_signal=bool(self.sv_lexicon.hits(full_text)),
             high_reach=high_reach,
+            quote_present=bool(item.get("fwd_from")) or bool(_QUOTE.search(item["text"])),
         )
         if a.route != "restricted_escalation":
             det_hits = self.lexicon.hits(full_text)

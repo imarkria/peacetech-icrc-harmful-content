@@ -55,7 +55,8 @@ INSTRUCTIONS = """You are a triage classifier for ICRC analysts. Apply the polic
 Fill the JSON fields in order, following the decision procedure:
 - risk_flags first. If possible_minor is true, leave every content field empty (empty lists, empty strings, null relation) and set route restricted_escalation.
 - exclusion: the B2 exclusion that applies, or null.
-- features: FT-STANCE, FT-TARGET, FT-GENERAL, FT-MODAL, FT-CTA, FT-FRAME, FT-SPEAKER (apply the v1.1 clarification of FT-STANCE "reports").
+- forwarded_original: only when a TG-L2 forwarded original is present: that original author's stance and relation; otherwise null. Everything after it (features, relation, harm) is about the TG-L1 speaker, i.e. the channel that posts, forwards or comments: a repost that condemns the original is quotes_to_condemn even if the original endorses SV.
+- features: FT-STANCE, FT-TARGET, FT-GENERAL, FT-MODAL, FT-CTA, FT-FRAME, FT-SPEAKER (apply the v1.1 clarification of FT-STANCE "reports"). Fill source_attributed first: true only if the item names the source it relays (media, NGO, UN, named authority).
 - elements A (sexual nature), B (coercive circumstances), C (conflict link): value, confidence 0-1, one reason of at most 20 words based only on what is observed.
 - primary_relation: one SV-REL (tie-break SV-REL-2 > SV-REL-5 > SV-REL-3 > SV-REL-4 > SV-REL-1) or null when the item has no relation to sexual violence (Axis 1 missing: hate without sexual violence is NOT in scope).
 - hi_types / harm_pathways: Axis 2, with possible=true when truth is unknown.

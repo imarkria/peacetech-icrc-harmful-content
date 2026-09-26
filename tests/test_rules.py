@@ -15,8 +15,8 @@ def output(**overrides) -> CRSVModelOutput:
     """A flaggable SV-REL-2 threat by default; override fields per test."""
     base = dict(
         risk_flags={"possible_minor": False, "identifiable_person": False, "possible_manipulated_media": False},
-        exclusion=None,
-        features={"stance": "endorses", "target": "group", "general": True, "modal": "future", "cta": "implied",
+        exclusion=None, forwarded_original=None,
+        features={"source_attributed": False, "stance": "endorses", "target": "group", "general": True, "modal": "future", "cta": "implied",
                   "frame": True, "speaker": "unknown"},
         elements={k: {"value": "likely", "confidence": 0.9, "reason": "r"} for k in "ABC"},
         primary_relation="SV-REL-2", secondary_relations=[], content_type=3, named_acts=["SV-FORM-01"],
@@ -80,9 +80,19 @@ def test_b2_exclusion_is_never_flagged():
 
 @pytest.mark.parametrize("stance", ["reports", "quotes_to_condemn"])
 def test_stance_override_gives_lead(stance):
-    a = run(output(features={"stance": stance}))
+    a = run(output(features={"stance": stance, "source_attributed": True}), quote_present=True)
     assert a.route == "not_flagged" and a.lead
     assert triage(to_classification(a)) == NOT_HARMFUL
+
+
+def test_unsourced_report_is_not_an_override():  # core v1.1: rumour = unclear, still assessed
+    a = run(output(features={"stance": "reports", "source_attributed": False}))
+    assert a.features.stance == "unclear" and a.route == "priority_review" and not a.lead
+
+
+def test_condemning_without_quote_is_not_an_override():
+    a = run(output(features={"stance": "quotes_to_condemn"}), quote_present=False)
+    assert a.features.stance == "unclear" and a.route == "priority_review"
 
 
 def test_testimony_is_not_a_lead():  # core v1.1, B6-3
@@ -97,7 +107,7 @@ def test_restricted_reason():
 
 
 def test_prevention_is_not_a_lead():
-    a = run(output(exclusion="B2-2", features={"stance": "reports"}, lead=True))
+    a = run(output(exclusion="B2-2", features={"stance": "reports", "source_attributed": True}, lead=True))
     assert a.route == "not_flagged" and not a.lead
 
 

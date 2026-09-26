@@ -64,6 +64,7 @@ class RiskFlags(BaseModel):
 
 
 class Features(BaseModel):
+    source_attributed: bool  # core v1.1: "reports" requires a named source (media, NGO, UN, named authority)
     stance: Literal["endorses", "reports", "quotes_to_condemn", "mocks", "unclear"]
     target: Literal["individual", "group", "unspecified"]
     general: bool
@@ -71,6 +72,12 @@ class Features(BaseModel):
     cta: Literal["explicit", "implied", "none"]
     frame: bool
     speaker: Literal["armed_actor_or_affiliate", "community_member", "journalist", "survivor_or_support_group", "unknown"]
+
+
+class ForwardedOriginal(BaseModel):
+    """TG-L2: the forwarded original is a separate speaker with its own stance."""
+    stance: Literal["endorses", "reports", "quotes_to_condemn", "mocks", "unclear"]
+    primary_relation: Relation | None
 
 
 class Element(BaseModel):
@@ -103,6 +110,7 @@ class CRSVModelOutput(BaseModel):
     """What the LLM fills, in decision-procedure order (core.md). Route and priority are proposals."""
     risk_flags: RiskFlags
     exclusion: Exclusion | None
+    forwarded_original: ForwardedOriginal | None
     features: Features
     elements: Elements
     primary_relation: Relation | None
@@ -170,8 +178,9 @@ def rule_priority(o: CRSVModelOutput, high_reach: bool = False) -> Priority:
 
 def finalize(o: CRSVModelOutput, *, item_id: str, region: str, profile_version: str,
              valid_ids: set[str] | None = None, age_indicator: bool = False,
-             sv_signal: bool = False, high_reach: bool = False) -> CRSVAssessment:
-    """Apply the hard rules. `age_indicator` / `sv_signal` come from the deterministic lexicon checks."""
+             sv_signal: bool = False, high_reach: bool = False, quote_present: bool = False) -> CRSVAssessment:
+    """Apply the hard rules. `age_indicator` / `sv_signal` come from the deterministic lexicon checks;
+    `quote_present` = the item forwards or quotes other content (known from the item, not the model)."""
     notes: list[str] = []
     data = o.model_dump()
     data.update(item_id=item_id, region=region, profile_version=profile_version,
@@ -189,8 +198,8 @@ def finalize(o: CRSVModelOutput, *, item_id: str, region: str, profile_version: 
         blank = CRSVAssessment(
             item_id=item_id, region=region, profile_version=profile_version,
             risk_flags=RiskFlags(possible_minor=True, identifiable_person=False, possible_manipulated_media=False),
-            exclusion=None,
-            features=Features(stance="unclear", target="unspecified", general=False, modal="past", cta="none",
+            exclusion=None, forwarded_original=None,
+            features=Features(source_attributed=False, stance="unclear", target="unspecified", general=False, modal="past", cta="none",
                               frame=False, speaker="unknown"),
             elements=Elements(**{k: Element(value="unclear", confidence=0, reason="") for k in "ABC"}),
             primary_relation=None, secondary_relations=[], content_type=None, named_acts=[], hi_types=[],
@@ -201,6 +210,19 @@ def finalize(o: CRSVModelOutput, *, item_id: str, region: str, profile_version: 
             rule_notes=notes, restricted_reason="model" if o.risk_flags.possible_minor else "rule_age",
         )
         return blank
+
+    # core v1.1: "reports" without an attributed source is not reporting (unsourced rumour → unclear).
+    if o.features.stance == "reports" and not o.features.source_attributed:
+        o = o.model_copy(deep=True)
+        o.features.stance = "unclear"
+        data["features"]["stance"] = "unclear"
+        notes.append("stance reports without attributed source -> unclear (core v1.1)")
+    # Nothing is quoted or forwarded: there is nothing to "quote to condemn".
+    if o.features.stance == "quotes_to_condemn" and not quote_present:
+        o = o.model_copy(deep=True)
+        o.features.stance = "unclear"
+        data["features"]["stance"] = "unclear"
+        notes.append("quotes_to_condemn without quoted or forwarded content -> unclear")
 
     # 2-8. Flag rule, lead, priority, route.
     flagged = flag_rule(o)
