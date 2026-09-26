@@ -144,6 +144,9 @@ def test_age_indicators_on_neutral_text():
     assert not age_indicators("Девушки из волонтёрского штаба привезли воду")  # девушка is not an indicator
     assert not age_indicators("Мне было 34 года")
     assert not age_indicators("A kidnapped journalist; minority rights")
+    assert age_indicators("A 15-year-old boy won the regional chess cup")
+    assert age_indicators("The 14 yr old student gave a speech")
+    assert age_indicators("news/2021/shkolnica-vyigrala-olimpiadu")  # Latin transliteration in a URL
 
 
 def test_normalize_evasion():

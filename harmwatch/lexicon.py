@@ -20,6 +20,20 @@ _IRREGULAR = {"child": "children", "дети": "детей|детям|детьм
               "kid": "kids"}
 
 
+_UK_ONLY = re.compile(r"[іїєґ]", re.IGNORECASE)
+_RU_ONLY = re.compile(r"[ыэъё]", re.IGNORECASE)
+
+
+def guess_lang(text: str) -> str:
+    """ru / uk / en / other from letters that exist in only one of the two alphabets."""
+    uk, ru = len(_UK_ONLY.findall(text)), len(_RU_ONLY.findall(text))
+    if uk or ru:
+        return "uk" if uk > ru else "ru"
+    if _CYRILLIC.search(text):
+        return "ru"
+    return "en" if re.search(r"[a-z]", text, re.IGNORECASE) else "other"
+
+
 def normalize(text: str) -> str:
     """Lower-case; inside words that contain Cyrillic, map look-alike symbols to Cyrillic letters."""
     text = text.lower().replace("ё", "е")
@@ -44,7 +58,23 @@ def _term_pattern(term: str) -> str:
 # --- Age indicators (CH-2) -------------------------------------------------------
 
 _AGE_NUMBER = re.compile(
-    r"(?<!\d)(?:[1-9]|1[0-7])\s*(?:-?\s*(?:лет|года|год|летн\w*|років|рік|роки|річн\w*|y\.?\s?o\.?|yo|years?\s+old))(?!\w)")
+    r"(?<!\d)(?:[1-9]|1[0-7])\s*-?\s*(?:лет|года|год|летн\w*|років|рік|роки|річн\w*|y\.?\s?o\.?|y/o|yo"
+    r"|yrs?\.?\s*-?\s*old|years?\s*-?\s*old)(?!\w)")
+
+# Latin transliteration of Russian/Ukrainian (URLs, evasion: "shkolnica", "iznasilovanie"). Soft/hard signs are
+# dropped on both sides before age-term matching, since transliterations usually omit them.
+_TRANSLIT_MULTI = [("shch", "щ"), ("sch", "щ"), ("zh", "ж"), ("kh", "х"), ("ch", "ч"), ("sh", "ш"), ("ts", "ц"),
+                   ("yu", "ю"), ("ya", "я"), ("ye", "е"), ("yo", "е"), ("ju", "ю"), ("ja", "я")]
+_TRANSLIT_ONE = str.maketrans("abvgdezijklmnoprstufhcwx", "абвгдезийклмнопрстуфхцвк")
+
+
+def _translit(text: str) -> str:
+    def word(w: str) -> str:
+        for a, b in _TRANSLIT_MULTI:
+            w = w.replace(a, b)
+        w = re.sub(r"(?<=[аеиоуяюэ])y", "й", w)
+        return w.replace("y", "ы").translate(_TRANSLIT_ONE)
+    return re.sub(r"[a-z]+", lambda m: word(m.group()), text)
 _GRADE = re.compile(r"(?<!\d)(?:[1-9]|1[01])\s*(?:-?\s*(?:й|ий|го)\s*)?(?:класс\w*|клас\w*|grade)(?!\w)")
 
 
@@ -69,9 +99,10 @@ def age_indicators(text: str) -> list[str]:
     """Which CH-2 indicators occur (labels only, never the matched span)."""
     global _AGE_TERMS
     if _AGE_TERMS is None:
-        _AGE_TERMS = [re.compile(_term_pattern(t)) for t in _children_terms()]
+        _AGE_TERMS = [re.compile(_term_pattern(t).replace("ь", "").replace("ъ", "")) for t in _children_terms()]
     lower = text.lower().replace("ё", "е")  # digits must not go through the homoglyph map
-    norm = normalize(text)
+    norm = normalize(text).replace("ь", "").replace("ъ", "")
+    norm += "\n" + _translit(lower).replace("ь", "").replace("ъ", "")
     hits = []
     if _AGE_NUMBER.search(lower):
         hits.append("stated_age")

@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from pydantic import ValidationError
 
-from harmwatch.lexicon import RegionLexicon, age_indicators
+from harmwatch.lexicon import RegionLexicon, age_indicators, guess_lang
 from harmwatch.policy_loader import Policy, format_item
 from harmwatch.schema import CRSVAssessment, CRSVModelOutput, finalize
 
@@ -32,14 +32,6 @@ def _get_client():
 
 
 _QUOTE = re.compile(r'[«»"“”„]')
-
-
-def guess_lang(text: str) -> str:
-    if re.search(r"[іїєґ]", text, re.IGNORECASE):
-        return "uk"
-    if re.search(r"[а-яё]", text, re.IGNORECASE):
-        return "ru"
-    return "en"
 
 
 class Assessor:

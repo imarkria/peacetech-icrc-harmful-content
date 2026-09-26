@@ -8,6 +8,7 @@ children.md                  minors: hard stop B1-1, age indicators CH-2
 platforms/telegram.md        Telegram layers TG-L1..L8, reach, evasion
 regions/<code>.yaml          region profile: groups, slurs, SV terms, actors, places, narratives, priority rules
 regions/<code>_examples.jsonl  annotated few-shot examples for that region               (lowest precedence)
+regions/<code>_filter.yaml    search patterns to extract candidates from a corpus (never evidence for a label)
 ```
 
 **Precedence:** core > platform > region. A lower layer can only *add* meaning (terms, actors, places) or *raise* priority. It never removes, narrows or overrides a higher layer (B3). The children rules and the barriers can't be relaxed by any layer.
@@ -32,7 +33,8 @@ REGION=ru_ua python -m harmwatch.pipeline        # or --region ru_ua in the scri
 
 1. Copy `regions/ru_ua.yaml` to `regions/<code>.yaml` and replace the header (languages, time window, heightened-risk groups, owner) and the entries. Keep the entry format; set every entry to `status: proposed`.
 2. Copy `regions/ru_ua_examples.jsonl` to `regions/<code>_examples.jsonl` and write synthetic, non-graphic examples in the local languages. Test cases involving minors stay abstract placeholders (`<SV term> + <age indicator>`), never realistic text.
-3. Approve the entries with `scripts/approve_region.py <code>`.
+3. Optional, for corpus extraction: copy `regions/ru_ua_filter.yaml` to `regions/<code>_filter.yaml` and write patterns for the local languages (`scripts/extract_sv.py`).
+4. Approve the entries with `scripts/approve_region.py <code>`.
 
 Nothing else changes: no code, no prompt.
 
