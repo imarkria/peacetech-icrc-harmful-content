@@ -34,7 +34,7 @@ Telegram channels ── collector ──► SQLite ◄────────�
 | `harmwatch/classify.py` | Claude classifier (structured output) + offline keyword fallback |
 | `harmwatch/triage.py` | Rules that turn labels into Escalate / Harmful / Potentially harmful / Not harmful, plus a priority score |
 | `harmwatch/db.py` | SQLite storage in `data/` (git-ignored) |
-| `app.py` | Web app: volunteer report form, ICRC review queue, tracking, export |
+| `app.py` | Web app: landing page → report form (no login) → thank-you page; ICRC sign-in → control board (review queue, tracking, export) |
 | `harmwatch/bot.py` | Telegram bot: volunteers forward a post, it joins the queue |
 | `harmwatch/collector.py` | Reads public Telegram channels (text + views/forwards only, no media) |
 | `harmwatch/evaluate.py` | Scores the classifier on the labelled samples |
@@ -47,7 +47,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env          # add ANTHROPIC_API_KEY to use Claude; without it the keyword fallback runs
 python -m harmwatch.seed      # load and classify the sample posts
-streamlit run app.py          # ICRC password: value of ICRC_PASSWORD (default "demo")
+streamlit run app.py          # ICRC sign-in: accounts in ICRC_USERS (default reviewer / demo)
 ```
 
 Other commands:
