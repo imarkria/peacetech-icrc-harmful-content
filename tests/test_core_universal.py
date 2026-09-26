@@ -29,7 +29,7 @@ def universal_texts() -> dict[str, str]:
 
 def local_names() -> set[str]:
     """Country names + proper nouns of every region profile except the generic one (places, actors, groups...)."""
-    names = {l.strip() for l in (ROOT / "tests" / "data" / "country_names.txt").read_text().splitlines()
+    names = {l.strip() for l in (ROOT / "tests" / "fixtures" / "country_names.txt").read_text().splitlines()
              if l.strip() and not l.startswith("#")}
     for path in (POLICY / "regions").glob("*.yaml"):
         if path.stem == "global" or path.stem.endswith("_filter"):
