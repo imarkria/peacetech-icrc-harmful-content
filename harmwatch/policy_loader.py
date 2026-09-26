@@ -1,6 +1,7 @@
 """Assemble the system prompt from the policy layers.
 
-    core.md + children.md + platforms/<platform>.md + approved entries of regions/<region>.yaml + k examples
+    core.md + children.md + modalities.md + platforms/<platform>.md + approved entries of regions/<region>.yaml
+    + k examples
 
 The code is identical for every country: only REGION (or --region) selects the profile.
 Only entries with `status: approved` are loaded (B3); without any, loading refuses to run.
@@ -29,24 +30,27 @@ class Policy:
     profile_version: str
     entries: list[dict]            # approved region entries only
     examples: list[dict]
-    texts: dict[str, str]          # core / children / platform
+    texts: dict[str, str]          # core / children / modalities / platform
     languages_covered: set[str] = field(default_factory=set)
     valid_ids: set[str] = field(default_factory=set)
 
-    def system_prompt(self, examples: list[dict] | None = None) -> str:
-        """Fixed prefix (cacheable). `examples` = the few-shot subset; None = all, [] = zero-shot."""
+    def system_prompt(self, examples: list[dict] | None = None, instructions: str | None = None) -> str:
+        """Fixed prefix (cacheable). `examples` = the few-shot subset; None = all, [] = zero-shot.
+        `instructions` replaces the output instructions (e.g. the compact image judge)."""
         shots = self.examples if examples is None else examples
         parts = [
-            INSTRUCTIONS,
+            instructions or INSTRUCTIONS,
             f"<core_policy>\n{self.texts['core']}\n</core_policy>",
             f"<children_policy>\n{self.texts['children']}\n</children_policy>",
+            f"<modalities_policy>\n{self.texts['modalities']}\n</modalities_policy>",
             f"<platform_profile name=\"{self.platform}\">\n{self.texts['platform']}\n</platform_profile>",
             f"<region_profile region=\"{self.region}\" version=\"{self.profile_version}\">\n"
             f"{format_entries(self.entries) or '(no approved entries: profile_gap for every language)'}\n"
             "</region_profile>",
         ]
         if shots:
-            parts.append("<examples>\n" + "\n\n".join(format_example(x) for x in shots) + "\n</examples>")
+            parts.append("<examples>\n" + "\n\n".join(format_example(x, self.platform) for x in shots)
+                         + "\n</examples>")
         return "\n\n".join(parts)
 
 
@@ -79,9 +83,16 @@ def format_entries(entries: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def format_item(item: dict) -> str:
-    """The user message. `item` = {id?, lang?, text, fwd_from?: {channel, text}, channel?, views?, forwards?, ...}."""
-    lines = [f"platform: telegram", f"language: {item.get('lang') or 'unknown'}"]
+def format_item(item: dict, platform: str = "telegram") -> str:
+    """The user message. `item` = {id?, lang?, text, fwd_from?: {channel, text}, channel?, views?, forwards?, ...}.
+    Non-text items (few-shot examples only) carry `modality` and a neutral `image_description`."""
+    lines = [f"platform: {platform}", f"language: {item.get('lang') or 'unknown'}"]
+    if item.get("modality", "text") != "text":
+        lines.append(f"modality: {item['modality']}")
+        if item.get("image_description"):
+            lines.append(f"image (described in text for this example): {item['image_description']}")
+        lines.append(f"embedded_text:\n\"\"\"\n{item['text']}\n\"\"\"")
+        return "<item>\n" + "\n".join(lines) + "\n</item>"
     if item.get("channel"):
         lines.append(f"channel (TG-L8, speaker context only): {item['channel']}")
     lines.append(f"TG-L1 post text:\n\"\"\"\n{item['text']}\n\"\"\"")
@@ -95,7 +106,7 @@ def format_item(item: dict) -> str:
     return "<item>\n" + "\n".join(lines) + "\n</item>"
 
 
-def format_example(x: dict) -> str:
+def format_example(x: dict, platform: str = "telegram") -> str:
     e = x["expected"]
     decision = "FLAG" if e.get("flag") else "NOT FLAGGED"
     parts = [f"{decision} → {e['route']}"]
@@ -111,7 +122,7 @@ def format_example(x: dict) -> str:
         parts.append(f"{k} {str(v).lower()}")
     if "lead" in e:
         parts.append(f"lead {str(e['lead']).lower()}")
-    return f"Example {x['id']}\n{format_item(x)}\nExpected: {' | '.join(parts)}\nWhy: {x['why']}"
+    return f"Example {x['id']}\n{format_item(x, platform)}\nExpected: {' | '.join(parts)}\nWhy: {x['why']}"
 
 
 def load_examples(region: str) -> list[dict]:
@@ -144,6 +155,7 @@ def load_policy(region: str | None = None, platform: str | None = None, *,
     texts = {
         "core": core_text,
         "children": (POLICY_DIR / "children.md").read_text(encoding="utf-8"),
+        "modalities": (POLICY_DIR / "modalities.md").read_text(encoding="utf-8"),
         "platform": (POLICY_DIR / "platforms" / f"{platform}.md").read_text(encoding="utf-8"),
     }
     valid = set()

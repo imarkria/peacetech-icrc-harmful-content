@@ -52,7 +52,13 @@ ConfId = Literal["CONF-1", "CONF-2", "CONF-3", "CONF-4"]
 Exclusion = Literal["B2-1", "B2-2", "B2-3", "B2-4", "B2-5"]
 Route = Literal["restricted_escalation", "priority_review", "standard_review", "not_flagged"]
 Priority = Literal["urgent", "high", "standard", "none"]
-Layer = Literal["TG-L1", "TG-L2", "TG-L3", "TG-L4", "TG-L5", "TG-L6", "TG-L7", "TG-L8"]
+Layer = Literal[
+    "TG-L1", "TG-L2", "TG-L3", "TG-L4", "TG-L5", "TG-L6", "TG-L7", "TG-L8",  # platforms/telegram.md
+    "GEN-L1", "GEN-L2",  # platforms/generic.md
+    # policy/modalities.md
+    "text", "image", "embedded_text", "meme", "caption", "speech", "on_screen_text", "sound", "visuals",
+]
+Modality = Literal["text", "image", "meme", "video", "audio"]
 FLAG_ROUTES = ("priority_review", "standard_review")
 PRIORITY_RANK = {"none": 0, "standard": 1, "high": 2, "urgent": 3}
 
@@ -136,6 +142,7 @@ class CRSVModelOutput(BaseModel):
 class CRSVAssessment(CRSVModelOutput):
     """Final record: model output after the hard rules of core.md / children.md."""
     item_id: str
+    modality: Modality = "text"  # policy/modalities.md; set from the input, never by the model
     region: str
     profile_version: str
     in_scope: bool

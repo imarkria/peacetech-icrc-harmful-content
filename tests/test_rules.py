@@ -175,3 +175,59 @@ def test_export_excludes_restricted(tmp_path, monkeypatch):
         db.save_classification(conn, pid, "test", c, triage(c), 0)
         db.save_decision(conn, pid, "yes", "", "t")
         assert db.export_decisions(conn) == []
+
+
+# --- Modalities and the compact image judge ------------------------------------------
+
+def compact(**overrides):
+    from harmwatch.vision import CompactModelOutput
+
+    base = dict(risk_flags={"possible_minor": False, "identifiable_person": False, "possible_manipulated_media": False},
+                exclusion=None, stance="endorses", source_attributed=False, primary_relation="SV-REL-3",
+                hi_types=["HI-TYPE-04"], harm_pathways=["HP-04"], affiliation="AFF-1", triggered_layer="meme",
+                confidence=0.8, reason="r")
+    return CompactModelOutput(**{**base, **overrides})
+
+
+def fin(o, text=""):
+    from harmwatch.vision import finalize_compact
+
+    return finalize_compact(o, item_id="t", modality="meme", embedded_text=text)
+
+
+def test_compact_hate_without_sv_is_hateful_not_flagged():
+    a = fin(compact(primary_relation=None))
+    assert a.hateful and not a.sv_related and not a.flag and a.route == "not_flagged"
+
+
+def test_compact_flag_rule_and_route():
+    assert fin(compact()).route == "standard_review"
+    assert fin(compact(primary_relation="SV-REL-2")).route == "priority_review"
+    assert not fin(compact(affiliation="AFF-4")).flag
+    assert not fin(compact(harm_pathways=[])).flag
+    a = fin(compact(exclusion="B2-3"))
+    assert not a.flag and a.lead
+
+
+def test_compact_unsourced_report_is_not_an_override():
+    a = fin(compact(stance="reports", source_attributed=False))
+    assert a.stance == "unclear" and a.flag
+
+
+def test_compact_possible_minor_blanks_everything():
+    a = fin(compact(risk_flags={"possible_minor": True, "identifiable_person": False,
+                                "possible_manipulated_media": False}))
+    assert a.route == "restricted_escalation" and a.reason == "" and a.hi_types == [] and a.restricted_reason == "model"
+    assert fin(compact(), text="Ученица 9 класса").restricted_reason == "rule_age"  # neutral text (CH-5)
+
+
+def test_assessment_has_modality_and_loader_has_modalities_layer():
+    assert run(output()).modality == "text"
+    p = load_policy("ru_ua")
+    assert "<modalities_policy>" in p.system_prompt([]) and "MOD-MEME" in p.valid_ids
+
+
+def test_generic_platform_and_global_profile_never_load_proposed():
+    p = load_policy("global", "generic", allow_no_approved=True)
+    assert p.entries == [] or all(e["status"] == "approved" for e in p.entries)
+    assert "platform: generic" in p.system_prompt(p.examples[:2])

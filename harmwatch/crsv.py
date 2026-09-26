@@ -71,7 +71,7 @@ class Assessor:
         error, usage, out = None, {}, None
         for _attempt in range(2):
             try:
-                out, usage = self._call(format_item(item), system)
+                out, usage = self._call(format_item(item, self.policy.platform), system)
                 break
             except (ValidationError, ValueError) as e:
                 error = f"invalid_json: {str(e)[:200]}"

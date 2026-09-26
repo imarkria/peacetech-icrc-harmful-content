@@ -1,0 +1,241 @@
+# Region profile: global (generic). Nothing country-specific. Adds meaning to core.md, never removes it (B3).
+# Only entries with status: approved are loaded. Approve with: python scripts/approve_region.py global --by <name>
+version: '0.1'
+region: global
+name: Generic profile (no country; English-language datasets)
+languages:
+- en
+time_window: any
+heightened_risk_groups:
+- detainees
+- displaced_persons
+- children
+- women
+- men_and_boys
+- lgbtiq
+- religious_and_ethnic_minorities
+- migrants
+owner: gmikou
+approval: All entries proposed; to be approved by gmikou with scripts/approve_region.py global.
+neutrality: No side, no country; same rules for every group.
+entries:
+- id: RG-GROUP-001
+  type: RG-GROUP
+  region: global
+  language: en
+  value: women / girls / wives / daughters (as a group)
+  refers_to: gender group
+  meaning: Neutral group reference; possible AFF-1 target, e.g. 'their women' framing (FT-FRAME).
+  supports:
+  - AFF-1
+  - AFF-2
+  context_notes: Naming a group is never evidence of harm on its own (B3). 'girls' alone is not an age indicator
+    (CH-2) unless context says minor.
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-GROUP-002
+  type: RG-GROUP
+  region: global
+  language: en
+  value: ethnic, national, religious, migrant or LGBTIQ+ groups named as such
+  refers_to: identity groups
+  meaning: Neutral identity reference; possible AFF-1/AFF-2 target for HI-TYPE-04.
+  supports:
+  - AFF-1
+  - AFF-2
+  context_notes: Neutral (B3).
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-GROUP-003
+  type: RG-GROUP
+  region: global
+  language: en
+  value: soldiers / fighters / militia / troops / 'our boys'
+  refers_to: armed actors
+  meaning: Armed actor reference; supports the conflict link.
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: ''
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-SVTERM-001
+  type: RG-SVTERM
+  region: global
+  language: en
+  value: rape / raped / rapist
+  refers_to: sexual violence
+  meaning: rape
+  supports:
+  - SV-FORM-01
+  - SV-EL-A
+  context_notes: 'Also figurative uses (''the prices raped my wallet''): no coercion, no target → not SV.'
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-SVTERM-002
+  type: RG-SVTERM
+  region: global
+  language: en
+  value: sexual assault / sexually assaulted / SA
+  refers_to: sexual violence
+  meaning: sexual assault
+  supports:
+  - SV-FORM-10
+  - SV-EL-A
+  context_notes: '''SA'' is ambiguous; needs context.'
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-SVTERM-003
+  type: RG-SVTERM
+  region: global
+  language: en
+  value: grape / 🍇 / r*pe / r@pe
+  refers_to: evasion spelling
+  meaning: Evasion spellings of rape.
+  supports:
+  - SV-FORM-01
+  - SV-EL-A
+  context_notes: '''grape'' is usually the fruit: needs SV context.'
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-SVTERM-004
+  type: RG-SVTERM
+  region: global
+  language: en
+  value: spoils of war / war bride / reward (applied to people)
+  refers_to: sexual slavery framing
+  meaning: People presented as spoils or rewards for fighters.
+  supports:
+  - SV-FORM-02
+  - SV-REL-4
+  - HP-06
+  context_notes: ''
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-SVTERM-005
+  type: RG-SVTERM
+  region: global
+  language: en
+  value: dishonoured / ruined / used (applied to survivors)
+  refers_to: stigma of survivors
+  meaning: Honour framing that blames or devalues survivors.
+  supports:
+  - SV-REL-5
+  - HP-02
+  context_notes: ''
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-NARRATIVE-001
+  type: RG-NARRATIVE
+  region: global
+  language: en
+  value: '''they are coming for our women'' / ''protect our women from them'''
+  refers_to: collective accusation narrative
+  meaning: Attributes SV to a whole group to justify hostility (SV-REL-3), often migrants or the other side.
+  supports:
+  - SV-REL-3
+  - HI-TYPE-04
+  - HP-04
+  - HP-01
+  context_notes: Also used to justify retaliation.
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-NARRATIVE-002
+  type: RG-NARRATIVE
+  region: global
+  language: en
+  value: '''the rape reports are fake / staged / crisis actors'''
+  refers_to: denial narrative
+  meaning: Denial of documented SV (SV-REL-4, HI-TYPE-02).
+  supports:
+  - SV-REL-4
+  - HI-TYPE-02
+  - HP-02
+  context_notes: Serious debate about verification is not denial.
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-NARRATIVE-003
+  type: RG-NARRATIVE
+  region: global
+  language: en
+  value: vermin / animals / parasites / plague (applied to a group)
+  refers_to: dehumanising metaphor
+  meaning: 'Dehumanising language for an identity group: HI-TYPE-04 + HP-04.'
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  context_notes: 'Hate without SV relation: Axis 1 absent → not flagged, hi_types still filled.'
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+- id: RG-PRIORITY-001
+  type: RG-PRIORITY
+  region: global
+  language: multi
+  value: sexual content involving detainees or prisoners of war → High (content type 6)
+  refers_to: priority rule
+  meaning: Raises priority only; never lowers it.
+  supports:
+  - priority:high
+  context_notes: ''
+  status: proposed
+  source_cases:
+  - core.md v1.1 (generic reading)
+  proposed_by: claude-code (generic profile for English datasets)
+  approved_by: null
+  created: '2026-09-26'
+  review_by: '2027-03-26'
