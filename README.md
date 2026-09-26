@@ -15,6 +15,49 @@ git clone https://github.com/imarkria/peacetech-icrc-harmful-content.git
 cd peacetech-icrc-harmful-content
 ```
 
+## What's in the skeleton
+
+A working end-to-end prototype, meant to be deepened in parallel:
+
+```
+Volunteers ── Telegram bot ──┐                     ┌── Web app (Streamlit) ── ICRC analysts
+                             ▼                     │   review queue · blur · Yes/No/Not processed
+Telegram channels ── collector ──► SQLite ◄────────┘   tracking · export
+                                     │  ▲
+                                     ▼  │
+                          classifier (Claude + policy.md)
+```
+
+| File | Role |
+|---|---|
+| `policy.md` | The harm definitions the classifier applies. **Edit this first** (task M1). |
+| `harmwatch/classify.py` | Claude classifier (structured output) + offline keyword fallback |
+| `harmwatch/triage.py` | Rules that turn labels into Escalate / Harmful / Potentially harmful / Not harmful, plus a priority score |
+| `harmwatch/db.py` | SQLite storage in `data/` (git-ignored) |
+| `app.py` | Web app: volunteer report form, ICRC review queue, tracking, export |
+| `harmwatch/bot.py` | Telegram bot: volunteers forward a post, it joins the queue |
+| `harmwatch/collector.py` | Reads public Telegram channels (text + views/forwards only, no media) |
+| `harmwatch/evaluate.py` | Scores the classifier on the labelled samples |
+| `samples/sample_posts.json` | 20 synthetic, non-graphic posts with expected labels (seed of the evaluation set, task M2) |
+
+## Run it
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env          # add ANTHROPIC_API_KEY to use Claude; without it the keyword fallback runs
+python -m harmwatch.seed      # load and classify the sample posts
+streamlit run app.py          # ICRC password: value of ICRC_PASSWORD (default "demo")
+```
+
+Other commands:
+
+```bash
+python -m harmwatch.evaluate                # precision/recall, false flags on safe posts, parity by side
+python -m harmwatch.collector --limit 100   # needs TELEGRAM_API_ID/HASH + TELEGRAM_CHANNELS
+python -m harmwatch.bot                     # needs TELEGRAM_BOT_TOKEN
+```
+
 ## Workflow
 
 - Create a branch for your work: `git checkout -b your-name/feature`
