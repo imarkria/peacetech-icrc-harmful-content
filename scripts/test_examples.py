@@ -64,11 +64,12 @@ def main():
     ap.add_argument("--region", default="ru_ua")
     ap.add_argument("--allow-no-approved", action="store_true",
                     help="dev: run core-only while no region entry is approved (never loads proposed ones)")
+    ap.add_argument("--platform", default=None, help="platform profile (default: PLATFORM env or telegram)")
     ap.add_argument("--bench", action="store_true")
     ap.add_argument("--workers", type=int, default=8)
     args = ap.parse_args()
 
-    policy = load_policy(args.region, allow_no_approved=args.allow_no_approved)
+    policy = load_policy(args.region, args.platform, allow_no_approved=args.allow_no_approved)
     examples = policy.examples
     assessor = Assessor(policy)
     systems = [policy.system_prompt([e for e in examples if e["id"] != x["id"]]) for x in examples]

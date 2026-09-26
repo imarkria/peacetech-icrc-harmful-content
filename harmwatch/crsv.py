@@ -84,7 +84,7 @@ class Assessor:
         a = finalize(
             out, item_id=str(item.get("id", "")), region=self.policy.region,
             profile_version=self.policy.profile_version, valid_ids=self.policy.valid_ids,
-            age_indicator=bool(age_indicators(full_text)), sv_signal=bool(self.sv_lexicon.hits(full_text)),
+            age_indicator=bool(age_indicators(full_text, self.policy.age_matcher)), sv_signal=bool(self.sv_lexicon.hits(full_text)),
             high_reach=high_reach,
             quote_present=bool(item.get("fwd_from")) or bool(_QUOTE.search(item["text"])),
         )

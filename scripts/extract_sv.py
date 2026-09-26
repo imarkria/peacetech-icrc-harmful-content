@@ -23,6 +23,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from harmwatch.lexicon import age_indicators, normalize  # noqa: E402
+from harmwatch.policy_loader import region_age_matcher  # noqa: E402
 
 PROCESSED = ROOT / "data" / "processed"
 CORPUS = PROCESSED / "telegram.jsonl"
@@ -32,6 +33,7 @@ WORD = re.compile(r"\w+")
 class Filter:
     def __init__(self, region: str):
         cfg = yaml.safe_load((ROOT / "policy" / "regions" / f"{region}_filter.yaml").read_text(encoding="utf-8"))
+        self.age = region_age_matcher(region)  # CH-2 words: generic profile + region age_terms
         self.patterns = []
         for p in cfg["patterns"]:
             if "regex" in p:
@@ -81,7 +83,7 @@ def _scan(lines: list[str]) -> tuple[list[dict], Counter, Counter]:
         if hits:
             rec["filter_hits"] = [h for h, _ in hits]
             rec["filter_strength"] = "strong" if any(s == "strong" for _, s in hits) else "weak"
-            rec["possible_minor_rule"] = bool(age_indicators(rec["text"]))
+            rec["possible_minor_rule"] = bool(age_indicators(rec["text"], _FILTER.age))
             rec["text_hash"] = text_hash(rec["text"])
             out.append(rec)
     return out, totals_side, totals_month
@@ -177,7 +179,7 @@ SENTENCE = re.compile(r"(?<=[.!?…])\s+|\n+")
 
 def minor_near(text: str, flt: Filter) -> bool:
     """Age indicator in the same sentence as a pattern hit (narrower variant of possible_minor_rule)."""
-    return any(age_indicators(s) and flt.hits(s) for s in SENTENCE.split(text))
+    return any(age_indicators(s, flt.age) and flt.hits(s) for s in SENTENCE.split(text))
 
 
 def load_scores():
@@ -256,7 +258,7 @@ def stage_report(region: str, top_k: int):
                 cands[rec["uid"]] = regex[rec["uid"]]
             elif k in emb_keys:
                 rec.update(filter_hits=[], filter_strength=None, text_hash=text_hash(rec["text"]),
-                           possible_minor_rule=bool(age_indicators(rec["text"])))
+                           possible_minor_rule=bool(age_indicators(rec["text"], flt.age)))
                 cands[rec["uid"]] = rec
             else:
                 continue

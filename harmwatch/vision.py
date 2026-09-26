@@ -78,7 +78,8 @@ class CompactAssessment(BaseModel):
     rule_notes: list[str] = []
 
 
-def finalize_compact(o: CompactModelOutput, *, item_id: str, modality: Modality, embedded_text: str = "") -> CompactAssessment:
+def finalize_compact(o: CompactModelOutput, *, item_id: str, modality: Modality, embedded_text: str = "",
+                     age_matcher=None) -> CompactAssessment:
     notes: list[str] = []
     stance = o.stance
     if stance == "reports" and not o.source_attributed:  # core v1.1
@@ -86,7 +87,7 @@ def finalize_compact(o: CompactModelOutput, *, item_id: str, modality: Modality,
         notes.append("stance reports without attributed source -> unclear (core v1.1)")
     sv = o.primary_relation is not None
     # possible_minor first (B1-1, CH-1a, CH-5): model flag, or age indicator in the text + sexual element.
-    if o.risk_flags.possible_minor or (sv and age_indicators(embedded_text)):
+    if o.risk_flags.possible_minor or (sv and age_indicators(embedded_text, age_matcher)):
         if not o.risk_flags.possible_minor:
             notes.append("possible_minor raised by rule (age indicator + sexual element)")
         return CompactAssessment(
@@ -160,7 +161,7 @@ class ImageAssessor:
                 usage = r.usage.model_dump() if r.usage else {}
                 out = CompactModelOutput.model_validate_json(raw)
                 a = finalize_compact(out, item_id=str(item["id"]), modality=item["modality"],
-                                     embedded_text=item.get("text") or "")
+                                     embedded_text=item.get("text") or "", age_matcher=self.policy.age_matcher)
                 return {"assessment": a, "raw": raw, "usage": usage, "seconds": time.time() - start, "error": None}
             except (ValidationError, ValueError) as e:
                 error = f"invalid_json: {str(e)[:200]}"

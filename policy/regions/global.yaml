@@ -18,6 +18,140 @@ heightened_risk_groups:
 owner: gmikou
 approval: All entries proposed; to be approved by gmikou with scripts/approve_region.py global.
 neutrality: No side, no country; same rules for every group.
+age_terms:
+  note: 'Generic English age terms (core v1.3, CH-2 types). note: words / institutions = terms (* = prefix); age_units
+    = years (a number under 18 is needed); infant_units = days, weeks or months (any number); number_words = ages
+    written in letters; stated_age_phrases and grade_patterns use {n} for the number; not_followed_by lists what
+    makes a number NOT an age ("only 15 minutes"). Raise-only: a match never lowers anything.'
+  en:
+    words:
+    - child
+    - children
+    - kid
+    - baby
+    - babies
+    - infant
+    - newborn
+    - toddler
+    - preteen
+    - pre-teen
+    - teen
+    - teens
+    - teenager
+    - teenage
+    - tween
+    - schoolgirl
+    - schoolboy
+    - pupil
+    - underage
+    - minor
+    - little girl
+    - little boy
+    - jailbait
+    - loli
+    - lolita
+    - shota
+    age_units:
+    - years old
+    - year old
+    - yrs old
+    - yr old
+    - y.o.
+    - y/o
+    - yo
+    - years of age
+    institutions:
+    - orphanage
+    - children's home
+    - kindergarten
+    - daycare
+    - primary school
+    - middle school
+    - elementary school
+    number_words:
+      one: 1
+      two: 2
+      three: 3
+      four: 4
+      five: 5
+      six: 6
+      seven: 7
+      eight: 8
+      nine: 9
+      ten: 10
+      eleven: 11
+      twelve: 12
+      thirteen: 13
+      fourteen: 14
+      fifteen: 15
+      sixteen: 16
+      seventeen: 17
+    stated_age_phrases:
+    - i'm {n}
+    - i'm only {n}
+    - i am {n}
+    - i am only {n}
+    - im {n}
+    - im only {n}
+    - she's {n}
+    - she is {n}
+    - he's {n}
+    - he is {n}
+    - only {n}
+    - aged {n}
+    - age {n}
+    infant_units:
+    - months old
+    - month old
+    - weeks old
+    - week old
+    - days old
+    - day old
+    - mos old
+    - mo old
+    grade_patterns:
+    - '{n}st grade'
+    - '{n}nd grade'
+    - '{n}rd grade'
+    - '{n}th grade'
+    - grade {n}
+    - year {n} pupil
+    - year {n} student
+    not_followed_by:
+    - minutes
+    - minute
+    - mins
+    - hours
+    - hour
+    - seconds
+    - days
+    - weeks
+    - months
+    - years
+    - times
+    - items
+    - points
+    - percent
+    - '%'
+    - dollars
+    - $
+    - euros
+    - followers
+    - likes
+    - views
+    - people
+    - inches
+    - feet
+    - cm
+    - km
+    - kg
+    - lbs
+    - miles
+    - o'clock
+    - am
+    - pm
+    - k
+    - m
 entries:
 - id: RG-GROUP-001
   type: RG-GROUP

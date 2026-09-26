@@ -27,11 +27,17 @@ sys.path.insert(0, str(ROOT))
 BENCH_DIR = ROOT / "data" / "benchmarks"
 BENCH = BENCH_DIR / "sv_images_v1.jsonl"
 DIST = BENCH_DIR / "sv_images_v1_distribution.json"
-PROMPT_FREEZE = BENCH_DIR / "sv_prompt_v1.json"
-# Frozen 2026-09-26 (core v1.2, SH-DEF, shots G03 G05 G06 G09). Never changed after results were seen.
-FROZEN_PROMPT_SHA256 = "ecaefeee7cb18e9883f09e417e5fc20dbb115014b138dd62d26bd506b6445101"
-RESULTS = ROOT / "results" / "sv_benchmark"
-SHOTS = ["G03", "G05", "G06", "G09"]  # synthetic, described in text; never benchmark images
+DOCS_PROMPTS = ROOT / "docs" / "prompts"
+# Frozen prompts. v1 (2026-09-26, core v1.2) is replayed from its versioned system text, so that later changes to
+# policy/ never alter it; v2 (core v1.3, universal core) is built from policy/ and pinned once frozen.
+PROMPTS = {
+    "v1": {"sha256": "ecaefeee7cb18e9883f09e417e5fc20dbb115014b138dd62d26bd506b6445101",
+           "system_file": DOCS_PROMPTS / "sv_prompt_v1_system.txt", "results": ROOT / "results" / "sv_benchmark"},
+    "v2": {"sha256": None, "system_file": None, "results": ROOT / "results" / "sv_benchmark_v2"},
+}
+# Few-shot examples per prompt version (synthetic, described in text; never benchmark images).
+SHOTS = {"v1": ["G03", "G05", "G06", "G09"],
+         "v2": ["G13", "G03", "G11", "G15", "G16", "G10", "G05", "G06", "G18", "G21"]}  # 5 positives / 5 negatives
 THRESHOLD = 50
 MODES = ("image_text", "text_only", "ambiguous")
 
@@ -51,30 +57,38 @@ def load_ambiguous() -> list[dict]:
             for a in notes if a["decision"] == "ambiguous"]
 
 
-def make_scorer(api_model: str, with_image: bool):
+def make_scorer(api_model: str, with_image: bool, prompt: str = "v1"):
     from harmwatch.policy_loader import load_examples, load_policy
     from harmwatch.sv_scores import SVScorer
 
     policy = load_policy("global", "generic", allow_no_approved=True)  # global entries still proposed → core only
     ex = {x["id"]: x for x in load_examples("global")}
-    return SVScorer(policy, [ex[i] for i in SHOTS], model=api_model, with_image=with_image), policy
+    scorer = SVScorer(policy, [ex[i] for i in SHOTS[prompt]], model=api_model, with_image=with_image)
+    if PROMPTS[prompt]["system_file"]:  # frozen text, independent of the current policy/ files
+        scorer.system = PROMPTS[prompt]["system_file"].read_text(encoding="utf-8")
+    return scorer, policy
 
 
 def cmd_freeze(args):
-    if PROMPT_FREEZE.exists():
-        sys.exit(f"Already frozen: {json.loads(PROMPT_FREEZE.read_text())['sha256']}")
-    scorer, policy = make_scorer("any", True)
-    fp = scorer.fingerprint()
-    (BENCH_DIR / "sv_prompt_v1_system.txt").write_text(scorer.system, encoding="utf-8")
-    PROMPT_FREEZE.write_text(json.dumps({"version": "sv_prompt_v1", "date": date.today().isoformat(), "sha256": fp,
-                                         "profile": policy.profile_version, "shots": SHOTS}, indent=2))
-    print(fp)
+    """Freeze a prompt built from the current policy/: writes docs/prompts/sv_prompt_<v>_system.txt and prints the
+    fingerprint to pin in PROMPTS. Refuses if that version is already pinned."""
+    if PROMPTS[args.prompt]["sha256"]:
+        sys.exit(f"{args.prompt} already frozen: {PROMPTS[args.prompt]['sha256']}")
+    scorer, policy = make_scorer("any", True, args.prompt)
+    DOCS_PROMPTS.mkdir(parents=True, exist_ok=True)
+    (DOCS_PROMPTS / f"sv_prompt_{args.prompt}_system.txt").write_text(scorer.system, encoding="utf-8")
+    (BENCH_DIR / f"sv_prompt_{args.prompt}.json").write_text(json.dumps(
+        {"version": f"sv_prompt_{args.prompt}", "date": date.today().isoformat(), "sha256": scorer.fingerprint(),
+         "profile": policy.profile_version, "shots": SHOTS[args.prompt]}, indent=2))
+    print(scorer.fingerprint())
 
 
-def check_prompt(scorer):
-    frozen = FROZEN_PROMPT_SHA256 or json.loads(PROMPT_FREEZE.read_text())["sha256"]
+def check_prompt(scorer, prompt: str = "v1"):
+    frozen = PROMPTS[prompt]["sha256"]
+    if not frozen:
+        sys.exit(f"sv_prompt_{prompt} is not frozen yet: run `freeze --prompt {prompt}` and pin the fingerprint.")
     if scorer.fingerprint() != frozen:
-        sys.exit("Prompt differs from the frozen sv_prompt_v1 fingerprint: refusing to run.")
+        sys.exit(f"Prompt differs from the frozen sv_prompt_{prompt} fingerprint: refusing to run.")
 
 
 class VramMonitor(threading.Thread):
@@ -98,11 +112,11 @@ class VramMonitor(threading.Thread):
 def cmd_run(args):
     from PIL import Image
 
-    scorer, policy = make_scorer(args.api_model, with_image=args.mode != "text_only")
-    check_prompt(scorer)
+    scorer, policy = make_scorer(args.api_model, with_image=args.mode != "text_only", prompt=args.prompt)
+    check_prompt(scorer, args.prompt)
     scorer.logprobs = not args.no_logprobs
     rows = load_ambiguous() if args.mode == "ambiguous" else load_bench()
-    out_dir = RESULTS / args.model / args.mode
+    out_dir = PROMPTS[args.prompt]["results"] / args.model / args.mode
     out_dir.mkdir(parents=True, exist_ok=True)
     items = [{"id": b["item_id"], "image": Image.open(ROOT / b["image"]), "text": b["text"], "lang": "en",
               "modality": "meme" if b["text"].strip() else "image"} for b in rows]
@@ -130,7 +144,7 @@ def cmd_run(args):
     info = {"model": args.model, "api_model": args.api_model, "backend": args.backend, "mode": args.mode,
             "n_items": len(items), "workers": args.workers, "total_seconds": round(total, 1),
             "images_per_min": round(60 * len(items) / total, 1), "vram_peak_mib": vram.peak,
-            "prompt_sha256": scorer.fingerprint(), "profile": policy.profile_version, "threshold": THRESHOLD}
+            "prompt": args.prompt, "prompt_sha256": scorer.fingerprint(), "profile": policy.profile_version, "threshold": THRESHOLD}
     (out_dir / "run_info.json").write_text(json.dumps(info, indent=2))
     print(json.dumps(info))
 
@@ -202,7 +216,7 @@ def cmd_score(args):
 
     from harmwatch.sv_scores import CATEGORY_REL, DIMENSIONS
 
-    out_dir = RESULTS / args.model / args.mode
+    out_dir = PROMPTS[args.prompt]["results"] / args.model / args.mode
     preds = [json.loads(l) for l in (out_dir / "predictions.jsonl").read_text().splitlines() if l.strip()]
     ok = [p for p in preds if p["prediction"]]
     err = [p for p in preds if not p["prediction"]]
@@ -354,7 +368,8 @@ def cmd_score(args):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("freeze")
+    fz = sub.add_parser("freeze")
+    fz.add_argument("--prompt", choices=list(PROMPTS), default="v2")
     r = sub.add_parser("run")
     r.add_argument("--model", required=True, help="name of the results folder")
     r.add_argument("--mode", choices=MODES, default="image_text")
@@ -362,9 +377,11 @@ def main():
     r.add_argument("--backend", default="llama.cpp")
     r.add_argument("--workers", type=int, default=8)
     r.add_argument("--no-logprobs", action="store_true")
+    r.add_argument("--prompt", choices=list(PROMPTS), default="v1")
     s = sub.add_parser("score")
     s.add_argument("--model", required=True)
     s.add_argument("--mode", choices=MODES, default="image_text")
+    s.add_argument("--prompt", choices=list(PROMPTS), default="v1")
     args = ap.parse_args()
     {"freeze": cmd_freeze, "run": cmd_run, "score": cmd_score}[args.cmd](args)
 

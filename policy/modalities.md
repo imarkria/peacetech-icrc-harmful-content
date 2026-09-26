@@ -5,7 +5,7 @@ Same definitions (core.md, children.md) for every format. Only the READING chang
 `modality` = text | image | meme | video | audio (one per item, set from the input, not guessed).
 
 ## MOD-TEXT
-The item is the text itself (post, caption, comment, transcript given as text). Layers from the platform profile (e.g. TG-L1..L3).
+The item is the text itself (post, caption, comment, transcript given as text). Layers from the platform profile.
 
 ## MOD-IMG Image (no text, or text that is only incidental)
 - The visual is used ONLY for (a) the conflict link (SV-EL-C: CONF-1 uniform, insignia, weapon; CONF-4 checkpoint, detention, ruins, camp) and (b) signs of manipulation (possible_manipulated_media: collage, edited or recycled picture, AI artefacts, caption contradicting the picture).
@@ -22,7 +22,7 @@ The item is the text itself (post, caption, comment, transcript given as text). 
 ## MOD-VID Video
 - Each layer is judged separately, then combined: `speech` (transcript), `on_screen_text` (OCR of frames), `caption` (title, description, post text), `sound` (music, chants, non-speech audio), `visuals` (sampled frames: conflict link and manipulation only, same limits as MOD-IMG).
 - `triggered_layer` = the layer that carries the harm; when only the combination does, the layer that makes it harmful (e.g. harmless visuals + threatening speech = `speech`).
-- A condemning caption over harmful footage: the caption is a separate speaker (like TG-L2): assess both, the footage still counts for leads.
+- A condemning caption over harmful footage: the caption is a separate speaker (like a forwarded or quoted original in the platform profile): assess both, the footage still counts for leads.
 
 ## MOD-AUD Audio (voice message, audio track)
 - Judged on the transcript (`speech`) and non-speech sound (`sound`). Voice is never used to identify a person (B1-3).

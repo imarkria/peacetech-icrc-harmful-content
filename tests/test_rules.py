@@ -137,16 +137,43 @@ def test_invalid_cited_ids_are_reported():
     assert a.invalid_ids == ["XX-99"]
 
 
-def test_age_indicators_on_neutral_text():
-    assert age_indicators("Ученица 9 класса победила в олимпиаде")
-    assert age_indicators("Дітей евакуювали з Херсона")
-    assert age_indicators("Він має 14 років")
-    assert not age_indicators("Девушки из волонтёрского штаба привезли воду")  # девушка is not an indicator
-    assert not age_indicators("Мне было 34 года")
-    assert not age_indicators("A kidnapped journalist; minority rights")
-    assert age_indicators("A 15-year-old boy won the regional chess cup")
-    assert age_indicators("The 14 yr old student gave a speech")
-    assert age_indicators("news/2021/shkolnica-vyigrala-olimpiadu")  # Latin transliteration in a URL
+def test_age_indicators_on_neutral_text():  # ru/uk words come from the ru_ua profile (core v1.3), en from global
+    ru_ua = load_policy("ru_ua").age_matcher
+    assert age_indicators("Ученица 9 класса победила в олимпиаде", ru_ua)
+    assert age_indicators("Дітей евакуювали з Херсона", ru_ua)
+    assert age_indicators("Він має 14 років", ru_ua)
+    assert not age_indicators("Девушки из волонтёрского штаба привезли воду", ru_ua)  # девушка is not an indicator
+    assert not age_indicators("Мне было 34 года", ru_ua)
+    assert not age_indicators("A kidnapped journalist; minority rights", ru_ua)
+    assert age_indicators("A 15-year-old boy won the regional chess cup", ru_ua)
+    assert age_indicators("The 14 yr old student gave a speech", ru_ua)
+    assert age_indicators("news/2021/shkolnica-vyigrala-olimpiadu", ru_ua)  # Latin transliteration in a URL
+    assert age_indicators("Ей двенадцать лет, она победила в конкурсе", ru_ua)  # age in letters
+
+
+@pytest.mark.parametrize("text", [  # TODO_SECURITE cases, neutral text only (CH-5)
+    "I'm only 12 and I love chess", "I’m only twelve", "she's 15 and already at university",
+    "a one-month-old puppy", "the 38-day-old baby slept", "6 month old twins", "a fifteen-year-old won the prize",
+    "twelve years old and a champion", "she is in 7th grade", "a newborn in the ward", "the orphanage choir sang",
+])
+def test_age_indicators_generic_english(text):
+    assert age_indicators(text), text
+
+
+@pytest.mark.parametrize("text", [
+    "only 15 minutes left", "top 12 items of the week", "back in the 1990s", "I'm 34 and tired",
+    "12 years ago we moved", "the girl at the counter was 25", "a 5-year plan", "he scored 17 points",
+    "grade A coffee", "I'm 12 minutes late",
+])
+def test_age_indicators_generic_english_negatives(text):
+    assert not age_indicators(text), text
+
+
+def test_region_age_terms_add_to_the_generic_ones():
+    ru_ua = load_policy("ru_ua")
+    assert "en" in ru_ua.age_terms and "ru" in ru_ua.age_terms  # global + region, raise-only
+    assert age_indicators("Ей 13, она пишет стихи", ru_ua.age_matcher)
+    assert not age_indicators("Ей 13, она пишет стихи")  # the generic profile alone has no Russian words
 
 
 def test_normalize_evasion():
@@ -218,7 +245,10 @@ def test_compact_possible_minor_blanks_everything():
     a = fin(compact(risk_flags={"possible_minor": True, "identifiable_person": False,
                                 "possible_manipulated_media": False}))
     assert a.route == "restricted_escalation" and a.reason == "" and a.hi_types == [] and a.restricted_reason == "model"
-    assert fin(compact(), text="Ученица 9 класса").restricted_reason == "rule_age"  # neutral text (CH-5)
+    ru_ua = load_policy("ru_ua").age_matcher  # neutral text (CH-5)
+    from harmwatch.vision import finalize_compact
+    assert finalize_compact(compact(), item_id="t", modality="meme", embedded_text="Ученица 9 класса",
+                            age_matcher=ru_ua).restricted_reason == "rule_age"
 
 
 def test_assessment_has_modality_and_loader_has_modalities_layer():
@@ -250,7 +280,10 @@ def test_sv_scores_possible_minor_blanks_scores():
 
     a = finalize_scores(sv_out(possible_minor=True), item_id="t")
     assert a.scores is None and a.reason == "" and a.sexual and a.restricted_reason == "model"
-    assert finalize_scores(sv_out(), item_id="t", embedded_text="Ученица 9 класса").restricted_reason == "rule_age"
+    ru_ua = load_policy("ru_ua").age_matcher
+    assert finalize_scores(sv_out(), item_id="t", embedded_text="Ученица 9 класса",
+                           age_matcher=ru_ua).restricted_reason == "rule_age"
+    assert finalize_scores(sv_out(), item_id="t", embedded_text="I'm only 12").restricted_reason == "rule_age"
 
 
 def test_sv_scores_not_sexual_clears_relation():

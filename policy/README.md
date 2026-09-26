@@ -4,9 +4,10 @@ The classifier's instructions are assembled from these files by `harmwatch/polic
 
 ```
 core.md                      definitions, flag rule, priority, barriers B1-B6        (highest precedence)
-children.md                  minors: hard stop B1-1, age indicators CH-2
+children.md                  minors: hard stop B1-1, TYPES of age indicators CH-2 (no word lists)
+modalities.md                how each format is read (text, image, meme, video, audio)
 platforms/telegram.md        Telegram layers TG-L1..L8, reach, evasion
-regions/<code>.yaml          region profile: groups, slurs, SV terms, actors, places, narratives, priority rules
+regions/<code>.yaml          region profile: languages, age terms, groups, slurs, SV terms, actors, places, narratives, priority rules
 regions/<code>_examples.jsonl  annotated few-shot examples for that region               (lowest precedence)
 regions/<code>_filter.yaml    search patterns to extract candidates from a corpus (never evidence for a label)
 ```
@@ -21,7 +22,11 @@ python scripts/approve_region.py ru_ua --by <name>                 # one by one
 python scripts/approve_region.py ru_ua --by <name> --approve-all   # bulk, with confirmation
 ```
 
-Every entry has a `review_by` date. `harmwatch/lexicon.py` reads the age indicators straight from `children.md` (the `ru:` / `uk:` / `en:` lines of CH-2), so edit them there.
+Every entry has a `review_by` date.
+
+**The core is universal** (core v1.3): `core.md`, `children.md`, `modalities.md` and the general judge instructions contain no country, language, local term, place or actor (enforced by `tests/test_core_universal.py`). Everything local lives in `regions/<code>.*`.
+
+**Age words** (CH-2) are in the `age_terms` block of each region profile (words, units, ages in letters, stated-age phrases, school grades, institutions, and what makes a number NOT an age). `harmwatch/lexicon.py` merges the generic profile (`global.yaml`, English) with the selected region; age terms can only add indicators, never remove one.
 
 ## Selecting a region
 
@@ -31,7 +36,7 @@ REGION=ru_ua python -m harmwatch.pipeline        # or --region ru_ua in the scri
 
 ## Adding a country
 
-1. Copy `regions/ru_ua.yaml` to `regions/<code>.yaml` and replace the header (languages, time window, heightened-risk groups, owner) and the entries. Keep the entry format; set every entry to `status: proposed`.
+1. Copy `regions/ru_ua.yaml` to `regions/<code>.yaml` and replace the header (languages, time window, heightened-risk groups, owner), the `age_terms` for each local language, and the entries. Keep the entry format; set every entry to `status: proposed`.
 2. Copy `regions/ru_ua_examples.jsonl` to `regions/<code>_examples.jsonl` and write synthetic, non-graphic examples in the local languages. Test cases involving minors stay abstract placeholders (`<SV term> + <age indicator>`), never realistic text.
 3. Optional, for corpus extraction: copy `regions/ru_ua_filter.yaml` to `regions/<code>_filter.yaml` and write patterns for the local languages (`scripts/extract_sv.py`).
 4. Approve the entries with `scripts/approve_region.py <code>`.

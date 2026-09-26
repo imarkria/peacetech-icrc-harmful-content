@@ -1,7 +1,7 @@
 """Deterministic lexicon checks: normalisation, age indicators (children.md CH-2), region term hits.
 
-Nothing here is country-specific: age indicators are read from policy/children.md and terms
-from the approved entries of the selected region profile.
+Nothing here is country-specific: age indicators come from the `age_terms` of the loaded region profiles and
+terms from the approved entries of the selected region profile.
 """
 
 import re
@@ -56,13 +56,11 @@ def _term_pattern(term: str) -> str:
 
 
 # --- Age indicators (CH-2) -------------------------------------------------------
+# children.md CH-2 only describes the TYPES of indicators; the words for each language are in the `age_terms` of
+# the region profiles (policy/regions/*.yaml). Nothing language-specific is hard-coded here.
 
-_AGE_NUMBER = re.compile(
-    r"(?<!\d)(?:[1-9]|1[0-7])\s*-?\s*(?:лет|года|год|летн\w*|років|рік|роки|річн\w*|y\.?\s?o\.?|y/o|yo"
-    r"|yrs?\.?\s*-?\s*old|years?\s*-?\s*old)(?!\w)")
-
-# Latin transliteration of Russian/Ukrainian (URLs, evasion: "shkolnica", "iznasilovanie"). Soft/hard signs are
-# dropped on both sides before age-term matching, since transliterations usually omit them.
+# Latin transliteration of Cyrillic (URLs, evasion: "shkolnica"). Soft/hard signs are dropped on both sides before
+# age-term matching, since transliterations usually omit them.
 _TRANSLIT_MULTI = [("shch", "щ"), ("sch", "щ"), ("zh", "ж"), ("kh", "х"), ("ch", "ч"), ("sh", "ш"), ("ts", "ц"),
                    ("yu", "ю"), ("ya", "я"), ("ye", "е"), ("yo", "е"), ("ju", "ю"), ("ja", "я")]
 _TRANSLIT_ONE = str.maketrans("abvgdezijklmnoprstufhcwx", "абвгдезийклмнопрстуфхцвк")
@@ -75,42 +73,87 @@ def _translit(text: str) -> str:
         w = re.sub(r"(?<=[аеиоуяюэ])y", "й", w)
         return w.replace("y", "ы").translate(_TRANSLIT_ONE)
     return re.sub(r"[a-z]+", lambda m: word(m.group()), text)
-_GRADE = re.compile(r"(?<!\d)(?:[1-9]|1[01])\s*(?:-?\s*(?:й|ий|го)\s*)?(?:класс\w*|клас\w*|grade)(?!\w)")
 
 
-def _children_terms() -> list[str]:
-    """Word lists from the CH-2 bullet lines of children.md (ru:/uk:/en: and orphanage terms)."""
-    text = (POLICY_DIR / "children.md").read_text(encoding="utf-8")
-    terms: list[str] = []
-    for line in text.splitlines():
-        m = re.match(r"\s*-\s*(ru|uk|en):\s*(.+?);?\s*$", line)
-        if m:
-            terms += [t.strip(" ;.") for t in m.group(2).split(",")]
-    m = re.search(r"orphanage \(([^)]+)\)", text)
-    if m:
-        terms += [t.strip() for t in m.group(1).split(",")]
-    return [t for t in terms if t]
+def _unit(u: str) -> str:
+    r"""'years old' → years[\s-]+old ; 'летн*' → летн\w* ; spaces and hyphens are interchangeable."""
+    parts = [re.escape(p[:-1]) + r"\w*" if p.endswith("*") else re.escape(p) for p in u.lower().split()]
+    return r"[\s-]+".join(parts)
 
 
-_AGE_TERMS: list[re.Pattern] | None = None
+def _alt(items) -> str:
+    return "|".join(sorted(items, key=len, reverse=True))
 
 
-def age_indicators(text: str) -> list[str]:
-    """Which CH-2 indicators occur (labels only, never the matched span)."""
-    global _AGE_TERMS
-    if _AGE_TERMS is None:
-        _AGE_TERMS = [re.compile(_term_pattern(t).replace("ь", "").replace("ъ", "")) for t in _children_terms()]
-    lower = text.lower().replace("ё", "е")  # digits must not go through the homoglyph map
-    norm = normalize(text).replace("ь", "").replace("ъ", "")
-    norm += "\n" + _translit(lower).replace("ь", "").replace("ъ", "")
-    hits = []
-    if _AGE_NUMBER.search(lower):
-        hits.append("stated_age")
-    if _GRADE.search(lower):
-        hits.append("school_grade")
-    if any(p.search(norm) for p in _AGE_TERMS):
-        hits.append("age_term")
-    return hits
+class AgeMatcher:
+    """Compiled CH-2 indicators for the `age_terms` of the loaded profiles ({lang: {words, age_units, ...}})."""
+
+    def __init__(self, age_terms: dict):
+        self.term_patterns: list[re.Pattern] = []
+        self.numeric: list[tuple[str, re.Pattern]] = []
+        for lang, t in age_terms.items():
+            if not isinstance(t, dict):
+                continue  # "note"
+            for w in list(t.get("words", [])) + list(t.get("institutions", [])):
+                self.term_patterns.append(re.compile(_term_pattern(w).replace("ь", "").replace("ъ", "")))
+            words = {k.lower(): v for k, v in (t.get("number_words") or {}).items()}
+            minor_words = [re.escape(k) for k, v in words.items() if v < 18]
+            any_words = [re.escape(k) for k in words]
+            # a number that is not part of a bigger number or a decimal ("13," is fine, "1.13" or "113" is not)
+            minor = r"(?:(?<!\d)(?<!\d[.,])(?:[1-9]|1[0-7])(?!\d)(?![.,]\d)" + (f"|\\b(?:{_alt(minor_words)})" if minor_words else "") + ")"
+            anynum = r"(?:(?<!\d)(?<!\d[.,])\d{1,3}(?!\d)(?![.,]\d)" + (f"|\\b(?:{_alt(any_words)})" if any_words else "") + ")"
+            stop = t.get("not_followed_by") or []
+            not_after = (r"(?!\s*-?\s*(?:" + _alt([_unit(x) for x in stop]) + r")(?!\w))") if stop else ""
+            if t.get("age_units"):
+                self.numeric.append(("stated_age", re.compile(
+                    minor + r"\s*[\s-]?\s*(?:" + _alt(_unit(u) for u in t["age_units"]) + r")(?!\w)")))
+            if t.get("infant_units"):
+                self.numeric.append(("infant_age", re.compile(
+                    anynum + r"\s*[\s-]?\s*(?:" + _alt(_unit(u) for u in t["infant_units"]) + r")(?!\w)")))
+            for ph in t.get("stated_age_phrases") or []:
+                before, _, after = ph.lower().partition("{n}")
+                self.numeric.append(("stated_age", re.compile(
+                    r"(?<!\w)" + re.escape(before) + minor + re.escape(after) + r"(?!\w)" + not_after)))
+            grade = r"(?<!\d)(?:[1-9]|1[0-2])(?!\d)"
+            for gp in t.get("grade_patterns") or []:
+                before, _, after = gp.lower().partition("{n}")
+                self.numeric.append(("school_grade", re.compile(
+                    r"(?<!\w)" + (_unit(before) + r"[\s-]*" if before.strip() else "") + grade
+                    + (r"[\s-]*" + _unit(after) if after.strip() else "") + r"(?!\w)")))
+
+    def hits(self, text: str) -> list[str]:
+        lower = text.lower().replace("ё", "е").replace("’", "'")  # digits must not go through the homoglyph map
+        norm = normalize(text).replace("ь", "").replace("ъ", "")
+        norm += "\n" + _translit(lower).replace("ь", "").replace("ъ", "")
+        found = []
+        for label, p in self.numeric:
+            if label not in found and p.search(lower):
+                found.append(label)
+        if any(p.search(norm) for p in self.term_patterns):
+            found.append("age_term")
+        return found
+
+
+_DEFAULT: AgeMatcher | None = None
+
+
+def default_age_terms() -> dict:
+    """The generic profile's age terms (policy/regions/global.yaml): used when no profile is given."""
+    import yaml
+
+    doc = yaml.safe_load((POLICY_DIR / "regions" / "global.yaml").read_text(encoding="utf-8"))
+    return doc.get("age_terms") or {}
+
+
+def age_indicators(text: str, matcher: AgeMatcher | None = None) -> list[str]:
+    """Which CH-2 indicator types occur (labels only, never the matched span). `matcher` comes from the loaded
+    policy (Policy.age_matcher); without one, the generic profile's terms are used."""
+    global _DEFAULT
+    if matcher is None:
+        if _DEFAULT is None:
+            _DEFAULT = AgeMatcher(default_age_terms())
+        matcher = _DEFAULT
+    return matcher.hits(text)
 
 
 # --- Region terms ---------------------------------------------------------------

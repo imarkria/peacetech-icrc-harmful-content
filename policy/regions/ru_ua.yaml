@@ -22,6 +22,144 @@ heightened_risk_groups:
 owner: gmikou
 approval: Approved by gmikou for the hackathon (2026-09-26); to be validated by the ICRC / a local partner.
 neutrality: Both sides, same rules.
+age_terms:
+  note: 'Moved from children.md CH-2 and lexicon.py (core v1.3). note: words / institutions = terms (* = prefix);
+    age_units = years (a number under 18 is needed); infant_units = days, weeks or months (any number); number_words
+    = ages written in letters; stated_age_phrases and grade_patterns use {n} for the number; not_followed_by lists
+    what makes a number NOT an age ("only 15 minutes"). Raise-only: a match never lowers anything.'
+  ru:
+    words:
+    - ребёнок
+    - дети
+    - девочка
+    - мальчик
+    - школьница
+    - школьник
+    - малолетка
+    - несовершеннолетн*
+    - подросток
+    - ученица
+    - ученик
+    - младенец
+    - малыш*
+    age_units:
+    - лет
+    - года
+    - год
+    - летн*
+    institutions:
+    - детдом
+    - детский дом
+    - интернат
+    number_words:
+      один: 1
+      два: 2
+      три: 3
+      четыре: 4
+      пять: 5
+      шесть: 6
+      семь: 7
+      восемь: 8
+      девять: 9
+      десять: 10
+      одиннадцать: 11
+      двенадцать: 12
+      тринадцать: 13
+      четырнадцать: 14
+      пятнадцать: 15
+      шестнадцать: 16
+      семнадцать: 17
+    stated_age_phrases:
+    - мне {n}
+    - ей {n}
+    - ему {n}
+    infant_units:
+    - месяц*
+    - недел*
+    - дней
+    - дня
+    - день
+    - дневн*
+    grade_patterns:
+    - '{n} класс*'
+    - '{n}-й класс*'
+    - '{n}-го класс*'
+    - '{n}-м класс*'
+    not_followed_by:
+    - минут*
+    - час*
+    - рубл*
+    - '%'
+    - процент*
+    - раз*
+    - штук*
+    - подписчик*
+  uk:
+    words:
+    - дитина
+    - діти
+    - дівчинка
+    - хлопчик
+    - школярка
+    - школяр
+    - неповнолітн*
+    - підліток
+    - учениця
+    - учень
+    - немовля
+    - малюк*
+    age_units:
+    - років
+    - рік
+    - роки
+    - річн*
+    institutions:
+    - дитбудинок
+    - дитячий будинок
+    - інтернат
+    number_words:
+      один: 1
+      два: 2
+      три: 3
+      чотири: 4
+      п'ять: 5
+      шість: 6
+      сім: 7
+      вісім: 8
+      дев'ять: 9
+      десять: 10
+      одинадцять: 11
+      дванадцять: 12
+      тринадцять: 13
+      чотирнадцять: 14
+      п'ятнадцять: 15
+      шістнадцять: 16
+      сімнадцять: 17
+    stated_age_phrases:
+    - мені {n}
+    - їй {n}
+    - йому {n}
+    infant_units:
+    - місяц*
+    - тиж*
+    - днів
+    - дні
+    - день
+    - денн*
+    grade_patterns:
+    - '{n} клас*'
+    - '{n}-й клас*'
+    - '{n}-го клас*'
+    - '{n}-му клас*'
+    not_followed_by:
+    - хвилин*
+    - годин*
+    - гривен*
+    - '%'
+    - відсот*
+    - раз*
+    - штук*
+    - підписник*
 entries:
 - id: RG-GROUP-001
   type: RG-GROUP
@@ -1344,3 +1482,63 @@ entries:
   created: '2026-09-26'
   review_by: '2027-03-26'
   decided: 2026-09-26 by gmikou
+- id: RG-CONTEXT-001
+  type: RG-CONTEXT
+  language: multi
+  value: deported / transferred Ukrainian children (documented; ICC warrants 2023)
+  refers_to: children (formerly children.md CH-3)
+  meaning: Exposure of these children = HI-TYPE-03 + HP-03 + identifiable_person; trafficking claims = SV-REL-3
+    or SV-REL-1 + HI-TYPE-01/02; UN/NGO reporting = B2-3.
+  supports:
+  - HI-TYPE-03
+  - HP-03
+  - SV-REL-3
+  - SV-REL-1
+  - B2-3
+  - CH-1b
+  context_notes: 'Priority: RG-PRIORITY-005. Identities are never repeated.'
+  region: ru_ua
+  status: approved
+  source_cases: &id001
+  - moved from core (core v1.3), text approved by gmikou 2026-09-26
+  proposed_by: gmikou (moved from core)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou (moved from core v1.2, core v1.3)
+- id: RG-STANCE-001
+  type: RG-STANCE
+  language: ru
+  value: говорят / говорят, что
+  refers_to: unsourced rumour marker
+  meaning: 'Unsourced rumour: FT-STANCE unclear, not reports (core v1.1 clarification); SV-REL-1 possible.'
+  supports:
+  - FT-STANCE
+  - SV-REL-1
+  context_notes: ''
+  region: ru_ua
+  status: approved
+  source_cases: *id001
+  proposed_by: gmikou (moved from core)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou (moved from core v1.2, core v1.3)
+- id: RG-STANCE-002
+  type: RG-STANCE
+  language: uk
+  value: кажуть / кажуть, що
+  refers_to: unsourced rumour marker
+  meaning: 'Unsourced rumour: FT-STANCE unclear, not reports (core v1.1 clarification); SV-REL-1 possible.'
+  supports:
+  - FT-STANCE
+  - SV-REL-1
+  context_notes: ''
+  region: ru_ua
+  status: approved
+  source_cases: *id001
+  proposed_by: gmikou (moved from core)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou (moved from core v1.2, core v1.3)

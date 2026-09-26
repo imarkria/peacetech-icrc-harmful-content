@@ -2,7 +2,7 @@
 
 ## Layers
 
-Analyse separately, report `triggered_layer`.
+Analyse separately, report `triggered_layer` = the layer that carries the harm: TG-L1 when the harm is in the post text itself; TG-L2 when it is in the forwarded original (also when the TG-L1 speaker reposts it to condemn it).
 
 - **TG-L1** post text or caption;
 - **TG-L2** forward origin (fwd_from) = separate speaker with its own stance (repost to condemn vs to amplify);
