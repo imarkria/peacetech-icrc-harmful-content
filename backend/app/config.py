@@ -5,7 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_JWT_SECRET = "replace-this-in-a-real-environment"
 DEMO_REVIEWER_EMAIL = "reviewer@icrc.org"
-DEMO_REVIEWER_PASSWORD = "reviewer"
+DEMO_VOLUNTEER_EMAIL = "volunteer@icrc.org"
+DEMO_PASSWORD = "reviewer"
 
 
 class Settings(BaseSettings):
@@ -18,8 +19,19 @@ class Settings(BaseSettings):
     cors_origin_regex: str = r"chrome-extension://.*"
     cookie_secure: bool = False
     seed_demo_data: bool = True
-    demo_reviewer_password: str = DEMO_REVIEWER_PASSWORD
-    ingest_token: str = ""  # shared with the harmwatch publisher; empty disables POST /api/detections
+    demo_password: str = DEMO_PASSWORD  # for the demo reviewer and the demo volunteer
+    ingest_token: str = ""  # shared with harmwatch; empty disables POST /api/detections and model screening
+    report_rate_limit: str = "5/600"  # community reports per client IP: <count>/<seconds>; 0/1 disables
+    screening_timeout_minutes: int = 30  # unscreened community reports reach the queue after this delay
+
+    @property
+    def rate_limit(self) -> tuple[int, int]:
+        count, seconds = self.report_rate_limit.split("/")
+        return int(count), int(seconds)
+
+    @property
+    def screening_enabled(self) -> bool:
+        return bool(self.ingest_token)
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=False, extra="ignore")
 
@@ -31,8 +43,8 @@ class Settings(BaseSettings):
         problems = []
         if self.jwt_secret == DEFAULT_JWT_SECRET or len(self.jwt_secret) < 32:
             problems.append("JWT_SECRET must be set to a random value of at least 32 characters")
-        if self.seed_demo_data and self.demo_reviewer_password == DEMO_REVIEWER_PASSWORD:
-            problems.append("SEED_DEMO_DATA=true needs DEMO_REVIEWER_PASSWORD, or set SEED_DEMO_DATA=false")
+        if self.seed_demo_data and self.demo_password == DEMO_PASSWORD:
+            problems.append("SEED_DEMO_DATA=true needs DEMO_PASSWORD, or set SEED_DEMO_DATA=false")
         if not self.cookie_secure:
             problems.append("COOKIE_SECURE must be true (HTTPS)")
         if self.ingest_token and len(self.ingest_token) < 32:

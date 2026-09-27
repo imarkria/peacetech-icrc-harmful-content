@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
-from .models import ReviewDecision, ReviewStatus, UserRole, ViolationCategory
+from .models import Priority, ReviewDecision, ReviewStatus, UserRole, ViolationCategory
 
 
 class LoginRequest(BaseModel):
@@ -41,14 +41,49 @@ class ReportResponse(BaseModel):
 
 
 class DetectionCreate(BaseModel):
-    """A link flagged by the harmwatch pipeline. `external_id` makes repeated sends idempotent."""
+    """One sighting sent by harmwatch. Sightings with the same group_key are copies of the same content.
+    `external_id` makes repeated sends idempotent."""
     external_id: str = Field(min_length=1, max_length=48, pattern=r"^[A-Za-z0-9_.:-]+$")
+    group_key: str | None = Field(default=None, max_length=64, pattern=r"^[A-Za-z0-9_.:-]+$")
     url: HttpUrl
     predicted_category: ViolationCategory
     confidence: float = Field(ge=0, le=1)
+    priority: Priority = Priority.STANDARD
     source: Literal["SCRAP", "PUBLIC"] = "SCRAP"
     detected_at: datetime | None = None
     context: str = Field(min_length=1, max_length=2000)
+
+
+class VolunteerReportCreate(BaseModel):
+    """Structured report from a trained volunteer: goes to the priority lane, no model screening."""
+    url: HttpUrl
+    category: ViolationCategory
+    harm_types: list[Literal["threat_incitement", "glorification", "mockery", "victim_identification",
+                             "stigmatization", "sexually_explicit", "denial_or_disinformation",
+                             "unverified_claim"]] = Field(default_factory=list, max_length=8)
+    urgency: Literal["urgent", "high", "standard"] = "high"
+    context: str = Field(min_length=10, max_length=2000)
+
+
+class VolunteerReportResponse(BaseModel):
+    reference: str
+    link_id: str
+    duplicate: bool  # the content was already in the queue: the report was added to it
+
+
+class ScreeningItem(BaseModel):
+    id: str
+    url: HttpUrl
+    platform: str
+
+
+class ScreeningResult(BaseModel):
+    """Model screening of a community report, sent by `python -m harmwatch.screen`."""
+    outcome: Literal["flagged", "not_flagged", "restricted", "unavailable"]
+    priority: Priority = Priority.STANDARD
+    confidence: float = Field(default=0.0, ge=0, le=1)
+    summary: str | None = Field(default=None, max_length=1000)
+    group_key: str | None = Field(default=None, max_length=64, pattern=r"^[A-Za-z0-9_.:-]+$")
 
 
 class ReviewEvidence(BaseModel):
@@ -66,6 +101,16 @@ class ReviewSummary(BaseModel):
     evidence: ReviewEvidence | None = None
 
 
+class OccurrenceResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    url: HttpUrl
+    platform: str
+    source: str
+    note: str | None = None
+    seen_at: datetime
+
+
 class DetectedLinkResponse(BaseModel):
     id: str
     url: HttpUrl
@@ -76,6 +121,9 @@ class DetectedLinkResponse(BaseModel):
     status: ReviewStatus
     detected_at: datetime
     context: str
+    priority: Priority
+    occurrence_count: int
+    occurrences: list[OccurrenceResponse] = Field(default_factory=list)
     review: ReviewSummary | None = None
 
 

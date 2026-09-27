@@ -3,8 +3,9 @@ from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .config import DEMO_REVIEWER_EMAIL, get_settings
-from .models import DetectedLink, Review, ReviewDecision, ReviewStatus, User, UserRole, ViolationCategory
+from .config import DEMO_REVIEWER_EMAIL, DEMO_VOLUNTEER_EMAIL, get_settings
+from .intake import normalize_url
+from .models import DetectedLink, Occurrence, Review, ReviewDecision, ReviewStatus, User, UserRole, ViolationCategory
 from .security import hash_password
 
 
@@ -77,11 +78,14 @@ SEED_LINKS = [
 
 
 def seed_demo_data(db: Session) -> None:
+    password = get_settings().demo_password
     reviewer = db.scalar(select(User).where(User.email == DEMO_REVIEWER_EMAIL))
     if reviewer is None:
-        password = get_settings().demo_reviewer_password
         reviewer = User(email=DEMO_REVIEWER_EMAIL, password_hash=hash_password(password), role=UserRole.REVIEWER.value)
         db.add(reviewer)
+        db.flush()
+    if db.scalar(select(User).where(User.email == DEMO_VOLUNTEER_EMAIL)) is None:
+        db.add(User(email=DEMO_VOLUNTEER_EMAIL, password_hash=hash_password(password), role=UserRole.VOLUNTEER.value))
         db.flush()
 
     if db.scalar(select(DetectedLink.id).limit(1)) is not None:
@@ -92,7 +96,8 @@ def seed_demo_data(db: Session) -> None:
         link_data = dict(original_data)
         review_decision = link_data.pop("review_decision", None)
         reviewed_at = link_data.pop("reviewed_at", None)
-        link = DetectedLink(**link_data)
+        link = DetectedLink(**link_data, normalized_url=normalize_url(link_data["url"]), occurrence_count=1)
+        link.occurrences.append(Occurrence(url=link.url, platform=link.platform, source="SCRAP", seen_at=link.detected_at))
         db.add(link)
         if review_decision:
             db.flush()

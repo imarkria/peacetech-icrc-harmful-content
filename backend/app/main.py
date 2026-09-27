@@ -1,38 +1,49 @@
 import secrets
-from contextlib import asynccontextmanager
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
-from urllib.parse import urlparse
+from contextlib import asynccontextmanager
+from datetime import datetime, timedelta, timezone
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import func, select, text
+from sqlalchemy import case, func, select, text
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, selectinload
 
 from .config import get_settings
-from .database import SessionLocal, engine, get_db, initialize_database
-from .models import DetectedLink, PublicReport, Review, ReviewDecision, ReviewStatus, User
+from .database import SessionLocal, get_db, initialize_database
+from .intake import RateLimiter, add_occurrence, find_group, new_link, normalize_url
+from .models import DetectedLink, Occurrence, PublicReport, Review, ReviewDecision, ReviewStatus, Source, User
 from .schemas import (
+    AnalysisCount,
+    AnalysisResponse,
+    AnalysisTrendPoint,
     DetectedLinkResponse,
     DetectionCreate,
     HealthResponse,
     LoginRequest,
     LoginResponse,
+    OccurrenceResponse,
     ReportCreate,
     ReportResponse,
     ReviewQueueResponse,
-    AnalysisResponse,
-    AnalysisCount,
-    AnalysisTrendPoint,
     ReviewSubmit,
     ReviewSummary,
+    ScreeningItem,
+    ScreeningResult,
     UserResponse,
+    VolunteerReportCreate,
+    VolunteerReportResponse,
 )
-from .security import create_access_token, require_reviewer, verify_password
+from .security import create_access_token, get_current_user, require_reviewer, require_volunteer, verify_password
 from .seed import seed_demo_data
 
 settings = get_settings()
+report_limiter = RateLimiter(*settings.rate_limit)
+
+# Reviewers only ever see these. SCREENING waits for the model; RESTRICTED (possible minor) is never listed or shown.
+VISIBLE_STATUSES = (ReviewStatus.PENDING.value, ReviewStatus.REVIEWED.value)
+PRIORITY_ORDER = case({"urgent": 0, "high": 1, "standard": 2, "none": 3}, value=DetectedLink.priority, else_=4)
+DEFAULT_PUBLIC_CONTEXT = "Submitted by a member of the public for reviewer assessment."
 
 
 @asynccontextmanager
@@ -42,11 +53,12 @@ async def lifespan(_: FastAPI):
         with SessionLocal() as db:
             seed_demo_data(db)
     with SessionLocal() as db:
+        backfill_links(db)
         sync_public_reports_to_queue(db)
     yield
 
 
-app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="0.2.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
@@ -76,36 +88,66 @@ def to_link_response(link: DetectedLink) -> DetectedLinkResponse:
         status=link.status,
         detected_at=link.detected_at,
         context=link.context,
+        priority=link.priority,
+        occurrence_count=link.occurrence_count,
+        occurrences=[OccurrenceResponse.model_validate(o) for o in link.occurrences],
         review=review,
     )
 
 
-def public_report_platform(url: str) -> str:
-    hostname = (urlparse(url).hostname or "").lower()
-    return "Telegram" if hostname in {"t.me", "telegram.me", "www.t.me", "www.telegram.me"} else "Web"
+def load_link(db: Session, link_id: str, visible_only: bool = True) -> DetectedLink | None:
+    query = (select(DetectedLink)
+             .options(joinedload(DetectedLink.review), selectinload(DetectedLink.occurrences))
+             .where(DetectedLink.id == link_id))
+    if visible_only:
+        query = query.where(DetectedLink.status.in_(VISIBLE_STATUSES))
+    return db.scalar(query)
+
+
+def backfill_links(db: Session) -> None:
+    """Links created before grouping existed: give them a normalised URL and their first occurrence."""
+    links = db.scalars(select(DetectedLink).where(DetectedLink.normalized_url.is_(None))).all()
+    for link in links:
+        link.normalized_url = normalize_url(link.url)
+        if not link.occurrences:
+            add_occurrence(link, url=link.url, source=link.source, seen_at=link.detected_at)
+    if links:
+        db.commit()
 
 
 def sync_public_reports_to_queue(db: Session) -> None:
-    reports = db.scalars(select(PublicReport).order_by(PublicReport.id)).all()
+    """Public reports stored before they were added to the queue on creation."""
     created = False
-    for report in reports:
-        link_id = f"public-{report.id}"
-        if db.get(DetectedLink, link_id):
+    for report in db.scalars(select(PublicReport).order_by(PublicReport.id)).all():
+        if db.get(DetectedLink, f"public-{report.id}") or find_group(db, None, normalize_url(report.url)):
             continue
-        db.add(DetectedLink(
-            id=link_id,
-            url=report.url,
-            platform=public_report_platform(report.url),
-            predicted_category=report.category,
-            confidence=0.0,
-        source="PUBLIC",
-            status=ReviewStatus.PENDING.value,
-            detected_at=report.created_at,
-            context=report.reason or "Submitted by a public user for reviewer assessment.",
-        ))
+        link = new_link(link_id=f"public-{report.id}", url=report.url, source=Source.PUBLIC.value,
+                        category=report.category, confidence=0.0, priority="standard",
+                        context=report.reason or DEFAULT_PUBLIC_CONTEXT, detected_at=report.created_at)
+        add_occurrence(link, url=report.url, source=Source.PUBLIC.value, note=report.reason, seen_at=report.created_at)
+        db.add(link)
         created = True
     if created:
         db.commit()
+
+
+def release_stale_screening(db: Session) -> None:
+    """Community reports are never lost: if the model has not screened them in time, they reach the queue unscreened."""
+    cutoff = datetime.now(timezone.utc) - timedelta(minutes=settings.screening_timeout_minutes)
+    stale = db.scalars(select(DetectedLink).where(DetectedLink.status == ReviewStatus.SCREENING.value,
+                                                  DetectedLink.detected_at < cutoff)).all()
+    for link in stale:
+        link.status = ReviewStatus.PENDING.value
+        link.context = f"{link.context}\nNot screened by the model (timed out)."
+    if stale:
+        db.commit()
+
+
+def require_ingest_token(x_ingest_token: str | None = Header(default=None)) -> None:
+    if not settings.ingest_token:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Detection ingestion is disabled (INGEST_TOKEN is not set)")
+    if not x_ingest_token or not secrets.compare_digest(x_ingest_token, settings.ingest_token):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid ingest token")
 
 
 @app.get("/", tags=["system"])
@@ -146,29 +188,31 @@ def logout(response: Response) -> None:
 
 
 @app.get("/api/me", response_model=UserResponse, tags=["auth"])
-def me(user: User = Depends(require_reviewer)) -> UserResponse:
+def me(user: User = Depends(get_current_user)) -> UserResponse:
     return UserResponse.model_validate(user)
 
 
-@app.post("/api/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED, tags=["public reports"])
-def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> ReportResponse:
-    report_url = str(payload.url)
-    report_reason = payload.reason.strip() or None if payload.reason else None
-    report = PublicReport(url=report_url, category=payload.category.value, reason=report_reason)
+# --- Community lane: anyone, anonymous, rate-limited, screened by the model when harmwatch is connected -------------
+
+@app.post("/api/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED, tags=["community reports"])
+def create_report(payload: ReportCreate, request: Request, db: Session = Depends(get_db)) -> ReportResponse:
+    if not report_limiter.allow(request.client.host if request.client else "unknown"):
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Too many reports. Please try again later.")
+    url = str(payload.url)
+    reason = payload.reason.strip() or None if payload.reason else None
+    report = PublicReport(url=url, category=payload.category.value, reason=reason)
     db.add(report)
     db.flush()
 
-    db.add(DetectedLink(
-        id=f"public-{report.id}",
-        url=report_url,
-        platform=public_report_platform(report_url),
-        predicted_category=payload.category.value,
-        confidence=0.0,
-        source="PUBLIC",
-        status=ReviewStatus.PENDING.value,
-        detected_at=datetime.now(timezone.utc),
-        context=report_reason or "Submitted by a public user for reviewer assessment.",
-    ))
+    link = find_group(db, None, normalize_url(url))
+    if link is None:
+        link = new_link(
+            link_id=f"public-{report.id}", url=url, source=Source.PUBLIC.value, category=payload.category.value,
+            confidence=0.0, priority="standard", context=reason or DEFAULT_PUBLIC_CONTEXT,
+            status=ReviewStatus.SCREENING.value if settings.screening_enabled else ReviewStatus.PENDING.value,
+        )
+        db.add(link)
+    add_occurrence(link, url=url, source=Source.PUBLIC.value, note=reason)
     db.commit()
     db.refresh(report)
     return ReportResponse(
@@ -181,12 +225,32 @@ def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> Repor
     )
 
 
-def require_ingest_token(x_ingest_token: str | None = Header(default=None)) -> None:
-    if not settings.ingest_token:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Detection ingestion is disabled (INGEST_TOKEN is not set)")
-    if not x_ingest_token or not secrets.compare_digest(x_ingest_token, settings.ingest_token):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid ingest token")
+# --- Trained volunteer lane: accounts, structured reports, priority, no screening -----------------------------------
 
+@app.post("/api/volunteer/reports", response_model=VolunteerReportResponse, status_code=status.HTTP_201_CREATED, tags=["volunteer reports"])
+def create_volunteer_report(payload: VolunteerReportCreate, volunteer: User = Depends(require_volunteer),
+                            db: Session = Depends(get_db)) -> VolunteerReportResponse:
+    url = str(payload.url)
+    labels = ", ".join(payload.harm_types) or "no harm type selected"
+    note = f"{labels}. {payload.context.strip()}"
+    link = find_group(db, None, normalize_url(url))
+    duplicate = link is not None
+    if link is None:
+        link = new_link(
+            link_id=f"vol-{secrets.token_hex(6)}", url=url, source=Source.VOLUNTEER.value,
+            category=payload.category.value, confidence=0.0, priority=payload.urgency,
+            context=f"Trained volunteer report ({labels}): {payload.context.strip()}",
+        )
+        db.add(link)
+    elif link.status == ReviewStatus.SCREENING.value:
+        link.status = ReviewStatus.PENDING.value  # a trained volunteer vouches for it: no need to wait for the model
+    occurrence = add_occurrence(link, url=url, source=Source.VOLUNTEER.value, priority=payload.urgency,
+                                reporter_id=volunteer.id, note=note)
+    db.commit()
+    return VolunteerReportResponse(reference=f"VR-{occurrence.id:06d}", link_id=link.id, duplicate=duplicate)
+
+
+# --- Detection lane: harmwatch (Apify, Telegram collector, Telegram bot) ------------------------------------------
 
 @app.post("/api/detections", response_model=DetectedLinkResponse, status_code=status.HTTP_201_CREATED, tags=["detections"])
 def create_detection(
@@ -195,30 +259,89 @@ def create_detection(
     _: None = Depends(require_ingest_token),
     db: Session = Depends(get_db),
 ) -> DetectedLinkResponse:
-    """Add a link flagged by the harmwatch pipeline to the review queue. Sending the same external_id again is a no-op."""
-    link_id = f"hw-{payload.external_id}"
-    existing = db.scalar(select(DetectedLink).options(joinedload(DetectedLink.review)).where(DetectedLink.id == link_id))
-    if existing:
+    """Add one sighting. A copy of content already in the queue (same group_key or same URL) joins it and returns 200;
+    sending the same external_id again is a no-op."""
+    known = db.scalar(select(Occurrence).where(Occurrence.external_id == payload.external_id))
+    if known:
         response.status_code = status.HTTP_200_OK
-        return to_link_response(existing)
+        return to_link_response(load_link(db, known.detected_link_id, visible_only=False))
 
     url = str(payload.url)
-    link = DetectedLink(
-        id=link_id,
-        url=url,
-        platform=public_report_platform(url),
-        predicted_category=payload.predicted_category.value,
-        confidence=payload.confidence,
-        source=payload.source,
-        status=ReviewStatus.PENDING.value,
-        detected_at=payload.detected_at or datetime.now(timezone.utc),
-        context=payload.context,
-    )
-    db.add(link)
+    link = find_group(db, payload.group_key, normalize_url(url))
+    if link is not None:
+        response.status_code = status.HTTP_200_OK
+        link.group_key = link.group_key or payload.group_key
+        if link.status == ReviewStatus.SCREENING.value:  # the model has now seen this content
+            link.status = ReviewStatus.PENDING.value
+            link.context = f"{link.context}\nModel: {payload.context}"
+    else:
+        link = new_link(
+            link_id=f"hw-{payload.external_id}", url=url, source=payload.source,
+            category=payload.predicted_category.value, confidence=payload.confidence,
+            priority=payload.priority.value, context=payload.context, group_key=payload.group_key,
+            detected_at=payload.detected_at,
+        )
+        db.add(link)
+    add_occurrence(link, url=url, source=payload.source, priority=payload.priority.value,
+                   external_id=payload.external_id, seen_at=payload.detected_at)
     db.commit()
-    db.refresh(link)
-    return to_link_response(link)
+    return to_link_response(load_link(db, link.id, visible_only=False))
 
+
+@app.get("/api/intake/screening", response_model=list[ScreeningItem], tags=["detections"])
+def screening_queue(limit: int = Query(default=50, ge=1, le=200), _: None = Depends(require_ingest_token),
+                    db: Session = Depends(get_db)) -> list[ScreeningItem]:
+    """Community reports waiting for the model, oldest first."""
+    links = db.scalars(select(DetectedLink).where(DetectedLink.status == ReviewStatus.SCREENING.value)
+                       .order_by(DetectedLink.detected_at).limit(limit)).all()
+    return [ScreeningItem(id=link.id, url=link.url, platform=link.platform) for link in links]
+
+
+@app.post("/api/intake/screening/{link_id}", tags=["detections"])
+def submit_screening(link_id: str, payload: ScreeningResult, _: None = Depends(require_ingest_token),
+                     db: Session = Depends(get_db)) -> dict[str, str]:
+    link = load_link(db, link_id, visible_only=False)
+    if link is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Link not found")
+    if link.status != ReviewStatus.SCREENING.value:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This link is not waiting for screening")
+
+    if payload.outcome == "restricted":
+        # CH-5: keep nothing that describes the content, not even the reporter's words.
+        link.status = ReviewStatus.RESTRICTED.value
+        link.context = "Restricted by model screening (possible minor)."
+        for occurrence in link.occurrences:
+            occurrence.note = None
+        db.commit()
+        return {"status": link.status, "link_id": link.id}
+
+    if payload.group_key:
+        other = db.scalar(select(DetectedLink).where(DetectedLink.group_key == payload.group_key,
+                                                     DetectedLink.id != link.id))
+        if other is not None:  # same content already in the queue: this report becomes one more copy of it
+            for occurrence in list(link.occurrences):
+                link.occurrences.remove(occurrence)
+                other.occurrences.append(occurrence)
+            other.occurrence_count = len(other.occurrences)
+            db.delete(link)
+            db.commit()
+            return {"status": "merged", "link_id": other.id}
+        link.group_key = payload.group_key
+
+    link.status = ReviewStatus.PENDING.value
+    if payload.outcome == "flagged":
+        link.priority, link.confidence = payload.priority.value, payload.confidence
+        link.context = f"{link.context}\nModel screening: {payload.summary or 'flagged'}"
+    elif payload.outcome == "not_flagged":
+        link.priority = "none"  # human reports are never dropped, only ranked lower
+        link.context = f"{link.context}\nModel screening: not flagged. {payload.summary or ''}".rstrip()
+    else:
+        link.context = f"{link.context}\nNot screened: the content could not be fetched."
+    db.commit()
+    return {"status": link.status, "link_id": link.id}
+
+
+# --- Reviewers ----------------------------------------------------------------------------------------------------
 
 @app.get("/api/reviews/queue", response_model=ReviewQueueResponse, tags=["reviews"])
 def review_queue(
@@ -229,7 +352,8 @@ def review_queue(
     _: User = Depends(require_reviewer),
     db: Session = Depends(get_db),
 ) -> ReviewQueueResponse:
-    filters = []
+    release_stale_screening(db)
+    filters = [DetectedLink.status.in_(VISIBLE_STATUSES)]
     if status_filter:
         filters.append(DetectedLink.status == status_filter.value)
     if query:
@@ -238,15 +362,18 @@ def review_queue(
 
     total = db.scalar(select(func.count()).select_from(DetectedLink).where(*filters)) or 0
     total_pages = max(1, (total + page_size - 1) // page_size)
-    base_query = (
+    if status_filter == ReviewStatus.REVIEWED:
+        order = (DetectedLink.detected_at.desc(),)
+    else:  # most urgent first, then the most widely spread, then the newest
+        order = (PRIORITY_ORDER, DetectedLink.occurrence_count.desc(), DetectedLink.detected_at.desc())
+    links = db.scalars(
         select(DetectedLink)
-        .options(joinedload(DetectedLink.review))
+        .options(joinedload(DetectedLink.review), selectinload(DetectedLink.occurrences))
         .where(*filters)
-        .order_by(DetectedLink.detected_at.desc())
+        .order_by(*order)
         .offset((page - 1) * page_size)
         .limit(page_size)
-    )
-    links = list(db.scalars(base_query).unique().all())
+    ).unique().all()
     pending_count = db.scalar(select(func.count()).select_from(DetectedLink).where(DetectedLink.status == ReviewStatus.PENDING.value)) or 0
     reviewed_count = db.scalar(select(func.count()).select_from(DetectedLink).where(DetectedLink.status == ReviewStatus.REVIEWED.value)) or 0
     return ReviewQueueResponse(
@@ -262,7 +389,7 @@ def review_queue(
 
 @app.get("/api/reviews/{link_id}", response_model=DetectedLinkResponse, tags=["reviews"])
 def get_review(link_id: str, _: User = Depends(require_reviewer), db: Session = Depends(get_db)) -> DetectedLinkResponse:
-    link = db.scalar(select(DetectedLink).options(joinedload(DetectedLink.review)).where(DetectedLink.id == link_id))
+    link = load_link(db, link_id)
     if not link:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Detected link not found")
     return to_link_response(link)
@@ -313,7 +440,7 @@ def analysis_summary(
 
 @app.post("/api/reviews/{link_id}", response_model=DetectedLinkResponse, tags=["reviews"])
 def submit_review(link_id: str, payload: ReviewSubmit, reviewer: User = Depends(require_reviewer), db: Session = Depends(get_db)) -> DetectedLinkResponse:
-    link = db.scalar(select(DetectedLink).options(joinedload(DetectedLink.review)).where(DetectedLink.id == link_id))
+    link = load_link(db, link_id)
     if not link:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Detected link not found")
     if link.status == ReviewStatus.REVIEWED.value or link.review:
@@ -332,5 +459,4 @@ def submit_review(link_id: str, payload: ReviewSubmit, reviewer: User = Depends(
     except IntegrityError as exc:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This link has already been reviewed") from exc
-    db.refresh(link)
-    return to_link_response(link)
+    return to_link_response(load_link(db, link.id))

@@ -48,6 +48,15 @@ def initialize_database() -> None:
     with engine.begin() as connection:
         connection.execute(text("UPDATE detected_links SET source = 'SCRAP' WHERE source IS NULL OR source = 'MODEL'"))
         connection.execute(text("UPDATE detected_links SET source = 'PUBLIC' WHERE source = 'PUBLIC_REPORT'"))
+    for column, ddl in (
+        ("priority", "VARCHAR(16) DEFAULT 'standard'"),
+        ("group_key", "VARCHAR(64)"),
+        ("normalized_url", "TEXT"),
+        ("occurrence_count", "INTEGER DEFAULT 1"),
+    ):
+        if column not in detected_link_columns:
+            with engine.begin() as connection:
+                connection.execute(text(f"ALTER TABLE detected_links ADD COLUMN {column} {ddl}"))
     if "channel" in detected_link_columns:
         with engine.begin() as connection:
             connection.execute(text("ALTER TABLE detected_links DROP COLUMN channel"))
