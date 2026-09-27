@@ -48,3 +48,5 @@ Nothing else changes: no code, no prompt.
 | Region | Version | Status |
 |---|---|---|
 | `ru_ua` | 0.1 | 65/65 entries approved by gmikou for the hackathon (2026-09-26). **To be validated by the ICRC / a local partner** before any operational use. |
+
+Separate topic layers (e.g. racism, used to test the video pipeline) live in `policy/topics/`: they never load or change the sexual-violence core.
