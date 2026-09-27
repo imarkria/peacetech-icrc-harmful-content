@@ -6,6 +6,10 @@ Challenge given by the International Committee of the Red Cross (ICRC) for the P
 
 SignalSafe finds and collects links to harmful content related to conflict-related sexual violence, and gives ICRC reviewers a safe place to label them. `harmwatch` is the name of its detection package.
 
+> **Detection part (safety filter → fast pre-filter → AI judge → SQLite table `detections`):** start with
+> [`docs/platform/README.md`](docs/platform/README.md): pipeline, who does what, quick start, how to read the table.
+> The definitions the AI judge applies are in [`policy/README.md`](policy/README.md).
+
 ## Team
 
 - Carlos Rafael Gonzalez Soffnee

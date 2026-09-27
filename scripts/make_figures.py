@@ -1,6 +1,10 @@
-"""Presentation figures from docs/results/ALL_METRICS.csv and ALL_CONFUSIONS.json ONLY → docs/figures/*.png.
+"""Presentation figures from docs/results/ALL_METRICS.csv and ALL_CONFUSIONS.json → docs/figures/*.png.
 
     python scripts/make_figures.py
+
+Bar charts carry 95 % CIs only where they were already computed: F1 CIs from docs/results/sv_images_v1/significance.json,
+AUROC CIs by the same bootstrap as scripts/make_presentation.py (2 000 resamples, seed 42) on the per-item scores in
+results/ (read only). No CI → no error bar, and the figure says "CI not available".
 
 No dataset image is ever read or drawn. Static PNGs for slides (light surface); colours: reference categorical order
 (blue, orange, aqua, yellow) and a single-hue blue ramp for the confusion heatmaps. Values are printed on every mark
@@ -9,6 +13,7 @@ No dataset image is ever read or drawn. Static PNGs for slides (light surface); 
 
 import csv
 import json
+import os
 from pathlib import Path
 
 import matplotlib
@@ -16,6 +21,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
+from make_presentation import NO_CI, SHOWN, bars, boot_auroc, jl  # noqa: E402  (before rcParams below)
 
 ROOT = Path(__file__).resolve().parent.parent
 RES = ROOT / "docs" / "results"
@@ -50,79 +56,77 @@ def pick(R, **kw):
     return [r for r in R if all(r.get(k) == v for k, v in kw.items())]
 
 
-def save(fig, name, note=None):
+def save(fig, name, note=None, hires=False):
+    """hires: PNG 300 dpi + PDF (bar charts); otherwise PNG 160 dpi (unchanged figures)."""
     if note:
         fig.text(0.01, -0.03, note, fontsize=7, color=INK2, ha="left", va="top")
     FIG.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FIG / name, dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    fig.savefig(FIG / name, dpi=300 if hires else 160, bbox_inches="tight")
     print("wrote", FIG / name)
+    if hires:
+        fig.savefig(FIG / name.replace(".png", ".pdf"), bbox_inches="tight")
+        print("wrote", FIG / name.replace(".png", ".pdf"))
+    plt.close(fig)
 
 
-def dot_panel(ax, labels, values, title, xlim, colors):
-    """Cleveland dot plot: one row per entity, value printed next to each dot (no truncated bar)."""
-    y = list(range(len(labels)))[::-1]
-    for yi, v, c in zip(y, values, colors):
-        ax.hlines(yi, xlim[0], v, color=GRID, lw=2, zorder=1)
-        ax.scatter([v], [yi], s=80, color=c, edgecolor=SURFACE, linewidth=2, zorder=3)
-        ax.text(v + (xlim[1] - xlim[0]) * 0.015, yi, f"{v:.3f}", va="center", fontsize=9, color=INK)
-    ax.set_yticks(y, labels)
-    ax.set_xlim(*xlim)
-    ax.set_title(title)
-    ax.grid(axis="y", visible=False)
+def subtitle(fig, text, y=0.95):
+    fig.text(0.01, y, text, fontsize=9, color=INK2, ha="left", va="bottom")
+
+
+FOLDER = {"qwen3.5-9b": "qwen35-9b", "qwen3.5-4b": "qwen35-4b", "gemma-4-12b": "gemma4-12b", "internvl3.5-8b": "internvl35-8b"}
+
+
+def f1_ci(model, variant):
+    sig = json.loads((RES / "sv_images_v1" / "significance.json").read_text())
+    return sig.get(FOLDER[model], {}).get(variant, {}).get("ci95")
+
+
+def auroc_ci(model):
+    """Same bootstrap as make_presentation.py (image + text, prompt v1); None if the per-item scores are absent."""
+    f = ROOT / "results" / "sv_benchmark" / FOLDER[model] / "image_text" / "predictions.jsonl"
+    if not f.exists():
+        return None
+    preds = [p for p in jl(f) if p["prediction"]]
+    return boot_auroc([int(p["reference"]["sexual"]) for p in preds],
+                      [1.0 if p["prediction"]["possible_minor"] else p["prediction"]["p_true"]["sexual"] for p in preds])
 
 
 def fig_models(R):
     rs = {r["model"]: r for r in pick(R, experiment="sv_images_v1", prompt="v1", variant="image_text", task="sexual")}
     models = [m for m in MODEL_ORDER if m in rs]
-    fig, axes = plt.subplots(1, 2, figsize=(9, 3.2), sharey=True)
-    colors = [SERIES[MODEL_ORDER.index(m)] for m in models]
-    dot_panel(axes[0], [MODEL_LABEL[m] for m in models], [rs[m]["f1"] for m in models],
-              "F1 · sexual character", (0.85, 1.0), colors)
-    dot_panel(axes[1], [MODEL_LABEL[m] for m in models], [rs[m]["auroc"] for m in models],
-              "AUROC · P(sexual) from logprobs", (0.85, 1.0), colors)
-    fig.suptitle("Four vision models on sv_images_v1 (60 / 60, prompt v1 frozen, image + text)", x=0.01, ha="left",
-                 fontsize=12, fontweight="bold", y=1.04)
-    save(fig, "models_f1_auroc.png", "Axes start at 0.85. Differences are not statistically significant "
-                                     "(bootstrap 95% CIs overlap, McNemar p ≥ 0.6).")
-
-
-def dumbbell(ax, labels, a, b, la, lb, title, xlim):
-    y = list(range(len(labels)))[::-1]
-    for yi, va, vb in zip(y, a, b):
-        ax.plot([va, vb], [yi, yi], color=GRID, lw=3, zorder=1, solid_capstyle="round")
-        ax.scatter([va], [yi], s=80, color=SERIES[0], edgecolor=SURFACE, linewidth=2, zorder=3,
-                   label=la if yi == y[0] else None)
-        ax.scatter([vb], [yi], s=80, color=SERIES[1], edgecolor=SURFACE, linewidth=2, zorder=3,
-                   label=lb if yi == y[0] else None)
-        lo, hi = sorted([(va, "a"), (vb, "b")])
-        off = (xlim[1] - xlim[0]) * 0.02
-        ax.text(lo[0] - off, yi, f"{lo[0]:.3f}", ha="right", va="center", fontsize=8, color=INK2)
-        ax.text(hi[0] + off, yi, f"{hi[0]:.3f}", ha="left", va="center", fontsize=8, color=INK2)
-    ax.set_yticks(y, labels)
-    ax.set_xlim(*xlim)
-    ax.set_title(title)
-    ax.grid(axis="y", visible=False)
-    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.14), ncol=2, fontsize=8)
+    fig, ax = plt.subplots(figsize=(9, 3.8))
+    bars(ax, [MODEL_LABEL[m] for m in models],
+         [("F1 · sexual character", SERIES[0], [rs[m]["f1"] for m in models], [f1_ci(m, "image_text") for m in models]),
+          ("AUROC · P(sexual) from logprobs", SERIES[1], [rs[m]["auroc"] for m in models], [auroc_ci(m) for m in models])],
+         "Four vision models on sv_images_v1 (60 / 60, prompt v1 frozen, image + text)", "models_f1_auroc")
+    subtitle(fig, "F1 and AUROC per model with bootstrap 95 % CIs: the four models are within each other's intervals.")
+    save(fig, "models_f1_auroc.png", "\n\nError bars: bootstrap 95 % CIs (2 000 resamples). Differences are not "
+                                     "statistically significant (CIs overlap, McNemar p ≥ 0.6).", hires=True)
 
 
 def fig_v1_v3(R):
-    labels, a, b = [], [], []
+    labels, a, b, ci = [], [], [], []
     for mode, mlab in (("image_text", "image + text"), ("text_only", "text only")):
         for metric, mname in (("f1", "F1"), ("auroc", "AUROC")):
             v1 = pick(R, experiment="sv_images_v1", model="qwen3.5-9b", prompt="v1", variant=mode, task="sexual")
             v3 = pick(R, experiment="sv_images_v1", model="qwen3.5-9b", prompt="v3", variant=mode, task="sexual")
             if v1 and v3:
-                labels.append(f"{mname} · {mlab}")
+                labels.append(f"{mname}\n{mlab}")
                 a.append(v1[0][metric])
                 b.append(v3[0][metric])
-    fig, ax = plt.subplots(figsize=(7, 3))
-    dumbbell(ax, labels, a, b, "prompt v1 (official)", "prompt v3 (indicative)", "Qwen3.5-9B · prompt v1 vs v3", (0.84, 1.0))
-    save(fig, "v1_vs_v3.png", "\n\nv3 was tuned after analysing the errors on this same set: its score is indicative only.")
+                ci.append(f1_ci("qwen3.5-9b", mode) if metric == "f1" else
+                          auroc_ci("qwen3.5-9b") if mode == "image_text" else None)
+    fig, ax = plt.subplots(figsize=(8, 3.8))
+    bars(ax, labels, [("prompt v1 (official)", SERIES[0], a, ci),
+                      ("prompt v3 (indicative) · CI not available", SERIES[1], b, [None] * len(b))],
+         "Qwen3.5-9B · prompt v1 vs v3", "v1_vs_v3")
+    subtitle(fig, "F1 and AUROC of the frozen prompt v1 and the tuned prompt v3, with and without the image.")
+    save(fig, "v1_vs_v3.png", "\n\nError bars: bootstrap 95 % CIs; " + NO_CI + " (prompt v3; AUROC text only). "
+         "v3 was tuned after analysing the errors on this same set: its score is indicative only.", hires=True)
 
 
 def fig_image_vs_text(R):
-    labels, a, b = [], [], []
+    labels, a, b, ca, cb = [], [], [], [], []
     for m in MODEL_ORDER:
         it = pick(R, experiment="sv_images_v1", model=m, prompt="v1", variant="image_text", task="sexual")
         tx = pick(R, experiment="sv_images_v1", model=m, prompt="v1", variant="text_only", task="sexual")
@@ -130,10 +134,14 @@ def fig_image_vs_text(R):
             labels.append(MODEL_LABEL[m])
             a.append(tx[0]["f1"])
             b.append(it[0]["f1"])
-    fig, ax = plt.subplots(figsize=(7, 3))
-    dumbbell(ax, labels, a, b, "text only (embedded text)", "image + text", "F1 · what the image adds (prompt v1)", (0.84, 1.0))
-    save(fig, "image_text_vs_text_only.png",
-         "\n\n50 of 60 positives contain an explicit keyword: the benchmark mostly measures reading the embedded text.")
+            ca.append(f1_ci(m, "text_only"))
+            cb.append(f1_ci(m, "image_text"))
+    fig, ax = plt.subplots(figsize=(8, 3.8))
+    bars(ax, labels, [("text only (embedded text)", SERIES[0], a, ca), ("image + text", SERIES[1], b, cb)],
+         "F1 · what the image adds (prompt v1) [95 % CI]", "image_text_vs_text_only")
+    subtitle(fig, "F1 per model when the judge reads only the embedded text vs when it also sees the image.")
+    save(fig, "image_text_vs_text_only.png", "\n\nError bars: bootstrap 95 % CIs. 50 of 60 positives contain an "
+         "explicit keyword: the benchmark mostly measures reading the embedded text.", hires=True)
 
 
 def fig_video(R):
@@ -170,35 +178,27 @@ def fig_cascade(R):
         print("skip cascade: no cascade rows in ALL_METRICS.csv")
         return
     field = lambda r, k: float(r["notes"].split(f"{k}=")[1].split(";")[0].split("/")[0])  # noqa: E731
-    fig, axes = plt.subplots(1, 2, figsize=(11, 3.4), gridspec_kw={"wspace": 0.75})
-    ax = axes[0]
-    xs, ys = [field(r, "sent") for r in casc], [r["recall"] for r in casc]
-    ax.plot(xs, ys, color=SERIES[1], lw=2, marker="o", ms=8, markeredgecolor=SURFACE, markeredgewidth=2,
-            label="cascade (student → Qwen v3)")
-    for r, x, y, off in zip(casc, xs, ys, ((-14, -16), (14, -16), (0, 9))):
-        ax.annotate(r["variant"].replace("cascade_", "") + " %", (x, y), xytext=off, textcoords="offset points",
-                    ha="center", fontsize=8, color=INK2)
-    ax.scatter([1.0], [judge[0]["recall"]], s=80, color=SERIES[0], edgecolor=SURFACE, linewidth=2, zorder=3,
-               label="Qwen v3 on every image")
-    ax.set_xlim(0, 1.05)
-    ax.set_ylim(0.8, 1.0)
-    ax.set_xlabel("share of images sent to Qwen")
-    ax.set_ylabel("recall (benchmark)")
-    ax.set_title("Cascade · recall vs share sent")
-    ax.legend(loc="lower left", fontsize=8)
+    labels = ["Qwen v3 on\nevery image"] + [f"cascade\n{r['variant'].replace('cascade_', '')} %" for r in casc]
+    fig, axes = plt.subplots(1, 2, figsize=(12, 3.8), gridspec_kw={"wspace": 0.25})
+    bars(axes[0], labels,
+         [("recall (benchmark)", SERIES[0], [judge[0]["recall"]] + [r["recall"] for r in casc], [None] * (len(casc) + 1)),
+          ("share of images sent to Qwen", SERIES[1], [1.0] + [field(r, "sent") for r in casc], [None] * (len(casc) + 1))],
+         "Cascade · recall vs share sent", "cascade", legend_cols=1)
     ax = axes[1]
-    labels = ["Qwen v3 on every image"] + [f"cascade {r['variant'].replace('cascade_', '')} %" for r in casc]
     vals = [float(judge[0]["notes"].split("time/img=")[1])] + [field(r, "time/img") for r in casc]
-    yy = list(range(len(labels)))[::-1]
-    for yi, v, c in zip(yy, vals, [SERIES[0]] + [SERIES[1]] * len(casc)):
-        ax.barh(yi, v, color=c, height=0.55, edgecolor=SURFACE, linewidth=2)
-        ax.text(v + 0.02, yi, f"{v:.2f} s", va="center", fontsize=8, color=INK)
-    ax.set_yticks(yy, labels)
-    ax.set_xlim(0, max(vals) * 1.25)
-    ax.grid(axis="y", visible=False)
-    ax.set_xlabel("seconds per image")
+    for xi, v, c in zip(range(len(vals)), vals, [SERIES[0]] + [SERIES[1]] * len(casc)):
+        ax.bar(xi, v, color=c, width=0.55, edgecolor=SURFACE, linewidth=2)
+        ax.text(xi, v + 0.02, f"{v:.2f} s", ha="center", va="bottom", fontsize=8, color=INK)
+    ax.set_xticks(range(len(vals)), labels)
+    ax.set_ylim(0, max(vals) * 1.2)
+    ax.grid(axis="x", visible=False)
+    ax.set_ylabel("seconds per image")
     ax.set_title("Time per image")
-    save(fig, "cascade.png", "sv_images_v1 is 50 % positive: the filter must pass at least half of the images, which caps the speed-up.")
+    subtitle(fig, "Student filter (DEV recall 95 / 97 / 99 %) in front of Qwen v3: recall kept, share of images sent "
+             "and time per image.")
+    save(fig, "cascade.png", "\n\n\n\nLeft: " + NO_CI + ". Qwen v3 alone sends 100 % of the images by definition. "
+         "sv_images_v1 is 50 % positive: the filter must pass at least half of the images, which caps the speed-up.",
+         hires=True)
 
 
 def fig_confusions():
@@ -247,6 +247,8 @@ def main():
     fig_video(R)
     fig_cascade(R)
     fig_confusions()
+    if os.environ.get("SHOWN_JSON"):  # optional: values printed on the bar charts, for the check against ALL_METRICS.csv
+        Path(os.environ["SHOWN_JSON"]).write_text(json.dumps(SHOWN, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":

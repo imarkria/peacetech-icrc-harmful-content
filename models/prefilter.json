@@ -1,0 +1,59 @@
+{
+  "name": "prefilter_image_logreg",
+  "file": "models/prefilter_image_logreg.joblib",
+  "sha256": "204c204b0faa982d2ac845b30977563f14bf28609d05f9d373d49c0bef2edd0b",
+  "size_bytes": 33613,
+  "date": "2026-09-27",
+  "status": "research experiment: trained on image-derived features (rule B5), to be validated by the team before operational use",
+  "task": "fast pre-filter for images, memes and video frames: P(sexual) as the AI judge (Qwen3.5-9B, frozen prompt v3) would decide; items under the threshold are not sent to the judge",
+  "embedding_model": "google/siglip2-so400m-patch14-384",
+  "embedding": "image features (get_image_features), L2-normalised (harmwatch.cascade.ImageEmbedder)",
+  "embedding_dim": 1152,
+  "classifier": "sklearn Pipeline(StandardScaler, LogisticRegression(C=0.001, class_weight='balanced'))",
+  "sklearn_version": "1.9.1",
+  "contents": "weights only: scaler mean/variance per dimension (1152 aggregate statistics), 1152 coefficients, 1 intercept; no image, no embedding of the training pool",
+  "threshold": 0.18230441212654114,
+  "threshold_rule": "highest threshold keeping 95 % recall of the judge's positives on DEV (never on the benchmark)",
+  "other_thresholds": {
+    "recall_97": 0.12057986110448837,
+    "recall_99": 0.087439626455307
+  },
+  "training": {
+    "teacher": "Qwen3.5-9B, prompt v3 (frozen, sha256 9160fe72...)",
+    "pool": "MemeLens memes (FHM, MMHS, MAMI), near-copies of the benchmark removed (pHash <= 8)",
+    "n_fit": 2300,
+    "teacher_positives_fit": 464,
+    "cv_auroc": 0.924,
+    "dev_auroc_vs_teacher": 0.905,
+    "dev_sent_fraction_at_threshold": 0.524
+  },
+  "metrics": {
+    "benchmark_120_hand_checked": {
+      "recall": 0.967,
+      "recall_ci95": [
+        0.886,
+        0.991
+      ],
+      "positives_passed": 58,
+      "positives": 60,
+      "sent_fraction": 0.733
+    },
+    "feed_10pct_prevalence": {
+      "n": 579,
+      "prevalence": 0.104,
+      "recall": 0.967,
+      "sent_fraction": 0.478,
+      "false_pass_rate": 0.422,
+      "speedup_vs_judge_alone": 2.01,
+      "note": "459 extra negatives labelled by the judge, not checked by hand: estimate"
+    },
+    "seconds_per_image": 0.0271,
+    "hardware": "1x NVIDIA V100 32 GB",
+    "source": "docs/results/cascade/filter_test_10pct.json, docs/results/ALL_METRICS.csv"
+  },
+  "limits": [
+    "trained on memes: not evaluated on video frames",
+    "sees the image only: content carried by speech or text alone can be filtered out",
+    "benchmark recall on 60 positives only (95 % CI 0.886-0.991)"
+  ]
+}
