@@ -69,7 +69,7 @@ Reviewers use the same sign-in page and are sent to the reviewer workspace.
 4. Add basic tags, and optionally advanced tags.
 5. Save. The decision covers every copy of the content.
 
-## Interface preview
+## Prototype preview
 
 Screenshots of the MVP. Some wording has changed since (the "specialist" role is now the trained volunteer lane).
 
