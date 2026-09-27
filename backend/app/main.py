@@ -27,10 +27,31 @@ from .schemas import (
     ReviewSummary,
     UserResponse,
 )
-from .security import create_access_token, require_reviewer, verify_password
+from .security import create_access_token, require_reviewer, require_specialist, verify_password
 from .seed import seed_demo_data
 
 settings = get_settings()
+BASIC_TAG_IDS = (
+    "BT-MEN",
+    "BT-WOMEN",
+    "BT-CHILDREN",
+    "BT-SEXUAL-VIOLENCE",
+    "BT-FORCED-SEXUAL-ACTION",
+)
+MOCK_AI_KEYWORDS = (
+    "sexual violence",
+    "sexual assault",
+    "forced sexual",
+    "rape",
+    "gender-based violence",
+    "hate speech",
+    "ethnic hatred",
+    "incitement",
+    "threat",
+    "kill",
+    "violence",
+    "harmful",
+)
 
 
 @asynccontextmanager
@@ -62,6 +83,8 @@ def to_link_response(link: DetectedLink) -> DetectedLinkResponse:
             decision=link.review.decision,
             reviewed_at=link.review.created_at,
             reviewer_id=link.review.reviewer_id,
+            sexual_violence=link.review.sexual_violence == "YES",
+            harmful_information=link.review.harmful_information == "YES",
             evidence=link.review.evidence,
         )
     return DetectedLinkResponse(
@@ -87,6 +110,8 @@ def sync_public_reports_to_queue(db: Session) -> None:
     reports = db.scalars(select(PublicReport).order_by(PublicReport.id)).all()
     created = False
     for report in reports:
+        if report.source != "SPECIALIST" and not report.ai_potential:
+            continue
         link_id = f"public-{report.id}"
         if db.get(DetectedLink, link_id):
             continue
@@ -95,15 +120,66 @@ def sync_public_reports_to_queue(db: Session) -> None:
             url=report.url,
             platform=public_report_platform(report.url),
             predicted_category=report.category,
-            confidence=0.0,
-            source="PUBLIC",
+            confidence=0.82 if report.ai_potential else 0.0,
+            source=report.source,
             status=ReviewStatus.PENDING.value,
             detected_at=report.created_at,
-            context=report.reason or "Submitted by a public user for reviewer assessment.",
+            context=report.reason or ("Mock AI flagged this public report as potentially harmful." if report.ai_potential else "Submitted by an ICRC specialist for reviewer assessment."),
         ))
         created = True
     if created:
         db.commit()
+
+
+def mock_ai_potential(url: str, reason: str | None, category: str) -> bool:
+    """Small deterministic stand-in for the future harmful-content model."""
+    haystack = f"{url} {reason or ''} {category}".lower()
+    return any(keyword in haystack for keyword in MOCK_AI_KEYWORDS)
+
+
+def save_link_submission(payload: ReportCreate, db: Session, source: str, direct_to_queue: bool) -> ReportResponse:
+    report_url = str(payload.url)
+    report_reason = payload.reason.strip() or None if payload.reason else None
+    ai_potential = mock_ai_potential(report_url, report_reason, payload.category.value) if not direct_to_queue else False
+    report = PublicReport(
+        url=report_url,
+        category=payload.category.value,
+        reason=report_reason,
+        source=source,
+        ai_potential=ai_potential,
+    )
+    db.add(report)
+    db.flush()
+
+    queued = direct_to_queue or ai_potential
+    if queued:
+        db.add(DetectedLink(
+            id=f"public-{report.id}",
+            url=report_url,
+            platform=public_report_platform(report_url),
+            predicted_category=payload.category.value,
+            confidence=0.0 if direct_to_queue else 0.82,
+            source=source,
+            status=ReviewStatus.PENDING.value,
+            detected_at=datetime.now(timezone.utc),
+            context=report_reason or (
+                "Submitted by an ICRC specialist for reviewer assessment."
+                if direct_to_queue else "Mock AI flagged this public report as potentially harmful."
+            ),
+        ))
+
+    db.commit()
+    db.refresh(report)
+    return ReportResponse(
+        id=report.id,
+        reference=f"SS-{report.id:06d}",
+        url=report.url,
+        category=report.category,
+        reason=report.reason,
+        created_at=report.created_at,
+        queued=queued,
+        ai_potential=ai_potential,
+    )
 
 
 @app.get("/", tags=["system"])
@@ -150,33 +226,12 @@ def me(user: User = Depends(require_reviewer)) -> UserResponse:
 
 @app.post("/api/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED, tags=["public reports"])
 def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> ReportResponse:
-    report_url = str(payload.url)
-    report_reason = payload.reason.strip() or None if payload.reason else None
-    report = PublicReport(url=report_url, category=payload.category.value, reason=report_reason)
-    db.add(report)
-    db.flush()
+    return save_link_submission(payload, db, source="PUBLIC", direct_to_queue=False)
 
-    db.add(DetectedLink(
-        id=f"public-{report.id}",
-        url=report_url,
-        platform=public_report_platform(report_url),
-        predicted_category=payload.category.value,
-        confidence=0.0,
-            source="PUBLIC",
-        status=ReviewStatus.PENDING.value,
-        detected_at=datetime.now(timezone.utc),
-        context=report_reason or "Submitted by a public user for reviewer assessment.",
-    ))
-    db.commit()
-    db.refresh(report)
-    return ReportResponse(
-        id=report.id,
-        reference=f"SS-{report.id:06d}",
-        url=report.url,
-        category=report.category,
-        reason=report.reason,
-        created_at=report.created_at,
-    )
+
+@app.post("/api/specialist/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED, tags=["specialist reports"])
+def create_specialist_report(payload: ReportCreate, _: User = Depends(require_specialist), db: Session = Depends(get_db)) -> ReportResponse:
+    return save_link_submission(payload, db, source="SPECIALIST", direct_to_queue=True)
 
 
 @app.get("/api/reviews/queue", response_model=ReviewQueueResponse, tags=["reviews"])
@@ -247,15 +302,16 @@ def analysis_summary(
     decision_counts = Counter()
     platform_counts = Counter()
     trend_counts = Counter()
-    trend_counts_by_decision: dict[str, Counter] = defaultdict(Counter)
+    trend_counts_by_basic_tag: dict[str, Counter] = defaultdict(Counter)
     evidence_counts: dict[str, Counter] = defaultdict(Counter)
     for source, platform, decision, evidence, detected_at in reviewed_items:
         source_counts[source] += 1
         decision_counts[decision] += 1
         platform_counts[platform] += 1
         trend_counts[detected_at.date().isoformat()] += 1
-        trend_counts_by_decision[decision][detected_at.date().isoformat()] += 1
-        for evidence_key in ("sexualElements", "coerciveCircumstances", "sexualForms", "harmfulTypes", "harmPathways"):
+        for basic_tag in (evidence or {}).get("basicTags", []):
+            trend_counts_by_basic_tag[basic_tag][detected_at.date().isoformat()] += 1
+        for evidence_key in ("basicTags", "sexualElements", "coerciveCircumstances", "sexualForms", "harmfulTypes", "harmPathways"):
             for value in (evidence or {}).get(evidence_key, []):
                 evidence_counts[evidence_key][value] += 1
 
@@ -265,7 +321,7 @@ def analysis_summary(
         decision_counts=[AnalysisCount(key=key, count=count) for key, count in decision_counts.most_common()],
         platform_counts=[AnalysisCount(key=key, count=count) for key, count in platform_counts.most_common()],
         post_trend=[AnalysisTrendPoint(date=date, count=trend_counts[date]) for date in sorted(trend_counts)],
-        post_trends={decision: [AnalysisTrendPoint(date=date, count=count) for date, count in sorted(dates.items())] for decision, dates in trend_counts_by_decision.items()},
+        post_trends={tag: [AnalysisTrendPoint(date=date, count=count) for date, count in sorted(trend_counts_by_basic_tag[tag].items())] for tag in BASIC_TAG_IDS},
         evidence_counts={key: [AnalysisCount(key=item, count=count) for item, count in values.most_common()] for key, values in evidence_counts.items()},
     )
 
@@ -279,10 +335,13 @@ def submit_review(link_id: str, payload: ReviewSubmit, reviewer: User = Depends(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This link has already been reviewed")
 
     link.status = ReviewStatus.REVIEWED.value
+    decision = ReviewDecision.YES.value if payload.sexual_violence and payload.harmful_information else ReviewDecision.NO.value
     link.review = Review(
         detected_link_id=link.id,
         reviewer_id=reviewer.id,
-        decision=payload.decision.value,
+        decision=decision,
+        sexual_violence="YES" if payload.sexual_violence else "NO",
+        harmful_information="YES" if payload.harmful_information else "NO",
         evidence=payload.evidence.model_dump() if payload.evidence else None,
         created_at=datetime.now(timezone.utc),
     )

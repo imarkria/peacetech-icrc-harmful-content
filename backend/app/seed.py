@@ -57,7 +57,7 @@ SEED_LINKS = [
         "status": ReviewStatus.REVIEWED.value,
         "detected_at": datetime(2025, 2, 12, 16, 21, tzinfo=timezone.utc),
         "context": "Model flagged content for general harmful-content review.",
-        "review_decision": ReviewDecision.NOT_A_VIOLATION.value,
+        "review_decision": ReviewDecision.NO.value,
         "reviewed_at": datetime(2025, 2, 13, 10, 4, tzinfo=timezone.utc),
     },
     {
@@ -69,7 +69,7 @@ SEED_LINKS = [
         "status": ReviewStatus.REVIEWED.value,
         "detected_at": datetime(2025, 2, 11, 11, 40, tzinfo=timezone.utc),
         "context": "Model flagged potentially hateful content targeting a protected group.",
-        "review_decision": ReviewDecision.HATE_RELATED.value,
+        "review_decision": ReviewDecision.YES.value,
         "reviewed_at": datetime(2025, 2, 12, 9, 17, tzinfo=timezone.utc),
     },
 ]
@@ -80,6 +80,11 @@ def seed_demo_data(db: Session) -> None:
     if reviewer is None:
         reviewer = User(email="reviewer@icrc.org", password_hash=hash_password("reviewer"), role=UserRole.REVIEWER.value)
         db.add(reviewer)
+        db.flush()
+
+    specialist = db.scalar(select(User).where(User.email == "specialist@icrc.org"))
+    if specialist is None:
+        db.add(User(email="specialist@icrc.org", password_hash=hash_password("specialist"), role=UserRole.SPECIALIST.value))
         db.flush()
 
     if db.scalar(select(DetectedLink.id).limit(1)) is not None:
@@ -94,5 +99,13 @@ def seed_demo_data(db: Session) -> None:
         db.add(link)
         if review_decision:
             db.flush()
-            db.add(Review(detected_link_id=link.id, reviewer_id=reviewer.id, decision=review_decision, created_at=reviewed_at))
+            is_yes = review_decision == ReviewDecision.YES.value
+            db.add(Review(
+                detected_link_id=link.id,
+                reviewer_id=reviewer.id,
+                decision=review_decision,
+                sexual_violence="YES" if is_yes else "NO",
+                harmful_information="YES" if is_yes else "NO",
+                created_at=reviewed_at,
+            ))
     db.commit()

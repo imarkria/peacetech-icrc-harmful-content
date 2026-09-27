@@ -3,8 +3,8 @@ import { AppShell } from "../components/app-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SignalSafe | Harmful content reporting",
-  description: "Report links and review system-detected harmful information.",
+  title: "SignalSafe | Harmful content related to sexual violence in armed conflicts",
+  description: "Submit and review links containing harmful content related to sexual violence in armed conflicts.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

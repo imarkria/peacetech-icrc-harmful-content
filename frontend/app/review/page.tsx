@@ -8,15 +8,19 @@ import {
     ClipboardCheck,
     FileWarning,
     Info,
-    Search,
-    ShieldCheck,
-    UserRound
+    Search
 } from "../../components/icons";
-import {AppShell, isReviewerAuthenticated} from "../../components/app-shell";
+import {isReviewerAuthenticated} from "../../components/app-shell";
 import {ApiError, getReviewQueue} from "../../lib/api";
 import {decisionLabels, DetectedLink, formatRelativeDate} from "../../lib/review-data";
 
 const PAGE_SIZE = 10;
+
+function sourceLabel(source: DetectedLink["source"]) {
+    if (source === "PUBLIC") return "Public";
+    if (source === "SPECIALIST") return "Specialist";
+    return "Scrap";
+}
 
 export default function ReviewQueuePage() {
     const searchParams = useSearchParams();
@@ -58,7 +62,7 @@ export default function ReviewQueuePage() {
                 window.location.href = "/reviewer/login";
                 return;
             }
-            setError("Unable to load the review queue. Make sure the backend is running on http://localhost:8000.");
+            setError("We could not load the review queue. Please try again or contact an administrator.");
             setReady(true);
         });
 
@@ -79,9 +83,7 @@ export default function ReviewQueuePage() {
         <div className="page-container">
             <div className="review-header">
                 <div className="page-heading"><span className="eyebrow">ICRC reviewer workspace</span><h1>Review
-                    queue</h1><p>Review system-detected links and public reports.</p></div>
-                {/*<div className="reviewer-chip"><span className="avatar">IC</span><span>ICRC reviewer</span>*/}
-                {/*</div>*/}
+                    queue</h1><p>Review potential harmful content related to sexual violence in armed conflicts.</p></div>
             </div>
             <div className="stats-row">
                 <div className="stat-card">
@@ -93,10 +95,6 @@ export default function ReviewQueuePage() {
                     <strong className="stat-value">{reviewedCount}</strong><span
                     className="stat-trend">Decisions recorded</span>
                 </div>
-                {/*<div className="stat-card">*/}
-                {/*    <div className="stat-label">Queue items <BarChart3 size={15}/></div>*/}
-                {/*    <strong className="stat-value">{pendingCount + reviewedCount}</strong><span className="stat-trend">Total links to review</span>*/}
-                {/*</div>*/}
             </div>
             <div className="queue-panel">
                 <div className="queue-toolbar">
@@ -132,13 +130,13 @@ export default function ReviewQueuePage() {
                         </div>
                         {visibleLinks.map((link) => <div className="queue-row" key={link.id}>
                             <div className="url-cell"><span className="url-title">{link.url}</span><span
-                                className="url-subtitle">{link.source === "PUBLIC" ? "Public report" : "Scrap"} · {formatRelativeDate(link.detectedAt)}</span>
+                                className="url-subtitle">{sourceLabel(link.source)} · {formatRelativeDate(link.detectedAt)}</span>
                             </div>
-                            <div className="source-value">{link.source === "PUBLIC" ? "Public" : "Scrap"}</div>
+                            <div className="source-value">{sourceLabel(link.source)}</div>
                             <div
                                 className={link.review ? "decision-recorded" : "decision-pending"}>{link.review ? decisionLabels[link.review.decision] : "Not decided"}</div>
                             <Link className="row-action"
-                                  href={`/reviewer/${link.id}`}>{link.status === "PENDING" ? "Review" : "View"}
+                                  href={`/review/${link.id}`}>{link.status === "PENDING" ? "Review" : "View"}
                                 <ArrowRight size={14}/></Link></div>)}
                         {totalPages > 1 && <div className="queue-pagination">
                             <span>Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)} of {total}</span>

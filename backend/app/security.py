@@ -47,3 +47,9 @@ def require_reviewer(user: User = Depends(get_current_user)) -> User:
     if user.role != UserRole.REVIEWER.value:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Reviewer access required")
     return user
+
+
+def require_specialist(user: User = Depends(get_current_user)) -> User:
+    if user.role != UserRole.SPECIALIST.value:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Specialist access required")
+    return user

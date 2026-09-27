@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 
-from sqlalchemy import JSON, DateTime, Float, ForeignKey, Index, String, Text, UniqueConstraint
+from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Index, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
@@ -13,6 +13,7 @@ def utc_now() -> datetime:
 
 class UserRole(str, Enum):
     REVIEWER = "REVIEWER"
+    SPECIALIST = "SPECIALIST"
 
 
 class ViolationCategory(str, Enum):
@@ -28,12 +29,8 @@ class ReviewStatus(str, Enum):
 
 
 class ReviewDecision(str, Enum):
-    SEXUAL_VIOLENCE = "SEXUAL_VIOLENCE"
-    CHILD_RELATED_HARM = "CHILD_RELATED_HARM"
-    HATE_RELATED = "HATE_RELATED"
-    OTHER = "OTHER"
-    NOT_A_VIOLATION = "NOT_A_VIOLATION"
-    UNCLEAR = "UNCLEAR"
+    YES = "YES"
+    NO = "NO"
 
 
 class User(Base):
@@ -55,6 +52,8 @@ class PublicReport(Base):
     url: Mapped[str] = mapped_column(Text)
     category: Mapped[str] = mapped_column(String(64), index=True)
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source: Mapped[str] = mapped_column(String(32), default="PUBLIC", index=True)
+    ai_potential: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
 
 
@@ -83,6 +82,8 @@ class Review(Base):
     detected_link_id: Mapped[str] = mapped_column(ForeignKey("detected_links.id"), index=True)
     reviewer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     decision: Mapped[str] = mapped_column(String(64))
+    sexual_violence: Mapped[str] = mapped_column(String(8), default="NO")
+    harmful_information: Mapped[str] = mapped_column(String(8), default="NO")
     evidence: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
 

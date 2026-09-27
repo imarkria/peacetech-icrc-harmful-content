@@ -36,9 +36,14 @@ class ReportResponse(BaseModel):
     category: ViolationCategory
     reason: str | None = None
     created_at: datetime
+    queued: bool
+    ai_potential: bool
 
 
 class ReviewEvidence(BaseModel):
+    basicTags: list[str] = Field(default_factory=list)
+    targetedEthnicity: str = Field(default="", max_length=200)
+    targetedEthnicity2: str = Field(default="", max_length=200)
     sexualElements: list[str] = Field(default_factory=list)
     coerciveCircumstances: list[str] = Field(default_factory=list)
     sexualForms: list[str] = Field(default_factory=list)
@@ -50,6 +55,8 @@ class ReviewSummary(BaseModel):
     decision: ReviewDecision
     reviewed_at: datetime
     reviewer_id: int
+    sexual_violence: bool
+    harmful_information: bool
     evidence: ReviewEvidence | None = None
 
 
@@ -97,7 +104,8 @@ class AnalysisResponse(BaseModel):
 
 
 class ReviewSubmit(BaseModel):
-    decision: ReviewDecision
+    sexual_violence: bool
+    harmful_information: bool
     evidence: ReviewEvidence | None = None
 
 

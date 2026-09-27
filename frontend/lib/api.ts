@@ -44,7 +44,7 @@ type ApiReview = {
   platform: "Telegram" | "Web";
   predicted_category: ViolationCategory;
   confidence: number;
-  source: "SCRAP" | "PUBLIC";
+  source: "SCRAP" | "PUBLIC" | "SPECIALIST";
   status: ReviewStatus;
   detected_at: string;
   context: string;
@@ -53,6 +53,8 @@ type ApiReview = {
     reviewed_at?: string;
     created_at?: string;
     reviewer_id: number;
+    sexual_violence: boolean;
+    harmful_information: boolean;
     evidence?: ReviewEvidence;
   } | null;
 };
@@ -81,6 +83,8 @@ function mapReview(item: ApiReview): DetectedLink {
     review: item.review ? {
       decision: item.review.decision,
       reviewedAt: item.review.reviewed_at || item.review.created_at || "",
+      sexualViolence: item.review.sexual_violence,
+      harmfulInformation: item.review.harmful_information,
       evidence: item.review.evidence,
     } : undefined,
   };
@@ -97,8 +101,8 @@ export async function logoutRequest() {
   await request<void>("/api/auth/logout", { method: "POST" });
 }
 
-export async function createReportRequest(payload: { url: string; category: ViolationCategory; reason?: string }) {
-  return request<{ reference: string; reason: string | null }>("/api/reports", {
+export async function createReportRequest(payload: { url: string; category: ViolationCategory; reason?: string }, source: "PUBLIC" | "SPECIALIST" = "PUBLIC") {
+  return request<{ reference: string; reason: string | null; queued: boolean; ai_potential: boolean }>(source === "SPECIALIST" ? "/api/specialist/reports" : "/api/reports", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -137,10 +141,10 @@ export async function getReviewRequest(id: string) {
   return mapReview(result);
 }
 
-export async function submitReviewRequest(id: string, decision: ReviewDecision, evidence: ReviewEvidence) {
+export async function submitReviewRequest(id: string, sexualViolence: boolean, harmfulInformation: boolean, evidence: ReviewEvidence) {
   const result = await request<ApiReview>(`/api/reviews/${encodeURIComponent(id)}`, {
     method: "POST",
-    body: JSON.stringify({ decision, evidence }),
+    body: JSON.stringify({ sexual_violence: sexualViolence, harmful_information: harmfulInformation, evidence }),
   });
   return mapReview(result);
 }

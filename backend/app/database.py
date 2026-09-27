@@ -37,10 +37,29 @@ def initialize_database() -> None:
     if "reason" not in columns:
         with engine.begin() as connection:
             connection.execute(text("ALTER TABLE public_reports ADD COLUMN reason TEXT"))
+    if "source" not in columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE public_reports ADD COLUMN source VARCHAR(32) DEFAULT 'PUBLIC'"))
+    if "ai_potential" not in columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE public_reports ADD COLUMN ai_potential BOOLEAN DEFAULT 0"))
+    with engine.begin() as connection:
+        connection.execute(text("UPDATE public_reports SET source = 'PUBLIC' WHERE source IS NULL"))
+        connection.execute(text("UPDATE public_reports SET ai_potential = 0 WHERE ai_potential IS NULL"))
     review_columns = {column["name"] for column in inspect(engine).get_columns("reviews")}
+    if "sexual_violence" not in review_columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE reviews ADD COLUMN sexual_violence VARCHAR(8) DEFAULT 'NO'"))
+    if "harmful_information" not in review_columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE reviews ADD COLUMN harmful_information VARCHAR(8) DEFAULT 'NO'"))
     if "evidence" not in review_columns:
         with engine.begin() as connection:
             connection.execute(text("ALTER TABLE reviews ADD COLUMN evidence JSON"))
+    with engine.begin() as connection:
+        connection.execute(text("UPDATE reviews SET sexual_violence = 'YES', harmful_information = 'YES' WHERE decision IN ('SEXUAL_VIOLENCE', 'CHILD_RELATED_HARM', 'HATE_RELATED', 'OTHER')"))
+        connection.execute(text("UPDATE reviews SET decision = 'NO' WHERE decision = 'NOT_A_VIOLATION'"))
+        connection.execute(text("UPDATE reviews SET decision = 'YES' WHERE decision IN ('SEXUAL_VIOLENCE', 'CHILD_RELATED_HARM', 'HATE_RELATED', 'OTHER', 'UNCLEAR')"))
     detected_link_columns = {column["name"] for column in inspect(engine).get_columns("detected_links")}
     if "source" not in detected_link_columns:
         with engine.begin() as connection:

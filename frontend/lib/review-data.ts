@@ -5,16 +5,15 @@ export type ViolationCategory =
   | "other";
 
 export type ReviewDecision =
-  | "SEXUAL_VIOLENCE"
-  | "CHILD_RELATED_HARM"
-  | "HATE_RELATED"
-  | "OTHER"
-  | "NOT_A_VIOLATION"
-  | "UNCLEAR";
+  | "YES"
+  | "NO";
 
 export type ReviewStatus = "PENDING" | "REVIEWED";
 
 export type ReviewEvidence = {
+  basicTags?: string[];
+  targetedEthnicity?: string;
+  targetedEthnicity2?: string;
   sexualElements?: string[];
   coerciveCircumstances?: string[];
   sexualForms?: string[];
@@ -28,13 +27,15 @@ export type DetectedLink = {
   platform: "Telegram" | "Web";
   predictedCategory: ViolationCategory;
   confidence: number;
-  source?: "SCRAP" | "PUBLIC";
+  source?: "SCRAP" | "PUBLIC" | "SPECIALIST";
   status: ReviewStatus;
   detectedAt: string;
   context: string;
   review?: {
     decision: ReviewDecision;
     reviewedAt: string;
+    sexualViolence: boolean;
+    harmfulInformation: boolean;
     evidence?: ReviewEvidence;
   };
 };
@@ -47,12 +48,8 @@ export const categoryLabels: Record<ViolationCategory, string> = {
 };
 
 export const decisionLabels: Record<ReviewDecision, string> = {
-  SEXUAL_VIOLENCE: "Sexual violence",
-  CHILD_RELATED_HARM: "Child-related harm",
-  HATE_RELATED: "Hate-related content",
-  OTHER: "Other harmful content",
-  NOT_A_VIOLATION: "Not a violation",
-  UNCLEAR: "Unclear / needs escalation",
+  YES: "Yes",
+  NO: "No",
 };
 
 export const initialDetectedLinks: DetectedLink[] = [
@@ -106,7 +103,9 @@ export const initialDetectedLinks: DetectedLink[] = [
     detectedAt: "2025-02-12T16:21:00Z",
     context: "Model flagged content for general harmful-content review.",
     review: {
-      decision: "NOT_A_VIOLATION",
+      decision: "NO",
+      sexualViolence: false,
+      harmfulInformation: false,
       reviewedAt: "2025-02-13T10:04:00Z",
     },
   },
@@ -120,7 +119,9 @@ export const initialDetectedLinks: DetectedLink[] = [
     detectedAt: "2025-02-11T11:40:00Z",
     context: "Model flagged potentially hateful content targeting a protected group.",
     review: {
-      decision: "HATE_RELATED",
+      decision: "YES",
+      sexualViolence: true,
+      harmfulInformation: true,
       reviewedAt: "2025-02-12T09:17:00Z",
     },
   },
