@@ -2,7 +2,7 @@
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#46505c"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker></defs>
 <rect width="2400" height="1460" fill="#ffffff"/>
 <text x="60" y="68" font-size="38" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">SignalSafe: detecting harmful content related to sexual violence</text>
-<text x="60" y="106" font-size="19" font-weight="normal" fill="#46505c" text-anchor="start" font-style="normal">PeaceTech Hackathon, ICRC challenge, Ukraine: multi-platform collection, duplicate filter, AI triage, community and trained volunteer reports, human review by the ICRC</text>
+<text x="60" y="106" font-size="19" font-weight="normal" fill="#46505c" text-anchor="start" font-style="normal">PeaceTech Hackathon, ICRC challenge, Ukraine: multi-platform collection, AI triage, duplicate filter, community and trained volunteer reports, human review by the ICRC</text>
 <rect x="60" y="150" width="430" height="1060" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
 <text x="86" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Collection</text>
 <text x="86" y="218" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Public posts only: text, metadata, hashes</text>
@@ -39,46 +39,48 @@
 <text x="104" y="1042" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">a paid Apify plan, or the ICRC</text>
 <text x="104" y="1069" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">requesting research or partner</text>
 <text x="104" y="1096" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">access from the platform</text>
-<rect x="1020" y="150" width="420" height="150" rx="14" fill="#fbecec" stroke="#c0392b" stroke-width="2.5"/>
-<text x="1046" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">ICRC local definition</text>
-<text x="1046" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Layered policy: core, children rules,</text>
-<text x="1046" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform and region profiles</text>
-<text x="1046" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Written with the ICRC, human-approved</text>
-<rect x="1520" y="150" width="390" height="150" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
-<text x="1546" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Community</text>
-<rect x="1792.5" y="170" width="99.5" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
-<text x="1842.25" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">anonymous</text>
-<text x="1546" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Anyone: web form, browser</text>
-<text x="1546" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">extension, Telegram bot</text>
-<text x="1546" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Rate-limited · checked by our AI</text>
-<rect x="1990" y="150" width="360" height="150" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
-<text x="2016" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Trained volunteers</text>
-<rect x="2242.0" y="170" width="90.0" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
-<text x="2287.0" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">accounts</text>
-<text x="2016" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Red Cross Movement volunteers</text>
-<text x="2016" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Structured report: harm types,</text>
-<text x="2016" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">urgency, context</text>
-<rect x="560" y="380" width="390" height="330" rx="14" fill="#e9f6ee" stroke="#2e7d4f" stroke-width="2.5"/>
-<text x="586" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Duplicate filter</text>
-<rect x="889.5" y="400" width="42.5" height="26" rx="13" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="2"/>
-<text x="910.75" y="418.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">new</text>
-<text x="586" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Fingerprints, never the content</text>
-<text x="586" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same or near text (SHA, SimHash)</text>
-<text x="586" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same file, near image</text>
-<text x="586" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">(perceptual hash)</text>
-<text x="586" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same post link (normalised URL)</text>
-<text x="586" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal"></text>
-<text x="586" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">One group per content:</text>
-<text x="586" y="644" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">judged once, reviewed once</text>
-<rect x="1020" y="380" width="420" height="330" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
-<text x="1046" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">AI classification</text>
-<text x="1046" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Our model, on our own GPU</text>
-<text x="1046" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">1. Safety filter: explicit media</text>
-<text x="1046" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">    quarantined, never shown</text>
-<text x="1046" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">2. Pre-filter trained on our data</text>
-<text x="1046" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">3. Qwen3.5-9B judge + our policy</text>
-<text x="1046" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">    and annotated examples</text>
-<text x="1046" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Output: route, priority, summary</text>
+<rect x="560" y="150" width="420" height="172" rx="14" fill="#fbecec" stroke="#c0392b" stroke-width="2.5"/>
+<text x="586" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">ICRC local definition</text>
+<text x="586" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Layered policy: core, children rules,</text>
+<text x="586" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform and region profiles</text>
+<text x="586" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Written with the ICRC, human-approved</text>
+<rect x="1050" y="150" width="390" height="172" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
+<text x="1076" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Community</text>
+<rect x="1322.5" y="170" width="99.5" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
+<text x="1372.25" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">anonymous</text>
+<text x="1076" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Anyone: web form, browser</text>
+<text x="1076" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">extension, Telegram bot</text>
+<text x="1076" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Rate-limited · checked by our AI</text>
+<rect x="1520" y="150" width="390" height="172" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
+<text x="1546" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Trained volunteers</text>
+<rect x="1802.0" y="170" width="90.0" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
+<text x="1847.0" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">accounts</text>
+<text x="1546" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Red Cross and Red Crescent</text>
+<text x="1546" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Movement volunteers</text>
+<text x="1546" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Structured report: harm types,</text>
+<text x="1546" y="301" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">urgency, context</text>
+<rect x="560" y="380" width="420" height="330" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
+<text x="586" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">AI classification</text>
+<text x="586" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Our model, on our own GPU</text>
+<text x="586" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">1. Safety filter: explicit media</text>
+<text x="586" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">    quarantined, never shown</text>
+<text x="586" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">2. Pre-filter trained on our data</text>
+<text x="586" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">3. Qwen3.5-9B judge + our policy</text>
+<text x="586" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">    and annotated examples</text>
+<text x="586" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Output: route, priority, summary</text>
+<rect x="1050" y="380" width="390" height="330" rx="14" fill="#e9f6ee" stroke="#2e7d4f" stroke-width="2.5"/>
+<text x="1076" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Duplicate filter</text>
+<rect x="1379.5" y="400" width="42.5" height="26" rx="13" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="2"/>
+<text x="1400.75" y="418.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">new</text>
+<text x="1076" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Fingerprints, never the content</text>
+<text x="1076" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same or near text (SHA, SimHash)</text>
+<text x="1076" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same file, near image</text>
+<text x="1076" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">(perceptual hash)</text>
+<text x="1076" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same post link (normalised URL)</text>
+<text x="1076" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal"></text>
+<text x="1076" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">One item per content, reviewed</text>
+<text x="1076" y="644" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">once. Copies already judged</text>
+<text x="1076" y="671" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">skip the AI</text>
 <rect x="1520" y="380" width="390" height="330" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
 <text x="1546" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Platform</text>
 <text x="1546" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Three lanes, one queue</text>
@@ -122,30 +124,30 @@
 <text x="586" y="1187" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Stored in the database, never in git. Restricted items are never exported.</text>
 <path d="M490,520 L556,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="498" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">posts</text>
-<path d="M950,520 L1016,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="962" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">new</text>
-<path d="M1230,300 L1230,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1242" y="345" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">policy</text>
-<path d="M1440,500 L1516,500" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1446" y="488" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">flagged</text>
-<path d="M1440,620 L1516,620" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1446" y="648" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">reports</text>
-<path d="M1600,300 L1600,340 L1400,340 L1400,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1412" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">reports</text>
-<path d="M2170,300 L2170,340 L1860,340 L1860,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1872" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">priority lane, no screening</text>
+<path d="M770,322 L770,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="782" y="356" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">policy</text>
+<path d="M1150,322 L1150,348 L930,348 L930,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="952" y="340" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">reports</text>
+<path d="M980,500 L1046,500" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="986" y="488" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">flagged</text>
+<path d="M980,620 L1046,620" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="986" y="648" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">reports</text>
+<path d="M1440,520 L1516,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1448" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">groups</text>
+<path d="M1715,322 L1715,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1727" y="356" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">priority lane, no screening</text>
 <path d="M1910,520 L1986,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="1917" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">queue</text>
 <path d="M2170,710 L2170,786" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
 <text x="2182" y="755" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">tags the case</text>
 <path d="M2170,1040 L2170,1086" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="2182" y="1070" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">decision + tags</text>
-<path d="M1230,1090 L1230,714" fill="none" stroke="#2e7d4f" stroke-width="2.5" stroke-dasharray="11 8" marker-end="url(#arrow-green)"/>
-<text x="1250" y="830" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">Planned feedback: past decisions and</text>
-<text x="1250" y="856" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">tags become prompt examples, then</text>
-<text x="1250" y="882" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">retraining data</text>
-<text x="1046" y="656" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start" font-style="normal">Possible minor: restricted,</text>
-<text x="1046" y="680" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start" font-style="normal">never sent, shown or exported</text>
+<path d="M770,1090 L770,714" fill="none" stroke="#2e7d4f" stroke-width="2.5" stroke-dasharray="11 8" marker-end="url(#arrow-green)"/>
+<text x="790" y="830" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">Planned feedback: past decisions and</text>
+<text x="790" y="856" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">tags become prompt examples, then</text>
+<text x="790" y="882" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">retraining data</text>
+<text x="586" y="656" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start" font-style="normal">Possible minor: restricted,</text>
+<text x="586" y="680" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start" font-style="normal">never sent, shown or exported</text>
 <rect x="60" y="1244" width="26" height="22" rx="5" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2"/>
 <text x="98" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">Inputs</text>
 <rect x="183.0" y="1244" width="26" height="22" rx="5" fill="#fbecec" stroke="#c0392b" stroke-width="2"/>
