@@ -12,7 +12,6 @@ import {
     ShieldCheck,
     UserRound
 } from "../../components/icons";
-import {AppShell, isReviewerAuthenticated} from "../../components/app-shell";
 import {ApiError, getReviewQueue} from "../../lib/api";
 import {decisionLabels, DetectedLink, formatRelativeDate} from "../../lib/review-data";
 
@@ -37,11 +36,6 @@ export default function ReviewQueuePage() {
     }, [requestedTab]);
 
     useEffect(() => {
-        if (!isReviewerAuthenticated()) {
-            window.location.href = "/reviewer/login";
-            return;
-        }
-
         let cancelled = false;
         setReady(false);
         setError("");

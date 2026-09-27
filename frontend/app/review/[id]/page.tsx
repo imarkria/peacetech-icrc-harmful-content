@@ -15,7 +15,6 @@ import {
     ShieldCheck,
     TriangleAlert
 } from "../../../components/icons";
-import {isReviewerAuthenticated} from "../../../components/app-shell";
 import {CategoryBadge} from "../../../components/status-badge";
 import {ApiError, getReviewRequest, submitReviewRequest} from "../../../lib/api";
 import {decisionLabels, DetectedLink, formatDate, ReviewDecision, ReviewEvidence} from "../../../lib/review-data";
@@ -94,10 +93,6 @@ export default function ReviewDetailPage() {
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
-        if (!isReviewerAuthenticated()) {
-            window.location.href = "/reviewer/login";
-            return;
-        }
         let cancelled = false;
         setReady(false);
         setError("");

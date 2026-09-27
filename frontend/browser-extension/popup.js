@@ -1,9 +1,10 @@
-const API_URL = "http://localhost:8000/api/reports";
+const DEFAULT_API_BASE_URL = "http://localhost:8000";
 
 const form = document.querySelector("#report-form");
 const urlInput = document.querySelector("#url");
 const reasonInput = document.querySelector("#reason");
 const counter = document.querySelector("#counter");
+const apiUrlInput = document.querySelector("#api-url");
 const submitButton = document.querySelector("#submit");
 const message = document.querySelector("#message");
 
@@ -19,6 +20,15 @@ function isWebUrl(value) {
   } catch {
     return false;
   }
+}
+
+chrome.storage.local.get({ apiBaseUrl: DEFAULT_API_BASE_URL }, ({ apiBaseUrl }) => {
+  apiUrlInput.value = apiBaseUrl;
+});
+
+function apiBaseUrl() {
+  const value = apiUrlInput.value.trim().replace(/\/$/, "");
+  return isWebUrl(value) ? value : DEFAULT_API_BASE_URL;
 }
 
 reasonInput.addEventListener("input", () => {
@@ -46,7 +56,9 @@ form.addEventListener("submit", async (event) => {
   setMessage("");
 
   try {
-    const response = await fetch(API_URL, {
+    const base = apiBaseUrl();
+    chrome.storage.local.set({ apiBaseUrl: base });
+    const response = await fetch(`${base}/api/reports`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url, category: "other", reason: reason || undefined }),

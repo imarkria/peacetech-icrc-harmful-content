@@ -26,6 +26,12 @@
         <textarea id="reason" name="reason" maxlength="1000" rows="4" placeholder="Briefly describe the concern."></textarea>
         <div class="field-meta"><span>Do not include personal information.</span><span id="counter">0/1000</span></div>
 
+        <details class="settings">
+          <summary>Settings</summary>
+          <label for="api-url">SignalSafe API address</label>
+          <input id="api-url" name="api-url" type="url" placeholder="http://localhost:8000" />
+        </details>
+
         <button id="submit" type="submit">Submit report</button>
         <p id="message" class="message" role="status" aria-live="polite"></p>
       </form>

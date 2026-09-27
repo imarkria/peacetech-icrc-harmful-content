@@ -22,7 +22,7 @@ def main():
         for p in load_samples():
             post_id = db.add_post(
                 conn, source="sample", text=p["text"], channel=p["channel"], side=p["side"],
-                url=f"sample://{p['id']}", views=p["views"], forwards=p["forwards"],
+                url=f"https://example.org/samples/{p['id']}", views=p["views"], forwards=p["forwards"],
             )
             added += post_id is not None
         print(f"Added {added} sample posts. Classifying…")

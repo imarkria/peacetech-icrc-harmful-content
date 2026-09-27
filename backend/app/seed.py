@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from .config import DEMO_REVIEWER_EMAIL, get_settings
 from .models import DetectedLink, Review, ReviewDecision, ReviewStatus, User, UserRole, ViolationCategory
 from .security import hash_password
 
@@ -76,9 +77,10 @@ SEED_LINKS = [
 
 
 def seed_demo_data(db: Session) -> None:
-    reviewer = db.scalar(select(User).where(User.email == "reviewer@icrc.org"))
+    reviewer = db.scalar(select(User).where(User.email == DEMO_REVIEWER_EMAIL))
     if reviewer is None:
-        reviewer = User(email="reviewer@icrc.org", password_hash=hash_password("reviewer"), role=UserRole.REVIEWER.value)
+        password = get_settings().demo_reviewer_password
+        reviewer = User(email=DEMO_REVIEWER_EMAIL, password_hash=hash_password(password), role=UserRole.REVIEWER.value)
         db.add(reviewer)
         db.flush()
 

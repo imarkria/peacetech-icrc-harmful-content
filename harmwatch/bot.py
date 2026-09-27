@@ -6,13 +6,14 @@ Needs TELEGRAM_BOT_TOKEN (create the bot with @BotFather). Only text and caption
 are stored; photos and videos are ignored on purpose.
 """
 
+import logging
 import os
 
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
-from harmwatch import db
+from harmwatch import db, publish
 from harmwatch.pipeline import classify_post
 
 WELCOME = (
@@ -50,6 +51,11 @@ async def report(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
         post = conn.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
         classify_post(conn, post)
+        if publish.enabled():
+            try:
+                publish.publish_pending(conn)
+            except Exception:  # the post stays unpublished; `python -m harmwatch.publish` retries it
+                logging.exception("Could not send the post to the review queue")
     await msg.reply_text("Thank you. The post was added to the review queue.")
 
 

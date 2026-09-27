@@ -25,6 +25,7 @@ services:
       CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
       COOKIE_SECURE: "false"
       SEED_DEMO_DATA: "true"
+      INGEST_TOKEN: ${INGEST_TOKEN:-}
     depends_on:
       db:
         condition: service_healthy

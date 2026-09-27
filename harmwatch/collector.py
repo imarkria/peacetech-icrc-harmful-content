@@ -14,7 +14,7 @@ import os
 
 from dotenv import load_dotenv
 
-from harmwatch import db
+from harmwatch import db, publish
 from harmwatch.pipeline import classify_pending
 
 
@@ -48,6 +48,9 @@ def main():
     print(f"Added {asyncio.run(collect(args.limit))} new posts.")
     with db.connect() as conn:
         print(f"Classified {classify_pending(conn)} posts.")
+        if publish.enabled():
+            sent, _ = publish.publish_pending(conn)
+            print(f"Sent {sent} flagged posts to the review queue.")
 
 
 if __name__ == "__main__":

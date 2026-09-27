@@ -93,6 +93,10 @@ export async function loginRequest(email: string, password: string) {
   });
 }
 
+export async function getMeRequest() {
+  return request<{ id: number; email: string; role: string }>("/api/me");
+}
+
 export async function logoutRequest() {
   await request<void>("/api/auth/logout", { method: "POST" });
 }

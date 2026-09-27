@@ -37,6 +37,7 @@ reviewer@icrc.org / reviewer
 | GET | `/api/reviews/{id}` | Reviewer |
 | POST | `/api/reviews/{id}` | Reviewer |
 | GET | `/api/analysis/summary` | Reviewer |
+| POST | `/api/detections` | `X-Ingest-Token` header |
 
 Login sets an HTTP-only `access_token` cookie (JWT signed with `JWT_SECRET`).
 
@@ -45,9 +46,28 @@ Login sets an HTTP-only `access_token` cookie (JWT signed with `JWT_SECRET`).
 Every item in the queue is a `detected_links` row with a `source`:
 
 - `PUBLIC`: a report sent through `POST /api/reports` (web form or browser extension). The report is also kept in `public_reports`.
-- `SCRAP`: a link found by detection. For now these are demo links seeded by `app/seed.py`. The `harmwatch` pipeline at the repository root is not connected yet.
+- `SCRAP`: a link found by detection, sent by `python -m harmwatch.publish` to `POST /api/detections` (ids `hw-<post id>`), plus the demo links seeded by `app/seed.py`. Posts forwarded by volunteers through the Telegram bot arrive as `PUBLIC`.
+
+`POST /api/detections` needs `INGEST_TOKEN` in `.env`. It is disabled while the token is empty. Sending the same post twice changes nothing.
 
 A link can be reviewed once. The decision and the structured evidence are stored in `reviews` and feed `/api/analysis/summary`.
+
+## Reviewer accounts
+
+```bash
+python -m app.create_reviewer analyst@icrc.org      # asks for the password; run it again to reset it
+```
+
+## Deploying outside localhost
+
+Set `ENVIRONMENT` to anything other than `development` (for example `production`). The API then refuses to start unless:
+
+- `JWT_SECRET` is a random value of at least 32 characters (`python -c "import secrets; print(secrets.token_urlsafe(48))"`)
+- `COOKIE_SECURE=true`, so the API is served over HTTPS
+- `SEED_DEMO_DATA=false`, or `DEMO_REVIEWER_PASSWORD` is changed
+- `INGEST_TOKEN`, if set, is at least 32 characters
+
+Create real reviewer accounts with `app.create_reviewer`. In the frontend, set `NEXT_PUBLIC_SHOW_DEMO_LOGIN=false` to hide the demo credentials.
 
 ## Docker
 

@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 from .models import ReviewDecision, ReviewStatus, UserRole, ViolationCategory
@@ -36,6 +38,17 @@ class ReportResponse(BaseModel):
     category: ViolationCategory
     reason: str | None = None
     created_at: datetime
+
+
+class DetectionCreate(BaseModel):
+    """A link flagged by the harmwatch pipeline. `external_id` makes repeated sends idempotent."""
+    external_id: str = Field(min_length=1, max_length=48, pattern=r"^[A-Za-z0-9_.:-]+$")
+    url: HttpUrl
+    predicted_category: ViolationCategory
+    confidence: float = Field(ge=0, le=1)
+    source: Literal["SCRAP", "PUBLIC"] = "SCRAP"
+    detected_at: datetime | None = None
+    context: str = Field(min_length=1, max_length=2000)
 
 
 class ReviewEvidence(BaseModel):

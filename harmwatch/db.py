@@ -41,6 +41,11 @@ CREATE TABLE IF NOT EXISTS assessments (
     result      TEXT NOT NULL,          -- CRSVAssessment JSON (policy/core.md)
     created_at  TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS published (
+    post_id     INTEGER PRIMARY KEY REFERENCES posts(id),
+    link_id     TEXT NOT NULL,          -- detected_links.id in the SignalSafe backend
+    created_at  TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS decisions (
     id          INTEGER PRIMARY KEY,
     post_id     INTEGER NOT NULL REFERENCES posts(id),
@@ -118,6 +123,27 @@ def queue(conn, include_decided: bool = False) -> list[dict]:
     ).fetchall()
     items = [dict(r) | {"result": Classification(**json.loads(r["result"]))} for r in rows]
     return items if include_decided else [i for i in items if i["decision"] is None]
+
+
+def unpublished(conn, buckets: tuple[str, ...]) -> list[dict]:
+    """Classified posts in `buckets` not yet sent to the SignalSafe backend."""
+    marks = ",".join("?" * len(buckets))
+    rows = conn.execute(
+        f"""
+        SELECT p.*, c.backend, c.result, c.bucket, c.priority, c.created_at AS classified_at
+        FROM posts p JOIN classifications c ON c.post_id = p.id
+        LEFT JOIN published pb ON pb.post_id = p.id
+        WHERE pb.post_id IS NULL AND c.bucket IN ({marks})
+        ORDER BY c.priority DESC, p.id
+        """,
+        buckets,
+    ).fetchall()
+    return [dict(r) | {"result": Classification(**json.loads(r["result"]))} for r in rows]
+
+
+def mark_published(conn, post_id: int, link_id: str):
+    conn.execute("INSERT OR REPLACE INTO published VALUES (?,?,?)", (post_id, link_id, now()))
+    conn.commit()
 
 
 def export_decisions(conn) -> list[dict]:

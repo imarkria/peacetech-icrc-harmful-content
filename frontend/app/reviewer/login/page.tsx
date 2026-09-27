@@ -3,8 +3,9 @@
 import Link from "next/link";
 import {FormEvent, useState} from "react";
 import {ArrowLeft, ArrowRight, BadgeCheck, Check, LockKeyhole} from "../../../components/icons";
-import {setReviewerAuthenticated} from "../../../components/app-shell";
 import {ApiError, loginRequest} from "../../../lib/api";
+
+const showDemoHint = process.env.NEXT_PUBLIC_SHOW_DEMO_LOGIN !== "false";
 
 export default function ReviewerLoginPage() {
     const [email, setEmail] = useState("");
@@ -18,7 +19,6 @@ export default function ReviewerLoginPage() {
         setError("");
         try {
             await loginRequest(email, password);
-            setReviewerAuthenticated(true);
             window.location.href = "/reviewer";
         } catch (loginError) {
             if (loginError instanceof ApiError && loginError.status === 401) {
@@ -52,7 +52,8 @@ export default function ReviewerLoginPage() {
                     <button className="button-primary auth-submit" type="submit"
                             disabled={loading}>{loading ? "Signing in…" : "Sign in"} {!loading &&
                         <ArrowRight size={16}/>}</button>
-                    <div className="demo-hint"><strong>Demo access</strong><br/>reviewer@icrc.org · reviewer</div>
+                    {showDemoHint &&
+                        <div className="demo-hint"><strong>Demo access</strong><br/>reviewer@icrc.org · reviewer</div>}
                 </form>
             </div>
         </div>

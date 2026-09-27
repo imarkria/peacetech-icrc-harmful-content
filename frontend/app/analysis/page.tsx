@@ -4,7 +4,6 @@ import {useEffect, useMemo, useState} from "react";
 import {BarChart3, Info} from "../../components/icons";
 import {ApiError, AnalysisCount, AnalysisSummary, getAnalysisSummary} from "../../lib/api";
 import {decisionLabels} from "../../lib/review-data";
-import {isReviewerAuthenticated} from "../../components/app-shell";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 const sourceLabels: Record<string, string> = {SCRAP: "Scrap", PUBLIC: "Public"};
@@ -83,10 +82,6 @@ export default function AnalysisPage() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        if (!isReviewerAuthenticated()) {
-            window.location.href = "/reviewer/login";
-            return;
-        }
         setData(null);
         setError("");
         getAnalysisSummary().then(setData).catch((requestError) => {

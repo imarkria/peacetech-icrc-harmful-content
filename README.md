@@ -1,28 +1,30 @@
-# PeaceTech Hackathon — ICRC Challenge
+# SignalSafe — PeaceTech Hackathon, ICRC Challenge
 
 **Challenge:** How can we identify harmful content related to sexual violence?
 
 Challenge given by the International Committee of the Red Cross (ICRC) for the PeaceTech Hackathon.
 
+SignalSafe finds and collects links to harmful content related to conflict-related sexual violence, and gives ICRC reviewers a safe place to label them. `harmwatch` is the name of its detection package.
+
 ## Team
 
-- _Add names here_
+- Ismaël Markria — platform skeleton, integration
+- SheEagle — web app, backend, browser extension
+- gmikou — detection pipeline, policy layers, evaluation
 
 ## Architecture
 
-The repository has two parts that run independently today:
-
 ```
- PLATFORM  (SignalSafe)                                  DETECTION  (harmwatch)
+ PLATFORM                                                DETECTION  (harmwatch)
 
  Public user ── web form (/report) ──┐                   Telegram channels ── collector ──┐
  Browser extension ──────────────────┤                   Volunteers ── Telegram bot ──────┤
                                      ▼                                                    ▼
  frontend/  Next.js ◄──── REST ────► backend/  FastAPI   harmwatch/  classifier ──► data/harmwatch.db
             reviewer queue,          PostgreSQL | SQLite     (Claude, local Qwen3.5-9B or keywords)
-            review form, analysis                            applies policy/ (layered, per region)
-                                     ▲
-                                     └──────── not connected yet: the review queue is seeded with demo links
+            review form, analysis          ▲                 applies policy/ (layered, per region)
+                                           │                                              │
+                                           └──── POST /api/detections ◄── harmwatch.publish
 ```
 
 - **Platform** (`frontend/`, `backend/`): the public report flow, the ICRC reviewer workspace and the analysis dashboard. Reviewers see links and context, never media.
@@ -42,6 +44,7 @@ The repository has two parts that run independently today:
 | `harmwatch/triage.py` | Turns labels into Escalate / Harmful / Potentially harmful / Not harmful, plus a priority score |
 | `harmwatch/db.py` | SQLite storage for the detection side, in `data/` (git-ignored) |
 | `harmwatch/collector.py`, `bot.py` | Telegram channel reader (text only) and volunteer bot |
+| `harmwatch/publish.py` | Sends Harmful and Potentially harmful posts to the backend's review queue |
 | `scripts/` | Data preparation, region approval, benchmarks and evaluation, figures |
 | `tests/` | Tests for the policy rules, safety filters, cascade and video segments |
 | `docs/` | Results ([images](docs/FINAL_IMAGES.md), [cascade](docs/RESULTS_CASCADE.md)), frozen prompts, metrics, presentation pack |
@@ -70,6 +73,8 @@ npm run dev
 
 Open http://localhost:3000. Reviewer demo account: `reviewer@icrc.org` / `reviewer`. The API docs are at http://localhost:8000/docs.
 
+Before running it anywhere other than your machine, see [Deploying outside localhost](backend/README.md#deploying-outside-localhost).
+
 ## Run the detection pipeline
 
 From the repository root:
@@ -88,7 +93,24 @@ Pick the classifier with `CLASSIFIER` in `.env`:
 - `claude`: needs `ANTHROPIC_API_KEY`. Applies `policy.md`.
 - `local`: needs a llama-server running Qwen3.5-9B (`scripts/serve_llm.sh`, written for one V100 32 GB). Applies `policy/` for `REGION` and `PLATFORM`.
 
-Other commands:
+### Send detections to the review queue
+
+Generate a token and put the same value in `backend/.env` (`INGEST_TOKEN`) and in the root `.env` (`SIGNALSAFE_INGEST_TOKEN`). Restart the backend after you change `backend/.env`.
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+```bash
+python -m harmwatch.seed        # classify the sample posts
+python -m harmwatch.publish     # send the flagged ones to the queue
+```
+
+The collector and the bot send new flagged posts on their own when the token is set. Only the neutral summary and the labels are sent, never the post text. Posts flagged as possibly involving a minor (Escalate) are never sent: the platform has no restricted handling for them yet.
+
+Local databases seeded before this change still have `sample://` links, which the backend rejects. Delete `data/harmwatch.db` and seed again.
+
+### Other commands
 
 ```bash
 python -m harmwatch.evaluate                # precision/recall, false flags on safe posts, parity by side
@@ -109,4 +131,4 @@ The image, cascade and video scripts download public datasets into `data/` and n
 
 This project deals with sensitive content. Do **not** commit raw datasets, personal data, or harmful media to this repository. Keep data out of git (see `.gitignore`) and share it only through the channels agreed with the ICRC.
 
-Content that may involve a minor and a sexual element is never shown, described or exported. The detection pipeline routes it to `restricted_escalation` and leaves it out of exports.
+Content that may involve a minor and a sexual element is never shown, described or exported. The detection pipeline routes it to `restricted_escalation`, leaves it out of exports and never sends it to the review queue.

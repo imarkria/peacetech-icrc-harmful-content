@@ -5,21 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogIn, LogOut, Menu, X } from "./icons";
 import { Logo } from "./logo";
-import { logoutRequest } from "../lib/api";
-
-const AUTH_KEY = "icrc-reviewer-auth";
-
-export function isReviewerAuthenticated() {
-  if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(AUTH_KEY) === "true";
-}
-
-export function setReviewerAuthenticated(value: boolean) {
-  if (typeof window !== "undefined") {
-    if (value) window.localStorage.setItem(AUTH_KEY, "true");
-    else window.localStorage.removeItem(AUTH_KEY);
-  }
-}
+import { getMeRequest, logoutRequest } from "../lib/api";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -29,17 +15,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    setAuthenticated(isReviewerAuthenticated());
+    // The session is an HTTP-only cookie: ask the backend whether it is still valid.
+    let active = true;
+    getMeRequest()
+      .then(() => active && setAuthenticated(true))
+      .catch(() => active && setAuthenticated(false))
+      .finally(() => active && setMounted(true));
+    return () => {
+      active = false;
+    };
   }, [pathname]);
 
   async function signOut() {
     try {
       await logoutRequest();
     } catch {
-      // Clear the local marker even when the backend session has already expired.
+      // The session may already have expired on the backend.
     }
-    setReviewerAuthenticated(false);
     setAuthenticated(false);
     setMobileOpen(false);
     router.push("/");

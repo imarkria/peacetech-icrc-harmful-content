@@ -1,9 +1,10 @@
+import secrets
 from contextlib import asynccontextmanager
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select, text
 from sqlalchemy.exc import IntegrityError
@@ -14,6 +15,7 @@ from .database import SessionLocal, engine, get_db, initialize_database
 from .models import DetectedLink, PublicReport, Review, ReviewDecision, ReviewStatus, User
 from .schemas import (
     DetectedLinkResponse,
+    DetectionCreate,
     HealthResponse,
     LoginRequest,
     LoginResponse,
@@ -96,7 +98,7 @@ def sync_public_reports_to_queue(db: Session) -> None:
             platform=public_report_platform(report.url),
             predicted_category=report.category,
             confidence=0.0,
-            source="PUBLIC",
+        source="PUBLIC",
             status=ReviewStatus.PENDING.value,
             detected_at=report.created_at,
             context=report.reason or "Submitted by a public user for reviewer assessment.",
@@ -162,7 +164,7 @@ def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> Repor
         platform=public_report_platform(report_url),
         predicted_category=payload.category.value,
         confidence=0.0,
-            source="PUBLIC",
+        source="PUBLIC",
         status=ReviewStatus.PENDING.value,
         detected_at=datetime.now(timezone.utc),
         context=report_reason or "Submitted by a public user for reviewer assessment.",
@@ -177,6 +179,45 @@ def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> Repor
         reason=report.reason,
         created_at=report.created_at,
     )
+
+
+def require_ingest_token(x_ingest_token: str | None = Header(default=None)) -> None:
+    if not settings.ingest_token:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Detection ingestion is disabled (INGEST_TOKEN is not set)")
+    if not x_ingest_token or not secrets.compare_digest(x_ingest_token, settings.ingest_token):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid ingest token")
+
+
+@app.post("/api/detections", response_model=DetectedLinkResponse, status_code=status.HTTP_201_CREATED, tags=["detections"])
+def create_detection(
+    payload: DetectionCreate,
+    response: Response,
+    _: None = Depends(require_ingest_token),
+    db: Session = Depends(get_db),
+) -> DetectedLinkResponse:
+    """Add a link flagged by the harmwatch pipeline to the review queue. Sending the same external_id again is a no-op."""
+    link_id = f"hw-{payload.external_id}"
+    existing = db.scalar(select(DetectedLink).options(joinedload(DetectedLink.review)).where(DetectedLink.id == link_id))
+    if existing:
+        response.status_code = status.HTTP_200_OK
+        return to_link_response(existing)
+
+    url = str(payload.url)
+    link = DetectedLink(
+        id=link_id,
+        url=url,
+        platform=public_report_platform(url),
+        predicted_category=payload.predicted_category.value,
+        confidence=payload.confidence,
+        source=payload.source,
+        status=ReviewStatus.PENDING.value,
+        detected_at=payload.detected_at or datetime.now(timezone.utc),
+        context=payload.context,
+    )
+    db.add(link)
+    db.commit()
+    db.refresh(link)
+    return to_link_response(link)
 
 
 @app.get("/api/reviews/queue", response_model=ReviewQueueResponse, tags=["reviews"])
