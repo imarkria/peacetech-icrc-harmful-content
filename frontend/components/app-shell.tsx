@@ -5,12 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogIn, LogOut, Menu, X } from "./icons";
 import { Logo } from "./logo";
-import { getMeRequest, logoutRequest } from "../lib/api";
+import { getMeRequest, logoutRequest, UserRole } from "../lib/api";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(false);
+  const [role, setRole] = useState<UserRole | null>(null);
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -18,8 +18,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     // The session is an HTTP-only cookie: ask the backend whether it is still valid.
     let active = true;
     getMeRequest()
-      .then(() => active && setAuthenticated(true))
-      .catch(() => active && setAuthenticated(false))
+      .then((user) => active && setRole(user.role))
+      .catch(() => active && setRole(null))
       .finally(() => active && setMounted(true));
     return () => {
       active = false;
@@ -32,13 +32,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     } catch {
       // The session may already have expired on the backend.
     }
-    setAuthenticated(false);
+    setRole(null);
     setMobileOpen(false);
     router.push("/");
   }
 
   const isReviewArea = pathname.startsWith("/reviewer") || pathname.startsWith("/review") || pathname === "/login";
   const isAnalysisArea = pathname.startsWith("/analysis");
+  const isVolunteerArea = pathname.startsWith("/volunteer");
 
   return (
     <div className="site-frame">
@@ -57,14 +58,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link className={pathname.startsWith("/report") ? "nav-link nav-link-active" : "nav-link"} href="/report" onClick={() => setMobileOpen(false)}>
               Report a link
             </Link>
-            {mounted && authenticated ? (
+            {mounted && role ? (
               <>
-                <Link className={isReviewArea && !isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
-                  Reviewer workspace
-                </Link>
-                <Link className={isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/analysis" onClick={() => setMobileOpen(false)}>
-                  Data analysis
-                </Link>
+                {role === "REVIEWER" ? <>
+                  <Link className={isReviewArea && !isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
+                    Reviewer workspace
+                  </Link>
+                  <Link className={isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/analysis" onClick={() => setMobileOpen(false)}>
+                    Data analysis
+                  </Link>
+                </> : <Link className={isVolunteerArea ? "nav-link nav-link-active" : "nav-link"} href="/volunteer/report" onClick={() => setMobileOpen(false)}>
+                  Volunteer report
+                </Link>}
                 <button className="nav-button" onClick={signOut}>
                   <LogOut size={15} />
                   Sign out
@@ -73,7 +78,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             ) : (
               <Link className="nav-button nav-button-dark" href="/reviewer/login" onClick={() => setMobileOpen(false)}>
                 <LogIn size={15} />
-                Reviewer login
+                Sign in
               </Link>
             )}
           </nav>

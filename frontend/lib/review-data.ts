@@ -14,6 +14,18 @@ export type ReviewDecision =
 
 export type ReviewStatus = "PENDING" | "REVIEWED";
 
+export type Source = "SCRAP" | "VOLUNTEER" | "PUBLIC";
+
+export type Priority = "urgent" | "high" | "standard" | "none";
+
+export type Occurrence = {
+  url: string;
+  platform: string;
+  source: Source;
+  note?: string | null;
+  seenAt: string;
+};
+
 export type ReviewEvidence = {
   sexualElements?: string[];
   coerciveCircumstances?: string[];
@@ -25,13 +37,16 @@ export type ReviewEvidence = {
 export type DetectedLink = {
   id: string;
   url: string;
-  platform: "Telegram" | "Web";
+  platform: string;
   predictedCategory: ViolationCategory;
   confidence: number;
-  source?: "SCRAP" | "PUBLIC";
+  source?: Source;
   status: ReviewStatus;
   detectedAt: string;
   context: string;
+  priority: Priority;
+  occurrenceCount: number;
+  occurrences: Occurrence[];
   review?: {
     decision: ReviewDecision;
     reviewedAt: string;
@@ -53,6 +68,19 @@ export const decisionLabels: Record<ReviewDecision, string> = {
   OTHER: "Other harmful content",
   NOT_A_VIOLATION: "Not a violation",
   UNCLEAR: "Unclear / needs escalation",
+};
+
+export const sourceLabels: Record<Source, string> = {
+  SCRAP: "Detection",
+  VOLUNTEER: "Trained volunteer",
+  PUBLIC: "Community report",
+};
+
+export const priorityLabels: Record<Priority, string> = {
+  urgent: "Urgent",
+  high: "High",
+  standard: "Standard",
+  none: "Low",
 };
 
 export function formatDate(date: string) {

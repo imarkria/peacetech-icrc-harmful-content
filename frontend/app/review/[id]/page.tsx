@@ -17,7 +17,7 @@ import {
 } from "../../../components/icons";
 import {CategoryBadge} from "../../../components/status-badge";
 import {ApiError, getReviewRequest, submitReviewRequest} from "../../../lib/api";
-import {decisionLabels, DetectedLink, formatDate, ReviewDecision, ReviewEvidence} from "../../../lib/review-data";
+import {decisionLabels, DetectedLink, formatDate, priorityLabels, ReviewDecision, ReviewEvidence, sourceLabels} from "../../../lib/review-data";
 
 const decisions: ReviewDecision[] = ["SEXUAL_VIOLENCE", "CHILD_RELATED_HARM", "HATE_RELATED", "OTHER", "NOT_A_VIOLATION", "UNCLEAR"];
 
@@ -174,7 +174,8 @@ export default function ReviewDetailPage() {
     // must not decide which guidance a reviewer is allowed to see.
     const showSexualGuidance = true;
     const showHarmfulGuidance = true;
-    const isPublicReport = link.source === "PUBLIC";
+    const isPublicReport = link.source === "PUBLIC" || link.source === "VOLUNTEER";
+    const otherCopies = link.occurrences.filter((o) => o.url !== link.url);
 
     return <section className="inner-page">
         <div className="page-container">
@@ -196,11 +197,11 @@ export default function ReviewDetailPage() {
                 <div>
                     <div className="detail-card source-detail-card">
                         <div className="card-kicker">Source</div>
-                        <h2>{isPublicReport ? "Public report" : "Detected link"}</h2>
+                        <h2>{sourceLabels[link.source || "SCRAP"]}</h2>
                         <div className="source-box"><h3>Source link</h3>
                             <div className="source-url">{link.url}</div>
                             <div className="source-meta"><span><Link2
-                                size={13}/> {link.platform}</span><span>{link.source === "PUBLIC" ? "Public report" : "Scrap"}</span><span>Detected {formatDate(link.detectedAt)}</span><a
+                                size={13}/> {link.platform}</span><span>{priorityLabels[link.priority]} priority</span><span>Detected {formatDate(link.detectedAt)}</span><a
                                 href={link.url} target="_blank" rel="noreferrer" style={{
                                 color: "var(--teal-dark)",
                                 display: "inline-flex",
@@ -210,8 +211,18 @@ export default function ReviewDetailPage() {
                         </div>
                         <div className="guidance-callout"><TriangleAlert size={16}/>
                             <div>
-                                <p>{link.context}</p></div>
+                                <p style={{whiteSpace: "pre-line"}}>{link.context}</p></div>
                         </div>
+                        {link.occurrenceCount > 1 && <div className="source-box" style={{marginTop: 14}}>
+                            <h3>Seen {link.occurrenceCount} times</h3>
+                            <p className="micro-note">Copies of the same content (reposts, other platforms, other
+                                reports). Your decision applies to all of them.</p>
+                            {otherCopies.map((o, index) => <div className="source-meta" key={`${o.url}-${index}`}>
+                                <span><Link2 size={13}/> {o.platform}</span><span>{sourceLabels[o.source]}</span>
+                                <span>{formatDate(o.seenAt)}</span>
+                                <span className="source-url" style={{fontSize: 12}}>{o.url}</span>
+                            </div>)}
+                        </div>}
                         <p className="micro-note"><ShieldCheck size={14}/> Do not download, copy or share sensitive
                             content.</p></div>
 
@@ -326,19 +337,19 @@ export default function ReviewDetailPage() {
                 </div>
                 <aside>
                     <div className="detail-card model-card">
-                        <div className="card-kicker">{isPublicReport ? "Public report" : "Model signal"}</div>
+                        <div className="card-kicker">{isPublicReport ? sourceLabels[link.source || "PUBLIC"] : "Model signal"}</div>
                         <h2>{isPublicReport ? "Reported category" : "Model prediction"}</h2>
                         <div className="prediction-row"><span
                             className="prediction-label">{isPublicReport ? "Reporter selected" : "Predicted category"}</span><span
                             className="prediction-value"><CategoryBadge category={link.predictedCategory}/></span></div>
-                        {!isPublicReport && <>
+                        {link.confidence > 0 && <>
                             <div className="prediction-row"><span className="prediction-label">Confidence</span><span
                                 className="prediction-value prediction-confidence">{Math.round(link.confidence * 100)}%</span>
                             </div>
                             <div className="confidence-track confidence-track-wide"><span
                                 style={{width: `${link.confidence * 100}%`}}/></div>
                         </>}
-                        {isPublicReport && <div className="prediction-row"><span className="prediction-label">Model confidence</span><span
+                        {link.confidence === 0 && <div className="prediction-row"><span className="prediction-label">Model confidence</span><span
                             className="prediction-value">Not available</span></div>}
                         <div className="prediction-row"><span className="prediction-label">Queue status</span><span
                             className="prediction-value">{reviewed ? "Reviewed" : "Pending review"}</span></div>

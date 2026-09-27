@@ -5,14 +5,15 @@ Next.js (App Router, TypeScript) app for public reporting and ICRC review. It ta
 | Route | Who | What |
 | --- | --- | --- |
 | `/` → `/report` → `/report/success` | Public, no account | Submit a link and an optional reason (reviewers set the category). Returns a reference such as `SS-000012`. |
-| `/reviewer/login` (`/login` redirects) | ICRC reviewer | Sign in. The session is an HTTP-only cookie set by the backend. |
-| `/review` | Reviewer | Queue of detected and publicly reported links, with status filter and search |
-| `/review/:id` | Reviewer | Review form: decision plus structured evidence (sexual elements, forms, harm types, pathways) |
+| `/reviewer/login` (`/login` redirects) | Reviewers and trained volunteers | Sign in, then go to the queue or the volunteer form by role. The session is an HTTP-only cookie set by the backend. |
+| `/volunteer/report` | Trained volunteer | Structured report: link, category, harm types, urgency, context. Goes to the priority lane. |
+| `/review` | Reviewer | Queue from the three lanes (detection, trained volunteers, community), urgent and most-copied first |
+| `/review/:id` | Reviewer | Review form: decision plus structured evidence. Lists every copy of the content; the decision covers them all. |
 | `/analysis` | Reviewer | Charts over reviewed items: by source, decision, platform, evidence, over time |
 
-Demo reviewer: `reviewer@icrc.org` / `reviewer` (seeded by the backend). The sign-in page shows it unless `NEXT_PUBLIC_SHOW_DEMO_LOGIN=false`.
+Demo accounts: `reviewer@icrc.org` and `volunteer@icrc.org`, password `reviewer` (seeded by the backend). The sign-in page shows them unless `NEXT_PUBLIC_SHOW_DEMO_LOGIN=false`.
 
-The header asks `GET /api/me` on each navigation to know whether a reviewer is signed in. Reviewer pages redirect to sign-in when the API answers 401.
+The header asks `GET /api/me` on each navigation to know who is signed in and shows the links for that role. Reviewer pages redirect to sign-in when the API answers 401.
 
 ## Run locally
 

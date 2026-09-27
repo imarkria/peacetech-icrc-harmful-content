@@ -1,4 +1,4 @@
-import { DetectedLink, ReviewDecision, ReviewEvidence, ReviewStatus, ViolationCategory } from "./review-data";
+import { DetectedLink, Priority, ReviewDecision, ReviewEvidence, ReviewStatus, Source, ViolationCategory } from "./review-data";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
 
@@ -41,13 +41,16 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 type ApiReview = {
   id: string;
   url: string;
-  platform: "Telegram" | "Web";
+  platform: string;
   predicted_category: ViolationCategory;
   confidence: number;
-  source: "SCRAP" | "PUBLIC";
+  source: Source;
   status: ReviewStatus;
   detected_at: string;
   context: string;
+  priority: Priority;
+  occurrence_count: number;
+  occurrences: { url: string; platform: string; source: Source; note?: string | null; seen_at: string }[];
   review?: {
     decision: ReviewDecision;
     reviewed_at?: string;
@@ -78,6 +81,15 @@ function mapReview(item: ApiReview): DetectedLink {
     status: item.status,
     detectedAt: item.detected_at,
     context: item.context,
+    priority: item.priority,
+    occurrenceCount: item.occurrence_count,
+    occurrences: (item.occurrences || []).map((o) => ({
+      url: o.url,
+      platform: o.platform,
+      source: o.source,
+      note: o.note,
+      seenAt: o.seen_at,
+    })),
     review: item.review ? {
       decision: item.review.decision,
       reviewedAt: item.review.reviewed_at || item.review.created_at || "",
@@ -87,14 +99,16 @@ function mapReview(item: ApiReview): DetectedLink {
 }
 
 export async function loginRequest(email: string, password: string) {
-  return request<{ user: { id: number; email: string; role: string } }>("/api/auth/login", {
+  return request<{ user: { id: number; email: string; role: UserRole } }>("/api/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
 }
 
+export type UserRole = "REVIEWER" | "VOLUNTEER";
+
 export async function getMeRequest() {
-  return request<{ id: number; email: string; role: string }>("/api/me");
+  return request<{ id: number; email: string; role: UserRole }>("/api/me");
 }
 
 export async function logoutRequest() {
@@ -103,6 +117,29 @@ export async function logoutRequest() {
 
 export async function createReportRequest(payload: { url: string; category: ViolationCategory; reason?: string }) {
   return request<{ reference: string; reason: string | null }>("/api/reports", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export type HarmType =
+  | "threat_incitement"
+  | "glorification"
+  | "mockery"
+  | "victim_identification"
+  | "stigmatization"
+  | "sexually_explicit"
+  | "denial_or_disinformation"
+  | "unverified_claim";
+
+export async function createVolunteerReportRequest(payload: {
+  url: string;
+  category: ViolationCategory;
+  harm_types: HarmType[];
+  urgency: "urgent" | "high" | "standard";
+  context: string;
+}) {
+  return request<{ reference: string; link_id: string; duplicate: boolean }>("/api/volunteer/reports", {
     method: "POST",
     body: JSON.stringify(payload),
   });

@@ -18,8 +18,8 @@ export default function ReviewerLoginPage() {
         setLoading(true);
         setError("");
         try {
-            await loginRequest(email, password);
-            window.location.href = "/reviewer";
+            const {user} = await loginRequest(email, password);
+            window.location.href = user.role === "VOLUNTEER" ? "/volunteer/report" : "/reviewer";
         } catch (loginError) {
             if (loginError instanceof ApiError && loginError.status === 401) {
                 setError("Email or password is incorrect.");
@@ -33,14 +33,14 @@ export default function ReviewerLoginPage() {
     return <section className="inner-page">
         <div className="page-container"><Link className="breadcrumb" href="/"><ArrowLeft size={14}/> Back to home</Link>
             <div className="auth-layout">
-                <div className="auth-intro"><span className="eyebrow">ICRC reviewer access</span><h1>Review detected
+                <div className="auth-intro"><span className="eyebrow">ICRC reviewers and trained volunteers</span><h1>Review detected
                     links.</h1><p>Sign in to review links detected by the system and record a final label.</p>
                     <div className="auth-points"><span className="auth-point"><Check
                         size={16}/> Review pending links</span><span className="auth-point"><Check size={16}/> See the model category and confidence</span><span
                         className="auth-point"><Check size={16}/> Record one final label</span></div>
                 </div>
                 <form className="auth-card" onSubmit={login}><BadgeCheck className="principle-icon" size={25}/>
-                    <h2>Reviewer sign in</h2><p className="auth-card-intro">Use your reviewer credentials.</p>{error &&
+                    <h2>Sign in</h2><p className="auth-card-intro">Use the account the ICRC gave you.</p>{error &&
                         <div className="auth-error"><LockKeyhole size={15}/> <span>{error}</span></div>}
                     <div className="form-group"><label className="form-label" htmlFor="email">Email
                         address</label><input className="text-input" id="email" type="email" placeholder="you@icrc.org"
@@ -53,7 +53,7 @@ export default function ReviewerLoginPage() {
                             disabled={loading}>{loading ? "Signing in…" : "Sign in"} {!loading &&
                         <ArrowRight size={16}/>}</button>
                     {showDemoHint &&
-                        <div className="demo-hint"><strong>Demo access</strong><br/>reviewer@icrc.org · reviewer</div>}
+                        <div className="demo-hint"><strong>Demo access</strong><br/>reviewer@icrc.org · reviewer<br/>volunteer@icrc.org · reviewer</div>}
                 </form>
             </div>
         </div>

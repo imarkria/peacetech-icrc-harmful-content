@@ -3,10 +3,9 @@
 import {useEffect, useMemo, useState} from "react";
 import {BarChart3, Info} from "../../components/icons";
 import {ApiError, AnalysisCount, AnalysisSummary, getAnalysisSummary} from "../../lib/api";
-import {decisionLabels} from "../../lib/review-data";
+import {decisionLabels, sourceLabels} from "../../lib/review-data";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
-const sourceLabels: Record<string, string> = {SCRAP: "Scrap", PUBLIC: "Public"};
 const evidenceLabels: Record<string, string> = {
     "HP-01": "Could trigger violence",
     "HP-02": "Stigmatises or exposes survivors",
@@ -130,7 +129,7 @@ export default function AnalysisPage() {
                         <div className="analysis-card-heading">
                             <div><span className="card-kicker">Source</span><h2>Reviewed by source</h2></div>
                         </div>
-                        <BarList items={data.source_counts} label={(key) => sourceLabels[key] || key} percentage/></article>
+                        <BarList items={data.source_counts} label={(key) => sourceLabels[key as keyof typeof sourceLabels] || key} percentage/></article>
                     <article className="analysis-card">
                         <div className="analysis-card-heading">
                             <div><span className="card-kicker">Platform</span><h2>Reviewed by platform</h2></div>

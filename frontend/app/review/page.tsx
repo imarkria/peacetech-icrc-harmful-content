@@ -13,7 +13,7 @@ import {
     UserRound
 } from "../../components/icons";
 import {ApiError, getReviewQueue} from "../../lib/api";
-import {decisionLabels, DetectedLink, formatRelativeDate} from "../../lib/review-data";
+import {decisionLabels, DetectedLink, formatRelativeDate, priorityLabels, sourceLabels} from "../../lib/review-data";
 
 const PAGE_SIZE = 10;
 
@@ -73,7 +73,7 @@ export default function ReviewQueuePage() {
         <div className="page-container">
             <div className="review-header">
                 <div className="page-heading"><span className="eyebrow">ICRC reviewer workspace</span><h1>Review
-                    queue</h1><p>Review system-detected links and public reports.</p></div>
+                    queue</h1><p>Detected links, trained volunteer reports and community reports. Copies of the same content appear once.</p></div>
                 {/*<div className="reviewer-chip"><span className="avatar">IC</span><span>ICRC reviewer</span>*/}
                 {/*</div>*/}
             </div>
@@ -126,9 +126,9 @@ export default function ReviewQueuePage() {
                         </div>
                         {visibleLinks.map((link) => <div className="queue-row" key={link.id}>
                             <div className="url-cell"><span className="url-title">{link.url}</span><span
-                                className="url-subtitle">{link.source === "PUBLIC" ? "Public report" : "Scrap"} · {formatRelativeDate(link.detectedAt)}</span>
+                                className="url-subtitle">{priorityLabels[link.priority]} priority · {link.occurrenceCount > 1 ? `${link.occurrenceCount} copies · ` : ""}{formatRelativeDate(link.detectedAt)}</span>
                             </div>
-                            <div className="source-value">{link.source === "PUBLIC" ? "Public" : "Scrap"}</div>
+                            <div className="source-value">{sourceLabels[link.source || "SCRAP"]}</div>
                             <div
                                 className={link.review ? "decision-recorded" : "decision-pending"}>{link.review ? decisionLabels[link.review.decision] : "Not decided"}</div>
                             <Link className="row-action"

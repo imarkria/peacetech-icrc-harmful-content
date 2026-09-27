@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, Info, ShieldCheck } from "../../components/icons";
-import { createReportRequest } from "../../lib/api";
+import { ApiError, createReportRequest } from "../../lib/api";
 
 export default function ReportPage() {
   const [url, setUrl] = useState("");
@@ -34,8 +34,10 @@ export default function ReportPage() {
       });
       window.sessionStorage.setItem("last-report", JSON.stringify({ url, category: "other", reason: reason.trim(), reference: result.reference }));
       window.location.href = `/report/success?ref=${encodeURIComponent(result.reference)}`;
-    } catch {
-      setSubmitError("The reporting service is unavailable. Please try again.");
+    } catch (error) {
+      setSubmitError(error instanceof ApiError && error.status === 429
+        ? "You have sent several reports in a short time. Please try again in a few minutes."
+        : "The reporting service is unavailable. Please try again.");
       setSubmitting(false);
     }
   }
@@ -44,7 +46,7 @@ export default function ReportPage() {
     <section className="inner-page">
       <div className="page-container content-narrow">
         <Link className="breadcrumb" href="/"><ArrowLeft size={14} /> Back to home</Link>
-        <div className="page-heading"><h1>Submit a link</h1><p>No sign-in required. Your report will be added to the reviewer queue.</p></div>
+        <div className="page-heading"><h1>Submit a link</h1><p>No sign-in required. Your report is checked automatically, then reviewed by the ICRC.</p></div>
         <form className="form-card" onSubmit={submit} noValidate>
           <div className="form-section">
             <label className="form-label" htmlFor="url">Link to report <span>*</span></label>
