@@ -33,7 +33,7 @@ class ReviewStatus(str, Enum):
 class Source(str, Enum):
     SCRAP = "SCRAP"            # found by detection (Apify, Telegram collector)
     VOLUNTEER = "VOLUNTEER"    # trained volunteer, priority lane
-    PUBLIC = "PUBLIC"          # broader local community: web form, browser extension, Telegram bot
+    PUBLIC = "PUBLIC"          # community, anonymous: web form, browser extension, Telegram bot
 
 
 class Priority(str, Enum):

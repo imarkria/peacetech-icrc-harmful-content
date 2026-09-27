@@ -2,7 +2,7 @@
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#46505c"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker></defs>
 <rect width="2400" height="1460" fill="#ffffff"/>
 <text x="60" y="68" font-size="38" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">SignalSafe: detecting harmful content related to sexual violence</text>
-<text x="60" y="106" font-size="19" font-weight="normal" fill="#46505c" text-anchor="start" font-style="normal">PeaceTech Hackathon, ICRC challenge, Ukraine: multi-platform collection, duplicate filter, AI triage, two community lanes, human review by the ICRC</text>
+<text x="60" y="106" font-size="19" font-weight="normal" fill="#46505c" text-anchor="start" font-style="normal">PeaceTech Hackathon, ICRC challenge, Ukraine: multi-platform collection, duplicate filter, AI triage, community and trained volunteer reports, human review by the ICRC</text>
 <rect x="60" y="150" width="430" height="1060" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
 <text x="86" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Collection</text>
 <text x="86" y="218" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Public posts only: text, metadata, hashes</text>
@@ -45,12 +45,12 @@
 <text x="1046" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform and region profiles</text>
 <text x="1046" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Written with the ICRC, human-approved</text>
 <rect x="1520" y="150" width="390" height="150" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
-<text x="1546" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Local community</text>
+<text x="1546" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Community</text>
 <rect x="1792.5" y="170" width="99.5" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
 <text x="1842.25" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">anonymous</text>
-<text x="1546" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Web form, browser extension,</text>
-<text x="1546" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Telegram bot · rate-limited</text>
-<text x="1546" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Screened by the model first</text>
+<text x="1546" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Anyone: web form, browser</text>
+<text x="1546" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">extension, Telegram bot</text>
+<text x="1546" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Rate-limited · checked by our AI</text>
 <rect x="1990" y="150" width="360" height="150" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
 <text x="2016" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Trained volunteers</text>
 <rect x="2242.0" y="170" width="90.0" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
@@ -128,10 +128,10 @@
 <text x="1242" y="345" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">policy</text>
 <path d="M1440,500 L1516,500" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="1446" y="488" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">flagged</text>
-<path d="M1520,620 L1444,620" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1448" y="648" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">screen</text>
-<path d="M1715,300 L1715,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1727" y="345" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">report</text>
+<path d="M1440,620 L1516,620" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1446" y="648" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">reports</text>
+<path d="M1600,300 L1600,340 L1400,340 L1400,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1412" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">reports</text>
 <path d="M2170,300 L2170,340 L1860,340 L1860,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="1872" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">priority lane, no screening</text>
 <path d="M1910,520 L1986,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>

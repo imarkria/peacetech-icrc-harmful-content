@@ -24,7 +24,7 @@ Content reaches ICRC reviewers through three lanes. Every copy of the same conte
 | Lane | Who | How it enters | Before reviewers see it |
 |---|---|---|---|
 | **Detection** | Apify collector for Facebook, Instagram, TikTok and X; Telegram collector | `harmwatch` → `POST /api/detections` | Duplicate filter, then our AI model; only items routed for review are sent |
-| **Local community** | Anyone, anonymous: web form, browser extension, Telegram bot | `POST /api/reports` | Rate-limited, grouped with copies, screened by our model. Never dropped: unflagged reports are only ranked lower |
+| **Community** | Anyone, anonymous: web form, browser extension, Telegram bot | `POST /api/reports` | Rate-limited, grouped with copies, screened by our model. Never dropped: unflagged reports are only ranked lower |
 | **Trained volunteers** | Red Cross Movement volunteers with an account | `POST /api/volunteer/reports` | Nothing: straight to the queue, `high` or `urgent` |
 
 1. **Collection** (`harmwatch/social.py`, `harmwatch/collector.py`): one Apify collector with an adapter per platform, and the official Telegram API. Public posts only. Media is downloaded only for the AI judge, into a temporary folder, and deleted right after.
@@ -38,7 +38,7 @@ Anything that may involve a child and sexual content is **restricted**: never se
 
 ## Product workflows
 
-### Local community (public user)
+### Community (public user)
 
 No account is needed.
 
@@ -129,7 +129,7 @@ Optional, chosen from the policy taxonomy (sexual elements, coercive circumstanc
 
 | Role | Sign-in | Report a link | Reviewer queue | Review items | Analysis |
 | --- | --- | --- | --- | --- | --- |
-| Public user (local community) | No | Yes: rate-limited, screened by the model | No | No | No |
+| Public user (community) | No | Yes: rate-limited, screened by the model | No | No | No |
 | Trained volunteer | Yes | Yes: structured, priority lane | No | No | No |
 | ICRC reviewer | Yes | No | Yes | Yes | Yes |
 
