@@ -8,9 +8,14 @@ SignalSafe finds and collects links to harmful content related to conflict-relat
 
 ## Team
 
-- Ismaël Markria — platform skeleton, integration
-- SheEagle — web app, backend, browser extension
-- gmikou — detection pipeline, policy layers, evaluation
+- Carlos Rafael Gonzalez Soffnee
+- Davide Hoxhaj
+- Gayet Nino
+- Ghita Mikou
+- Ismael MARKRIA
+- Julius Schmitz
+- Théo Goyette
+- Xiru Wang
 
 ## Architecture
 
