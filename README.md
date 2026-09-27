@@ -23,13 +23,13 @@ Content reaches ICRC reviewers through three lanes. Every copy of the same conte
 
 | Lane | Who | How it enters | Before reviewers see it |
 |---|---|---|---|
-| **Detection** | Apify collector for Facebook, Instagram, TikTok and X; Telegram collector | `harmwatch` → `POST /api/detections` | Duplicate filter, then our AI model; only items routed for review are sent |
+| **Detection** | Apify collector for Facebook, Instagram, TikTok and X; Telegram collector | `harmwatch` → `POST /api/detections` | Our AI model, then the duplicate filter; only items routed for review are sent |
 | **Community** | Anyone, anonymous: web form, browser extension, Telegram bot | `POST /api/reports` | Rate-limited, grouped with copies, screened by our model. Never dropped: unflagged reports are only ranked lower |
-| **Trained volunteers** | Red Cross Movement volunteers with an account | `POST /api/volunteer/reports` | Nothing: straight to the queue, `high` or `urgent` |
+| **Trained volunteers** | Red Cross and Red Crescent Movement volunteers with an account | `POST /api/volunteer/reports` | Nothing: straight to the queue, `high` or `urgent` |
 
 1. **Collection** (`harmwatch/social.py`, `harmwatch/collector.py`): one Apify collector with an adapter per platform, and the official Telegram API. Public posts only. Media is downloaded only for the AI judge, into a temporary folder, and deleted right after.
-2. **Duplicate filter** (`harmwatch/dedup.py`, `harmwatch/intake.py`): posts are fingerprinted (same or nearly the same text, same file, nearly the same image, same normalised link). Only the fingerprints are stored, never the content. Each group is judged once.
-3. **AI classification** (`harmwatch/analyze.py`): our own model on our own GPU. A safety filter quarantines explicit media, a small pre-filter trained on our data skips clearly harmless images, and the Qwen3.5-9B judge applies our layered policy (`policy/`) with our annotated examples. It returns a route, a priority and one neutral sentence.
+2. **AI classification** (`harmwatch/analyze.py`): our own model on our own GPU. A safety filter quarantines explicit media, a small pre-filter trained on our data skips clearly harmless images, and the Qwen3.5-9B judge applies our layered policy (`policy/`) with our annotated examples. It returns a route, a priority and one neutral sentence.
+3. **Duplicate filter** (`harmwatch/dedup.py`, `harmwatch/intake.py`): copies of the same content (same or nearly the same text, same file, nearly the same image, same normalised link) become one queue item, reviewed once. Only the fingerprints are stored, never the content. Copies of content already judged skip the AI, so the model runs once per content.
 4. **Platform** (`backend/`, `frontend/`): one queue for the three lanes, ordered by urgency, then number of copies, then date. Each item lists every copy (link, platform, lane).
 5. **ICRC review**: a human answers two core questions and tags the case. The AI only proposes.
 6. **Analysis**: decisions and tags feed the analysis dashboard.
@@ -51,7 +51,7 @@ Reports are rate-limited per sender. The Telegram bot never stores who sent a re
 
 ### Trained volunteer
 
-Trained Red Cross Movement volunteers sign in on the shared sign-in page (`/login`) with a volunteer account.
+Trained Red Cross and Red Crescent Movement volunteers sign in on the shared sign-in page (`/login`) with a volunteer account.
 
 1. Open **Volunteer report**.
 2. Enter the link, the category, what the post does (threat, glorification, mockery, exposure of a survivor…), the urgency and some context for the reviewer.
