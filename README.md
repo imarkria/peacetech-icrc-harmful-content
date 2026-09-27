@@ -2,7 +2,7 @@
 
 **PeaceTech Hackathon, ICRC challenge:** how can we identify harmful content related to sexual violence?
 
-SignalSafe collects links to harmful content related to conflict-related sexual violence from social media and from the people who see it, filters out duplicates, has our own AI model triage it, and gives ICRC reviewers a safe place to decide and tag each case. `harmwatch` is the name of its detection package.
+SignalSafe collects links to harmful content related to sexual violence in armed conflicts from social media and from the people who see it, filters out duplicates, has our own AI model triage it, and gives ICRC reviewers a safe place to decide and tag each case. `harmwatch` is the name of its detection package.
 
 ![SignalSafe architecture](docs/architecture.svg)
 
