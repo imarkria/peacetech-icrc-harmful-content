@@ -3,23 +3,15 @@
     python -m harmwatch.pipeline
 """
 
-import json
-
 from harmwatch import db
-from harmwatch.classify import classify, needs_human
-from harmwatch.triage import ESCALATE, priority, triage
+from harmwatch.classify import classify
+from harmwatch.triage import priority, triage
 
 
 def classify_post(conn, post) -> str:
-    if post["text"].strip():
-        result, backend = classify(post["text"])
-    else:
-        result, backend = needs_human("Link only, no text provided. Open the link to review."), "none"
+    result, backend = classify(post["text"])
     bucket = triage(result)
-    targets = json.loads(post["targets"]) if post["targets"] else []
-    if "child" in targets:  # a reporter's child flag always escalates, whatever the model says
-        bucket = ESCALATE
-    db.save_classification(conn, post["id"], backend, result, bucket, priority(result, post["views"], bucket))
+    db.save_classification(conn, post["id"], backend, result, bucket, priority(result, post["views"]))
     return bucket
 
 
