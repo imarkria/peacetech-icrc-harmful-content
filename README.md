@@ -45,6 +45,44 @@ Reviewers use the shared staff sign-in page and are redirected to the reviewer w
 
 The final decision is derived from the two core questions: it is `YES` only when both answers are `YES`; otherwise it is `NO`. The final decision is stored for analysis, but is not displayed as a separate editable field in the review form.
 
+## Interface preview
+
+The following screenshots show the current MVP workflow.
+
+### Public reporting
+
+![Landing page](frontend/resources/screenshots/landing-page.png)
+
+The landing page is focused on public reporting. Staff access is available through the shared sign-in entry in the header.
+
+![Public report form](frontend/resources/screenshots/public-report.png)
+
+Public users submit a link and optional context without creating an account.
+
+### Staff access and reviewer workspace
+
+![Staff sign-in](frontend/resources/screenshots/login.png)
+
+Reviewers and ICRC specialists use the same staff sign-in page. Their role determines which workspace they can access.
+
+![Reviewer dashboard](frontend/resources/screenshots/dashboard.png)
+
+The reviewer dashboard provides access to pending items, decisions, and analysis.
+
+![Review form](frontend/resources/screenshots/review.png)
+
+Reviewers answer the two core questions and record basic tags plus optional advanced tags.
+
+![Data analysis](frontend/resources/screenshots/data-analysis.png)
+
+The analysis view presents reviewed-post trends and distributions, including filters based on basic tags.
+
+### Browser extension
+
+![Browser extension](frontend/resources/screenshots/browser-extension.png)
+
+The browser extension captures the current page URL and opens the reporting workflow for submission.
+
 ## Review tags
 
 ### Basic tags
