@@ -11,4 +11,6 @@ This MVP extension submits the active browser tab as a public report.
 5. Select this `browser-extension` directory.
 6. Open a normal `http://` or `https://` page and click the extension.
 
-The extension sends `POST /api/reports` with the current URL and optional reason. Public reports are added to the reviewer queue and retained for future research.
+The extension sends `POST /api/reports` with the current URL, the category `other` and an optional reason. The report joins the reviewer queue with source `PUBLIC`.
+
+The API address is fixed to `http://localhost:8000` in `popup.js` and `manifest.json`. Change both before pointing it at a deployed backend.

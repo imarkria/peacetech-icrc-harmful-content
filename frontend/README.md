@@ -1,51 +1,37 @@
-# PeaceTech Hackathon — ICRC Challenge
+# SignalSafe frontend
 
-**Challenge:** How can we identify harmful content related to sexual violence?
+Next.js (App Router, TypeScript) app for public reporting and ICRC review. It talks to the FastAPI service in `../backend` through `lib/api.ts`.
 
-Challenge given by the International Committee of the Red Cross (ICRC) for the PeaceTech Hackathon.
+| Route | Who | What |
+| --- | --- | --- |
+| `/` → `/report` → `/report/success` | Public, no account | Submit a link, a category and an optional reason. Returns a reference such as `SS-000012`. |
+| `/reviewer/login` (`/login` redirects) | ICRC reviewer | Sign in. The session is an HTTP-only cookie set by the backend. |
+| `/review` | Reviewer | Queue of detected and publicly reported links, with status filter and search |
+| `/review/:id` | Reviewer | Review form: decision plus structured evidence (sexual elements, forms, harm types, pathways) |
+| `/analysis` | Reviewer | Charts over reviewed items: by source, decision, platform, evidence, over time |
 
-## Team
+Demo reviewer: `reviewer@icrc.org` / `reviewer` (seeded by the backend).
 
-- _Add names here_
+## Run locally
 
-## Getting started
-
-```bash
-git clone https://github.com/imarkria/peacetech-icrc-harmful-content.git
-cd peacetech-icrc-harmful-content
-cd frontend
-```
-
-## Frontend MVP
-
-The first working frontend is in the repository root and uses Next.js, TypeScript, and local browser storage as a temporary API mock. It implements the complete demo workflow before the FastAPI service is connected:
-
-- Public user: `/` → `/report` → `/report/success`
-- ICRC reviewer: `/login` → `/review` → `/review/:id`
-- Reviewer demo account: `reviewer@icrc.org` / `reviewer`
-
-Run it directly on the host:
+Start the backend first (see `../backend/README.md`), then:
 
 ```bash
+cp .env.example .env.local    # NEXT_PUBLIC_API_BASE_URL, defaults to http://localhost:8000
 npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open http://localhost:3000.
 
-The review queue is seeded with safe placeholder metadata in `lib/review-data.ts`. Reviewer decisions are persisted in `localStorage` for the MVP, and public reports are kept separate from the review queue. Replace those helpers with the FastAPI client when the backend is ready.
-
-An optional Docker setup is also available:
+With Docker:
 
 ```bash
 docker compose up --build
 ```
 
-## Workflow
+This runs the dev server only. Start the backend separately.
 
-- Create a branch for your work: `git checkout -b your-name/feature`
-- Open a pull request into `main` when ready.
+## Browser extension
 
-## Data & ethics
-
-This project deals with sensitive content. Do **not** commit raw datasets, personal data, or harmful media to this repository. Keep data out of git (see `.gitignore`) and share it only through the channels agreed with the ICRC.
+`browser-extension/` is a Chrome/Edge extension that reports the current tab. It posts to `http://localhost:8000` only. See [browser-extension/README.md](browser-extension/README.md).

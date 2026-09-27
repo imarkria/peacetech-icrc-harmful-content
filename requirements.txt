@@ -8,3 +8,6 @@ telethon
 python-telegram-bot>=21
 pyyaml
 openai>=1.50
+imagehash       # harmwatch/cascade.py
+matplotlib      # scripts/make_*.py
+pytest
