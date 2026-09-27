@@ -78,6 +78,39 @@ Each copy can raise the item's priority. A copy of content already reviewed is a
 
 `POST /api/detections` and screening need `INGEST_TOKEN` in `.env`; they are disabled while it is empty.
 
+## Reviews
+
+A reviewer answers two core questions. The backend derives the final `decision`: `YES` only when both answers are true, otherwise `NO`.
+
+```json
+{
+  "sexual_violence": true,
+  "harmful_information": true,
+  "evidence": {
+    "basicTags": ["BT-SEXUAL-VIOLENCE", "BT-FORCED-SEXUAL-ACTION"],
+    "targetedEthnicity": "",
+    "targetedEthnicity2": "",
+    "sexualElements": [],
+    "coerciveCircumstances": [],
+    "sexualForms": [],
+    "harmfulTypes": [],
+    "harmPathways": []
+  }
+}
+```
+
+Basic tags (`BT-MEN`, `BT-WOMEN`, `BT-CHILDREN`, `BT-SEXUAL-VIOLENCE`, `BT-FORCED-SEXUAL-ACTION`, plus two open "targeted ethnicity" fields) are charted over time by `/api/analysis/summary`. The advanced fields are optional.
+
+## Database model
+
+| Table | Holds |
+| --- | --- |
+| `users` | Accounts: `email`, `password_hash`, `role` (`REVIEWER` or `VOLUNTEER`; earlier `SPECIALIST` accounts are migrated to `VOLUNTEER` on startup) |
+| `public_reports` | Every community report: `url`, `category`, `reason`, `source` |
+| `detected_links` | One queue item per content group: `url`, `platform`, `predicted_category`, `confidence`, `source` (lane), `status` (`PENDING`, `REVIEWED`, `SCREENING`, `RESTRICTED`), `priority`, `group_key`, `normalized_url`, `occurrence_count`, `context` |
+| `occurrences` | Every copy or report of an item: `url`, `platform`, `source`, `note`, `reporter_id` (trained volunteer), `external_id` (harmwatch sighting), `seen_at` |
+| `reviews` | One per item: `decision` (`YES`/`NO`), `sexual_violence`, `harmful_information`, `evidence` (tags), `reviewer_id` |
+
 ## Accounts
 
 ```bash

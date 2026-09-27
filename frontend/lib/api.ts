@@ -56,6 +56,8 @@ type ApiReview = {
     reviewed_at?: string;
     created_at?: string;
     reviewer_id: number;
+    sexual_violence: boolean;
+    harmful_information: boolean;
     evidence?: ReviewEvidence;
   } | null;
 };
@@ -93,10 +95,14 @@ function mapReview(item: ApiReview): DetectedLink {
     review: item.review ? {
       decision: item.review.decision,
       reviewedAt: item.review.reviewed_at || item.review.created_at || "",
+      sexualViolence: item.review.sexual_violence,
+      harmfulInformation: item.review.harmful_information,
       evidence: item.review.evidence,
     } : undefined,
   };
 }
+
+export type UserRole = "REVIEWER" | "VOLUNTEER";
 
 export async function loginRequest(email: string, password: string) {
   return request<{ user: { id: number; email: string; role: UserRole } }>("/api/auth/login", {
@@ -104,8 +110,6 @@ export async function loginRequest(email: string, password: string) {
     body: JSON.stringify({ email, password }),
   });
 }
-
-export type UserRole = "REVIEWER" | "VOLUNTEER";
 
 export async function getMeRequest() {
   return request<{ id: number; email: string; role: UserRole }>("/api/me");
@@ -178,10 +182,10 @@ export async function getReviewRequest(id: string) {
   return mapReview(result);
 }
 
-export async function submitReviewRequest(id: string, decision: ReviewDecision, evidence: ReviewEvidence) {
+export async function submitReviewRequest(id: string, sexualViolence: boolean, harmfulInformation: boolean, evidence: ReviewEvidence) {
   const result = await request<ApiReview>(`/api/reviews/${encodeURIComponent(id)}`, {
     method: "POST",
-    body: JSON.stringify({ decision, evidence }),
+    body: JSON.stringify({ sexual_violence: sexualViolence, harmful_information: harmfulInformation, evidence }),
   });
   return mapReview(result);
 }

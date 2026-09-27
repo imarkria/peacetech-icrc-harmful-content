@@ -13,9 +13,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<UserRole | null>(null);
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const authenticated = role !== null;
 
   useEffect(() => {
-    // The session is an HTTP-only cookie: ask the backend whether it is still valid.
+    // The session is an HTTP-only cookie: ask the backend who is signed in.
     let active = true;
     getMeRequest()
       .then((user) => active && setRole(user.role))
@@ -39,7 +40,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const isReviewArea = pathname.startsWith("/reviewer") || pathname.startsWith("/review") || pathname === "/login";
   const isAnalysisArea = pathname.startsWith("/analysis");
-  const isVolunteerArea = pathname.startsWith("/volunteer");
 
   return (
     <div className="site-frame">
@@ -58,28 +58,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link className={pathname.startsWith("/report") ? "nav-link nav-link-active" : "nav-link"} href="/report" onClick={() => setMobileOpen(false)}>
               Report a link
             </Link>
-            {mounted && role ? (
+            {mounted && authenticated && role === "REVIEWER" ? (
               <>
-                {role === "REVIEWER" ? <>
-                  <Link className={isReviewArea && !isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
-                    Reviewer workspace
-                  </Link>
-                  <Link className={isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/analysis" onClick={() => setMobileOpen(false)}>
-                    Data analysis
-                  </Link>
-                </> : <Link className={isVolunteerArea ? "nav-link nav-link-active" : "nav-link"} href="/volunteer/report" onClick={() => setMobileOpen(false)}>
+                <Link className={isReviewArea && !isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
+                  Reviewer workspace
+                </Link>
+                <Link className={isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/analysis" onClick={() => setMobileOpen(false)}>
+                  Data analysis
+                </Link>
+                <button className="nav-button" onClick={signOut}>
+                  <LogOut size={15} />
+                  Sign out
+                </button>
+              </>
+            ) : mounted && authenticated && role === "VOLUNTEER" ? (
+              <>
+                <Link className={pathname.startsWith("/volunteer") ? "nav-link nav-link-active" : "nav-link"} href="/volunteer/report" onClick={() => setMobileOpen(false)}>
                   Volunteer report
-                </Link>}
+                </Link>
                 <button className="nav-button" onClick={signOut}>
                   <LogOut size={15} />
                   Sign out
                 </button>
               </>
             ) : (
-              <Link className="nav-button nav-button-dark" href="/reviewer/login" onClick={() => setMobileOpen(false)}>
-                <LogIn size={15} />
-                Sign in
-              </Link>
+              <>
+                <Link className="nav-button nav-button-dark" href="/login" onClick={() => setMobileOpen(false)}>
+                  <LogIn size={15} />
+                  Sign in
+                </Link>
+              </>
             )}
           </nav>
         </div>
@@ -88,8 +96,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <footer className="site-footer">
         <div className="footer-inner">
           <Logo compact />
-          <p>Public reporting and ICRC review.</p>
-          <span>PeaceTech ICRC challenge · MVP</span>
+          <p>Humanitarian content reporting and review.</p>
+          <span>For the public, trained volunteers and authorised ICRC reviewers.</span>
         </div>
       </footer>
     </div>

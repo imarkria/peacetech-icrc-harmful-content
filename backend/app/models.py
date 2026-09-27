@@ -47,12 +47,8 @@ PRIORITY_RANK = {"urgent": 3, "high": 2, "standard": 1, "none": 0}
 
 
 class ReviewDecision(str, Enum):
-    SEXUAL_VIOLENCE = "SEXUAL_VIOLENCE"
-    CHILD_RELATED_HARM = "CHILD_RELATED_HARM"
-    HATE_RELATED = "HATE_RELATED"
-    OTHER = "OTHER"
-    NOT_A_VIOLATION = "NOT_A_VIOLATION"
-    UNCLEAR = "UNCLEAR"
+    YES = "YES"
+    NO = "NO"
 
 
 class User(Base):
@@ -74,6 +70,7 @@ class PublicReport(Base):
     url: Mapped[str] = mapped_column(Text)
     category: Mapped[str] = mapped_column(String(64), index=True)
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source: Mapped[str] = mapped_column(String(32), default="PUBLIC", index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
 
 
@@ -127,6 +124,8 @@ class Review(Base):
     detected_link_id: Mapped[str] = mapped_column(ForeignKey("detected_links.id"), index=True)
     reviewer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     decision: Mapped[str] = mapped_column(String(64))
+    sexual_violence: Mapped[str] = mapped_column(String(8), default="NO")
+    harmful_information: Mapped[str] = mapped_column(String(8), default="NO")
     evidence: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
 

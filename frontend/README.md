@@ -5,11 +5,11 @@ Next.js (App Router, TypeScript) app for public reporting and ICRC review. It ta
 | Route | Who | What |
 | --- | --- | --- |
 | `/` → `/report` → `/report/success` | Public, no account | Submit a link and an optional reason (reviewers set the category). Returns a reference such as `SS-000012`. |
-| `/reviewer/login` (`/login` redirects) | Reviewers and trained volunteers | Sign in, then go to the queue or the volunteer form by role. The session is an HTTP-only cookie set by the backend. |
-| `/volunteer/report` | Trained volunteer | Structured report: link, category, harm types, urgency, context. Goes to the priority lane. |
+| `/login` (`/reviewer/login` is the same page) | Reviewers and trained volunteers | Sign in, then go to the queue or the volunteer form by role. The session is an HTTP-only cookie set by the backend. |
+| `/volunteer/report` | Trained volunteer | Structured report: link, category, harm types, urgency, context. Goes to the priority lane. The earlier `/specialist/*` routes redirect here and to `/login`. |
 | `/review` | Reviewer | Queue from the three lanes (detection, trained volunteers, community), urgent and most-copied first |
-| `/review/:id` | Reviewer | Review form: decision plus structured evidence. Lists every copy of the content; the decision covers them all. |
-| `/analysis` | Reviewer | Charts over reviewed items: by source, decision, platform, evidence, over time |
+| `/review/:id` | Reviewer | Review form: two core questions (sexual violence, harmful information), basic tags, optional advanced tags. Lists every copy of the content; the decision covers them all. |
+| `/analysis` | Reviewer | Charts over reviewed items: by source, decision, platform and basic tag, over time |
 
 Demo accounts: `reviewer@icrc.org` and `volunteer@icrc.org`, password `reviewer` (seeded by the backend). The sign-in page shows them unless `NEXT_PUBLIC_SHOW_DEMO_LOGIN=false`.
 

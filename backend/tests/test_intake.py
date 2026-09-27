@@ -68,7 +68,7 @@ def test_wrong_ingest_token_is_refused(client):
 
 def test_a_copy_of_reviewed_content_inherits_the_decision(reviewer):
     link = reviewer.post("/api/detections", headers=TOKEN, json=detection("s3", "https://t.me/c/3", "g-rev")).json()
-    reviewer.post(f"/api/reviews/{link['id']}", json={"decision": "SEXUAL_VIOLENCE"})
+    reviewer.post(f"/api/reviews/{link['id']}", json={"sexual_violence": True, "harmful_information": True})
     reviewer.post("/api/detections", headers=TOKEN, json=detection("s4", "https://t.me/other/8", "g-rev"))
     item = reviewer.get(f"/api/reviews/{link['id']}").json()
     assert item["status"] == "REVIEWED" and item["occurrence_count"] == 2

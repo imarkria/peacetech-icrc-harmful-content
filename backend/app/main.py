@@ -44,6 +44,13 @@ report_limiter = RateLimiter(*settings.rate_limit)
 VISIBLE_STATUSES = (ReviewStatus.PENDING.value, ReviewStatus.REVIEWED.value)
 PRIORITY_ORDER = case({"urgent": 0, "high": 1, "standard": 2, "none": 3}, value=DetectedLink.priority, else_=4)
 DEFAULT_PUBLIC_CONTEXT = "Submitted by a member of the public for reviewer assessment."
+BASIC_TAG_IDS = (  # reviewer tags charted over time on the analysis page
+    "BT-MEN",
+    "BT-WOMEN",
+    "BT-CHILDREN",
+    "BT-SEXUAL-VIOLENCE",
+    "BT-FORCED-SEXUAL-ACTION",
+)
 
 
 @asynccontextmanager
@@ -76,6 +83,8 @@ def to_link_response(link: DetectedLink) -> DetectedLinkResponse:
             decision=link.review.decision,
             reviewed_at=link.review.created_at,
             reviewer_id=link.review.reviewer_id,
+            sexual_violence=link.review.sexual_violence == "YES",
+            harmful_information=link.review.harmful_information == "YES",
             evidence=link.review.evidence,
         )
     return DetectedLinkResponse(
@@ -415,15 +424,16 @@ def analysis_summary(
     decision_counts = Counter()
     platform_counts = Counter()
     trend_counts = Counter()
-    trend_counts_by_decision: dict[str, Counter] = defaultdict(Counter)
+    trend_counts_by_basic_tag: dict[str, Counter] = defaultdict(Counter)
     evidence_counts: dict[str, Counter] = defaultdict(Counter)
     for source, platform, decision, evidence, detected_at in reviewed_items:
         source_counts[source] += 1
         decision_counts[decision] += 1
         platform_counts[platform] += 1
         trend_counts[detected_at.date().isoformat()] += 1
-        trend_counts_by_decision[decision][detected_at.date().isoformat()] += 1
-        for evidence_key in ("sexualElements", "coerciveCircumstances", "sexualForms", "harmfulTypes", "harmPathways"):
+        for basic_tag in (evidence or {}).get("basicTags", []):
+            trend_counts_by_basic_tag[basic_tag][detected_at.date().isoformat()] += 1
+        for evidence_key in ("basicTags", "sexualElements", "coerciveCircumstances", "sexualForms", "harmfulTypes", "harmPathways"):
             for value in (evidence or {}).get(evidence_key, []):
                 evidence_counts[evidence_key][value] += 1
 
@@ -433,7 +443,7 @@ def analysis_summary(
         decision_counts=[AnalysisCount(key=key, count=count) for key, count in decision_counts.most_common()],
         platform_counts=[AnalysisCount(key=key, count=count) for key, count in platform_counts.most_common()],
         post_trend=[AnalysisTrendPoint(date=date, count=trend_counts[date]) for date in sorted(trend_counts)],
-        post_trends={decision: [AnalysisTrendPoint(date=date, count=count) for date, count in sorted(dates.items())] for decision, dates in trend_counts_by_decision.items()},
+        post_trends={tag: [AnalysisTrendPoint(date=date, count=count) for date, count in sorted(trend_counts_by_basic_tag[tag].items())] for tag in BASIC_TAG_IDS},
         evidence_counts={key: [AnalysisCount(key=item, count=count) for item, count in values.most_common()] for key, values in evidence_counts.items()},
     )
 
@@ -447,10 +457,13 @@ def submit_review(link_id: str, payload: ReviewSubmit, reviewer: User = Depends(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This link has already been reviewed")
 
     link.status = ReviewStatus.REVIEWED.value
+    decision = ReviewDecision.YES.value if payload.sexual_violence and payload.harmful_information else ReviewDecision.NO.value
     link.review = Review(
         detected_link_id=link.id,
         reviewer_id=reviewer.id,
-        decision=payload.decision.value,
+        decision=decision,
+        sexual_violence="YES" if payload.sexual_violence else "NO",
+        harmful_information="YES" if payload.harmful_information else "NO",
         evidence=payload.evidence.model_dump() if payload.evidence else None,
         created_at=datetime.now(timezone.utc),
     )

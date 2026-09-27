@@ -32,21 +32,20 @@ export default function ReportPage() {
         category: "other",
         reason: reason.trim() || undefined,
       });
-      window.sessionStorage.setItem("last-report", JSON.stringify({ url, category: "other", reason: reason.trim(), reference: result.reference }));
       window.location.href = `/report/success?ref=${encodeURIComponent(result.reference)}`;
     } catch (error) {
       setSubmitError(error instanceof ApiError && error.status === 429
         ? "You have sent several reports in a short time. Please try again in a few minutes."
-        : "The reporting service is unavailable. Please try again.");
+        : "We could not submit your report. Please try again.");
       setSubmitting(false);
     }
   }
 
   return (
     <section className="inner-page">
-      <div className="page-container content-narrow">
+        <div className="page-container content-narrow">
         <Link className="breadcrumb" href="/"><ArrowLeft size={14} /> Back to home</Link>
-        <div className="page-heading"><h1>Submit a link</h1><p>No sign-in required. Your report is checked automatically, then reviewed by the ICRC.</p></div>
+        <div className="page-heading"><h1>Report harmful content</h1><p>Submit a link containing harmful content related to sexual violence in armed conflicts. No sign-in is required.</p></div>
         <form className="form-card" onSubmit={submit} noValidate>
           <div className="form-section">
             <label className="form-label" htmlFor="url">Link to report <span>*</span></label>
@@ -54,19 +53,6 @@ export default function ReportPage() {
             <input id="url" className={`text-input ${urlError ? "text-input-error" : ""}`} value={url} onChange={(event) => { setUrl(event.target.value); setUrlError(""); }} placeholder="https://t.me/channel/post" type="url" autoComplete="url" />
             {urlError && <p className="field-error">{urlError}</p>}
           </div>
-          {/*<div className="form-section">*/}
-          {/*  <span className="form-label">What areas may be violated? <span>*</span></span>*/}
-          {/*  <p className="form-helper">Choose the categories that describe what you saw.</p>*/}
-          {/*  <div className="category-options">*/}
-          {/*    {categories.map((item) => (*/}
-          {/*      <div className="category-option" key={item}>*/}
-          {/*        <input id={item} name="category" type="radio" checked={category === item} onChange={() => { setCategory(item); setCategoryError(""); }} />*/}
-          {/*        <label htmlFor={item}><span className="category-radio" /><span className="category-label">{categoryLabels[item]}</span></label>*/}
-          {/*      </div>*/}
-          {/*    ))}*/}
-          {/*  </div>*/}
-          {/*  {categoryError && <p className="field-error">{categoryError}</p>}*/}
-          {/*</div>*/}
           <div className="form-section">
             <label className="form-label" htmlFor="reason">Reason <span className="optional-label">(optional)</span></label>
             <p className="form-helper">Briefly describe why the link may be harmful. Do not include personal information.</p>
@@ -79,7 +65,7 @@ export default function ReportPage() {
             <button className="button-primary" type="submit" disabled={submitting}>{submitting ? "Submitting…" : "Submit report"} {!submitting && <ArrowRight size={16} />}</button>
           </div>
         </form>
-        <p className="hero-note"><ShieldCheck size={15} /> No sign-in required. Reports are reviewed by authorised ICRC reviewers.</p>
+        <p className="hero-note"><ShieldCheck size={15} /> No sign-in required. Reports are grouped with other reports of the same content and screened before reviewer access.</p>
       </div>
     </section>
   );

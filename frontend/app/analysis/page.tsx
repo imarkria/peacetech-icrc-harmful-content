@@ -1,23 +1,21 @@
 "use client";
 
-import {useEffect, useMemo, useState} from "react";
-import {BarChart3, Info} from "../../components/icons";
+import {useEffect, useState} from "react";
+import {Info} from "../../components/icons";
 import {ApiError, AnalysisCount, AnalysisSummary, getAnalysisSummary} from "../../lib/api";
-import {decisionLabels, sourceLabels} from "../../lib/review-data";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
-const evidenceLabels: Record<string, string> = {
-    "HP-01": "Could trigger violence",
-    "HP-02": "Stigmatises or exposes survivors",
-    "HP-03": "Reveals a person at risk",
-    "HP-04": "Dehumanises a group or side",
-    "HP-05": "Spreads fear",
-    "HP-06": "Normalises sexual violence",
-    "HP-07": "Undermines humanitarian safety",
+const sourceLabels: Record<string, string> = {SCRAP: "Detection", PUBLIC: "Community", VOLUNTEER: "Trained volunteer"};
+const basicTagLabels: Record<string, string> = {
+    "BT-MEN": "Men",
+    "BT-WOMEN": "Women",
+    "BT-CHILDREN": "Children",
+    "BT-SEXUAL-VIOLENCE": "Sexual Violence",
+    "BT-FORCED-SEXUAL-ACTION": "Forced Sexual Action",
 };
 
-function labelForDecision(key: string) {
-    return decisionLabels[key as keyof typeof decisionLabels] || key;
+function labelForBasicTag(key: string) {
+    return basicTagLabels[key] || key;
 }
 
 function BarList({items, label, percentage = false}: { items: AnalysisCount[]; label: (key: string) => string; percentage?: boolean }) {
@@ -32,12 +30,11 @@ function BarList({items, label, percentage = false}: { items: AnalysisCount[]; l
 }
 
 const lineColors: Record<string, string> = {
-    SEXUAL_VIOLENCE: "#d71920",
-    CHILD_RELATED_HARM: "#b45309",
-    HATE_RELATED: "#7c3aed",
-    OTHER: "#0f766e",
-    NOT_A_VIOLATION: "#64748b",
-    UNCLEAR: "#2563eb",
+    "BT-MEN": "#d71920",
+    "BT-WOMEN": "#b45309",
+    "BT-CHILDREN": "#7c3aed",
+    "BT-SEXUAL-VIOLENCE": "#0f766e",
+    "BT-FORCED-SEXUAL-ACTION": "#2563eb",
 };
 
 function TrendChart({series}: { series: AnalysisSummary["post_trends"] }) {
@@ -64,7 +61,7 @@ function TrendChart({series}: { series: AnalysisSummary["post_trends"] }) {
                     const key = String(entry.dataKey);
                     const active = !selectedKey || selectedKey === key;
                     return <button key={key} type="button" className={active ? "chart-legend-item chart-legend-active" : "chart-legend-item chart-legend-muted"} onClick={() => setSelectedKey((current) => current === key ? null : key)}>
-                        <span className="chart-legend-dot" style={{background: lineColors[key] || "#334155"}} />{labelForDecision(key)}
+                        <span className="chart-legend-dot" style={{background: lineColors[key] || "#334155"}} />{labelForBasicTag(key)}
                     </button>;
                 })}
             </div>}/>
@@ -88,12 +85,9 @@ export default function AnalysisPage() {
                 window.location.href = "/reviewer/login";
                 return;
             }
-            setError("Unable to load analysis. Make sure the backend is running on http://localhost:8000.");
+            setError("We could not load the analysis. Please try again or contact an administrator.");
         });
     }, []);
-
-    const publicCount = useMemo(() => data?.source_counts.find((item) => item.key === "PUBLIC")?.count || 0, [data]);
-    const scrapCount = useMemo(() => data?.source_counts.find((item) => item.key === "SCRAP")?.count || 0, [data]);
 
     if (!data && !error) return <section className="inner-page">
         <div className="page-container"><p className="hero-note">Loading analysis…</p></div>
@@ -102,34 +96,20 @@ export default function AnalysisPage() {
     return <section className="inner-page">
         <div className="page-container analysis-page">
             <div className="page-heading analysis-heading"><span className="eyebrow">Reviewer workspace</span><h1>Data
-                analysis</h1><p>Summary of posts with a completed human decision.</p></div>
+                analytics</h1><p>Overview of reviewed content related to sexual violence in armed conflicts.</p></div>
             {error ? <div className="auth-error"><Info size={15}/><span>{error}</span></div> : data && <>
-                <div className="stats-row analysis-stats">
-                    {/*<div className="stat-card">*/}
-                    {/*    <div className="stat-label">Reviewed posts <BarChart3 size={15}/></div>*/}
-                    {/*    <strong className="stat-value">{data.reviewed_total}</strong><span className="stat-trend">Human decisions recorded</span>*/}
-                    {/*</div>*/}
-                    {/*<div className="stat-card">*/}
-                    {/*    <div className="stat-label">Public reports</div>*/}
-                    {/*    <strong className="stat-value">{publicCount}</strong><span className="stat-trend">Reviewed public submissions</span>*/}
-                    {/*</div>*/}
-                    {/*<div className="stat-card">*/}
-                    {/*    <div className="stat-label">Scrap detections</div>*/}
-                    {/*    <strong className="stat-value">{scrapCount}</strong><span className="stat-trend">Reviewed scraped posts</span>*/}
-                    {/*</div>*/}
-                </div>
                 <div className="analysis-grid">
                     <article className="analysis-card analysis-card-wide">
                         <div className="analysis-card-heading">
-                            <div><span className="card-kicker">Decisions</span><h2>Final decision distribution</h2>
+                            <div><span className="card-kicker">Basic tags</span><h2>Basic tag distribution</h2>
                             </div>
                         </div>
-                        <BarList items={data.decision_counts} label={labelForDecision} percentage/></article>
+                        <BarList items={data.evidence_counts.basicTags || []} label={labelForBasicTag} percentage/></article>
                     <article className="analysis-card">
                         <div className="analysis-card-heading">
                             <div><span className="card-kicker">Source</span><h2>Reviewed by source</h2></div>
                         </div>
-                        <BarList items={data.source_counts} label={(key) => sourceLabels[key as keyof typeof sourceLabels] || key} percentage/></article>
+                        <BarList items={data.source_counts} label={(key) => sourceLabels[key] || key} percentage/></article>
                     <article className="analysis-card">
                         <div className="analysis-card-heading">
                             <div><span className="card-kicker">Platform</span><h2>Reviewed by platform</h2></div>
@@ -137,18 +117,12 @@ export default function AnalysisPage() {
                         <BarList items={data.platform_counts} label={(key) => key} percentage/></article>
                     <article className="analysis-card analysis-card-wide">
                         <div className="analysis-card-heading">
-                            <div><span className="card-kicker">Post timeline</span><h2>Reviewed posts by post date</h2><p className="chart-helper">Click a legend item to focus on one decision.</p></div>
+                            <div><span className="card-kicker">Post timeline</span><h2>Reviewed posts by Basic tag</h2><p className="chart-helper">Click a legend item to focus on one tag.</p></div>
                         </div>
                         <TrendChart series={data.post_trends}/></article>
-                    {/*<article className="analysis-card analysis-card-wide">*/}
-                    {/*    <div className="analysis-card-heading">*/}
-                    {/*        <div><span className="card-kicker">Evidence</span><h2>Harm pathways recorded</h2></div>*/}
-                    {/*    </div>*/}
-                    {/*    <BarList items={data.evidence_counts.harmPathways || []}*/}
-                    {/*             label={(key) => evidenceLabels[key] || key}/></article>*/}
                 </div>
-                <p className="analysis-note"><Info size={14}/> Only reviewed posts are included. Counts reflect recorded
-                    reviewer decisions and evidence.</p>
+                <p className="analysis-note"><Info size={14}/> Only reviewed links are included. Counts reflect recorded
+                    tags and evidence.</p>
             </>}
         </div>
     </section>;
