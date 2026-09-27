@@ -176,7 +176,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -196,7 +196,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -216,7 +216,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -236,7 +236,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -256,7 +256,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -276,7 +276,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -296,7 +296,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -316,7 +316,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -336,7 +336,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -356,7 +356,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -376,7 +376,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -397,7 +397,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -418,7 +418,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -439,7 +439,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -460,7 +460,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -481,7 +481,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -502,7 +502,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -523,7 +523,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -544,7 +544,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -565,7 +565,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -586,7 +586,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - dehumanisation_study (VettyCher)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -607,7 +607,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -628,7 +628,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -650,7 +650,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -672,7 +672,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -693,7 +693,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -715,7 +715,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -736,7 +736,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -757,7 +757,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -778,7 +778,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -799,7 +799,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -820,7 +820,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -841,7 +841,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -861,7 +861,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -881,7 +881,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -901,7 +901,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -921,7 +921,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -941,7 +941,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -961,7 +961,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -981,7 +981,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1002,7 +1002,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1023,7 +1023,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1044,7 +1044,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1065,7 +1065,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1086,7 +1086,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1107,7 +1107,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1128,7 +1128,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1149,7 +1149,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1170,7 +1170,7 @@ entries:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1190,7 +1190,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1213,7 +1213,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - BBC Sept 2026 investigation (sexualised fakes about Ukrainian servicewomen)
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1232,7 +1232,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - OPORA 2025
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1250,7 +1250,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1271,7 +1271,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1291,7 +1291,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - OHCHR Sept 2026 CRSV report
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1309,7 +1309,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1328,7 +1328,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1347,7 +1347,7 @@ entries:
   source_cases:
   - team brief 2026-09-26
   - UN Commission of Inquiry on Ukraine
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1365,7 +1365,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1384,7 +1384,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1402,7 +1402,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1421,7 +1421,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1440,7 +1440,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1458,7 +1458,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'
@@ -1477,7 +1477,7 @@ entries:
   status: approved
   source_cases:
   - team brief 2026-09-26
-  proposed_by: claude-code (from team brief)
+  proposed_by: team (from team brief)
   approved_by: gmikou
   created: '2026-09-26'
   review_by: '2027-03-26'

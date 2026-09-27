@@ -42,3 +42,5 @@ npm-debug.log*
 
 # Evaluation outputs (predictions, per-item descriptions): never committed
 /results/
+
+.claude/
