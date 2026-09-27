@@ -1,3 +1,8 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
 # Data (never commit sensitive content)
 data/
 *.csv
@@ -14,5 +19,26 @@ venv/
 # Env / secrets
 .env
 
-# OS
+# next.js
+.next/
+out/
+
+# local env files
+.env*.local
+
+# misc
 .DS_Store
+*.log
+npm-debug.log*
+*.tsbuildinfo
+
+# local editor files
+.idea/
+.vscode/
+
+# Policy few-shot examples are part of the policy layers (synthetic, non-graphic)
+!policy/regions/*.jsonl
+!policy/topics/*.jsonl
+
+# Evaluation outputs (predictions, per-item descriptions): never committed
+/results/

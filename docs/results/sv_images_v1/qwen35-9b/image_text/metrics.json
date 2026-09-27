@@ -1,0 +1,295 @@
+{
+  "model": "qwen35-9b",
+  "mode": "image_text",
+  "counts": {
+    "n": 120,
+    "valid": 120,
+    "invalid_json": 0,
+    "timeouts": 0,
+    "server_errors": 0,
+    "refusals": 0,
+    "restricted_possible_minor": 1,
+    "logprobs_missing": 0
+  },
+  "throughput": {
+    "total_seconds": 196.5,
+    "images_per_min": 36.6,
+    "vram_peak_mib": 15328,
+    "workers": 8,
+    "mean_latency_s": 12.99
+  },
+  "sexual": {
+    "n": 120,
+    "TP": 57,
+    "FP": 8,
+    "FN": 3,
+    "TN": 52,
+    "precision": 0.877,
+    "recall": 0.95,
+    "f1": 0.912,
+    "accuracy": 0.908,
+    "specificity": 0.867
+  },
+  "positives_without_keyword": {
+    "n": 10,
+    "detected": 8,
+    "recall": 0.8
+  },
+  "negatives_with_keyword": {
+    "n": 2,
+    "false_positives": 0
+  },
+  "written_scores": {
+    "auroc": 0.949,
+    "distinct_values": 5
+  },
+  "logprob": {
+    "sexual": {
+      "n": 120,
+      "auroc": 0.975,
+      "best_threshold": 0.9754,
+      "tpr_at_best": 0.9,
+      "fpr_at_best": 0.05,
+      "calibration": {
+        "ece": 0.082,
+        "brier": 0.086,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 55,
+            "mean_p": 0.005,
+            "frac_pos": 0.055
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 65,
+            "mean_p": 0.986,
+            "frac_pos": 0.877
+          }
+        ]
+      }
+    },
+    "hate": {
+      "n": 119,
+      "auroc": 0.763,
+      "calibration": {
+        "ece": 0.155,
+        "brier": 0.158,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 92,
+            "mean_p": 0.002,
+            "frac_pos": 0.13
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 27,
+            "mean_p": 0.987,
+            "frac_pos": 0.741
+          }
+        ]
+      }
+    },
+    "misogyny": {
+      "n": 119,
+      "auroc": 0.943,
+      "calibration": {
+        "ece": 0.162,
+        "brier": 0.154,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 62,
+            "mean_p": 0.004,
+            "frac_pos": 0.177
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 2,
+            "mean_p": 0.226,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 3,
+            "mean_p": 0.336,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 52,
+            "mean_p": 1.0,
+            "frac_pos": 0.904
+          }
+        ]
+      }
+    }
+  },
+  "by_reference_class": {
+    "positives": {
+      "n": 60,
+      "n_scored": 59,
+      "pct_sexual_violence_ge50": 45.8,
+      "mean_sexual_violence": 43.1,
+      "pct_sexual_harassment_ge50": 57.6,
+      "mean_sexual_harassment": 55.6,
+      "pct_hate_ge50": 25.4,
+      "mean_hate": 26.0,
+      "pct_misogyny_ge50": 72.9,
+      "mean_misogyny": 66.2,
+      "pct_other_violence_ge50": 13.6,
+      "mean_other_violence": 14.9,
+      "pct_sexual_pred": 95.0
+    },
+    "negatives": {
+      "n": 60,
+      "n_scored": 60,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 13.3,
+      "mean_sexual_harassment": 11.5,
+      "pct_hate_ge50": 20.0,
+      "mean_hate": 19.8,
+      "pct_misogyny_ge50": 15.0,
+      "mean_misogyny": 14.2,
+      "pct_other_violence_ge50": 10.0,
+      "mean_other_violence": 9.6,
+      "pct_sexual_pred": 13.3
+    },
+    "negatives_trap": {
+      "n": 30,
+      "n_scored": 30,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 26.7,
+      "mean_sexual_harassment": 23.0,
+      "pct_hate_ge50": 30.0,
+      "mean_hate": 29.8,
+      "pct_misogyny_ge50": 30.0,
+      "mean_misogyny": 28.2,
+      "pct_other_violence_ge50": 16.7,
+      "mean_other_violence": 14.8,
+      "pct_sexual_pred": 26.7
+    },
+    "negatives_neutral": {
+      "n": 30,
+      "n_scored": 30,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 0.0,
+      "mean_sexual_harassment": 0.0,
+      "pct_hate_ge50": 10.0,
+      "mean_hate": 9.8,
+      "pct_misogyny_ge50": 0.0,
+      "mean_misogyny": 0.3,
+      "pct_other_violence_ge50": 3.3,
+      "mean_other_violence": 4.3,
+      "pct_sexual_pred": 0.0
+    }
+  },
+  "hate_vs_reference": {
+    "n": 119,
+    "TP": 20,
+    "FP": 7,
+    "FN": 12,
+    "TN": 80,
+    "precision": 0.741,
+    "recall": 0.625,
+    "f1": 0.678,
+    "accuracy": 0.84,
+    "specificity": 0.92
+  },
+  "hate_score_vs_reference": {
+    "n": 119,
+    "TP": 20,
+    "FP": 7,
+    "FN": 12,
+    "TN": 80,
+    "precision": 0.741,
+    "recall": 0.625,
+    "f1": 0.678,
+    "accuracy": 0.84,
+    "specificity": 0.92
+  },
+  "misogyny_vs_reference": {
+    "n": 119,
+    "TP": 47,
+    "FP": 5,
+    "FN": 16,
+    "TN": 51,
+    "precision": 0.904,
+    "recall": 0.746,
+    "f1": 0.817,
+    "accuracy": 0.824,
+    "specificity": 0.911
+  },
+  "misogyny_score_vs_reference": {
+    "n": 119,
+    "TP": 47,
+    "FP": 5,
+    "FN": 16,
+    "TN": 51,
+    "precision": 0.904,
+    "recall": 0.746,
+    "f1": 0.817,
+    "accuracy": 0.824,
+    "specificity": 0.911
+  },
+  "tp_category_or_relation_correct": {
+    "n_tp": 56,
+    "correct": 21,
+    "pct": 37.5
+  },
+  "by_category_recall": {
+    "denial_minimization": {
+      "n": 7,
+      "detected": 7
+    },
+    "rape_joke_glorification": {
+      "n": 11,
+      "detected": 11
+    },
+    "threat_incitement": {
+      "n": 8,
+      "detected": 8
+    },
+    "victim_stigmatisation": {
+      "n": 5,
+      "detected": 4
+    },
+    "collective_accusation": {
+      "n": 7,
+      "detected": 7
+    },
+    "sexualised_insult": {
+      "n": 10,
+      "detected": 8
+    },
+    "degrading_sexualisation": {
+      "n": 10,
+      "detected": 10
+    },
+    "humiliating_objectification": {
+      "n": 2,
+      "detected": 2
+    }
+  },
+  "errors": {
+    "FP": [
+      "sv1-c194",
+      "sv1-c187",
+      "sv1-c202",
+      "sv1-c201",
+      "sv1-c206",
+      "sv1-c208",
+      "sv1-c212",
+      "sv1-c214"
+    ],
+    "FN": [
+      "sv1-c049",
+      "sv1-c136",
+      "sv1-c174"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: signalsafe
+      POSTGRES_USER: signalsafe
+      POSTGRES_PASSWORD: signalsafe
+    ports:
+      - "5432:5432"
+    volumes:
+      - signalsafe_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U signalsafe -d signalsafe"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://signalsafe:signalsafe@db:5432/signalsafe
+      JWT_SECRET: change-this-development-secret
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      COOKIE_SECURE: "false"
+      SEED_DEMO_DATA: "true"
+      INGEST_TOKEN: ${INGEST_TOKEN:-}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  signalsafe_postgres_data:

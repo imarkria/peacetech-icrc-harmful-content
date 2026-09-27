@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1460" viewBox="0 0 2400 1460" font-family="DejaVu Sans, Helvetica Neue, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#46505c"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker></defs>
+<rect width="2400" height="1460" fill="#ffffff"/>
+<text x="60" y="68" font-size="38" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">SignalSafe: detecting harmful content related to sexual violence</text>
+<text x="60" y="106" font-size="19" font-weight="normal" fill="#46505c" text-anchor="start" font-style="normal">PeaceTech Hackathon, ICRC challenge, Ukraine: multi-platform collection, duplicate filter, AI triage, two community lanes, human review by the ICRC</text>
+<rect x="60" y="150" width="430" height="1060" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
+<text x="86" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Collection</text>
+<text x="86" y="218" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Public posts only: text, metadata, hashes</text>
+<rect x="82" y="240" width="386" height="196" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="104" y="274" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Apify</text>
+<rect x="314.5" y="254" width="137.5" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
+<text x="383.25" y="272.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">one collector</text>
+<text x="104" y="306" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Facebook · Instagram · TikTok · X</text>
+<text x="104" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Search terms, or one post by URL</text>
+<text x="104" y="358" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same adapter code for every</text>
+<text x="104" y="384" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform (harmwatch.social)</text>
+<rect x="82" y="452" width="386" height="120" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="104" y="486" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Telegram</text>
+<rect x="409.5" y="466" width="42.5" height="26" rx="13" fill="#fff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="430.75" y="484.5" font-size="14" font-weight="bold" fill="#6b4fa0" text-anchor="middle" font-style="normal">API</text>
+<text x="104" y="518" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Official API via Telethon</text>
+<text x="104" y="544" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Public channels, text only</text>
+<rect x="82" y="588" width="386" height="146" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="104" y="622" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Media</text>
+<rect x="352.5" y="602" width="99.5" height="26" rx="13" fill="#fff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="402.25" y="620.5" font-size="14" font-weight="bold" fill="#6b4fa0" text-anchor="middle" font-style="normal">temporary</text>
+<text x="104" y="654" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Downloaded only for the AI judge,</text>
+<text x="104" y="680" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">from the platform&#x27;s own servers,</text>
+<text x="104" y="706" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">deleted right after judging</text>
+<rect x="82" y="760" width="386" height="424" rx="14" fill="#fff4e0" stroke="#c07a1a" stroke-width="2.5" stroke-dasharray="10 7"/>
+<text x="104" y="798" font-size="22" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Scraping limits</text>
+<text x="104" y="832" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Rate limits and flood waits</text>
+<text x="104" y="859" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Apify cost per run (capped),</text>
+<text x="104" y="886" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">API read quotas</text>
+<text x="104" y="913" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Public content only</text>
+<text x="104" y="940" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Platform terms of service</text>
+<line x1="104" y1="980" x2="446" y2="980" stroke="#e0b870" stroke-width="1.5"/>
+<text x="104" y="1012" font-size="16" font-weight="bold" fill="#26313d" text-anchor="start" font-style="normal">Can be raised by:</text>
+<text x="104" y="1042" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">a paid Apify plan, or the ICRC</text>
+<text x="104" y="1069" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">requesting research or partner</text>
+<text x="104" y="1096" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">access from the platform</text>
+<rect x="1020" y="150" width="420" height="150" rx="14" fill="#fbecec" stroke="#c0392b" stroke-width="2.5"/>
+<text x="1046" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">ICRC local definition</text>
+<text x="1046" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Layered policy: core, children rules,</text>
+<text x="1046" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform and region profiles</text>
+<text x="1046" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Written with the ICRC, human-approved</text>
+<rect x="1520" y="150" width="390" height="150" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
+<text x="1546" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Local community</text>
+<rect x="1792.5" y="170" width="99.5" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
+<text x="1842.25" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">anonymous</text>
+<text x="1546" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Web form, browser extension,</text>
+<text x="1546" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Telegram bot · rate-limited</text>
+<text x="1546" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Screened by the model first</text>
+<rect x="1990" y="150" width="360" height="150" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
+<text x="2016" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Trained volunteers</text>
+<rect x="2242.0" y="170" width="90.0" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
+<text x="2287.0" y="188.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">accounts</text>
+<text x="2016" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Red Cross Movement volunteers</text>
+<text x="2016" y="247" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Structured report: harm types,</text>
+<text x="2016" y="274" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">urgency, context</text>
+<rect x="560" y="380" width="390" height="330" rx="14" fill="#e9f6ee" stroke="#2e7d4f" stroke-width="2.5"/>
+<text x="586" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Duplicate filter</text>
+<rect x="889.5" y="400" width="42.5" height="26" rx="13" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="2"/>
+<text x="910.75" y="418.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">new</text>
+<text x="586" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Fingerprints, never the content</text>
+<text x="586" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same or near text (SHA, SimHash)</text>
+<text x="586" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same file, near image</text>
+<text x="586" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">(perceptual hash)</text>
+<text x="586" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same post link (normalised URL)</text>
+<text x="586" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal"></text>
+<text x="586" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">One group per content:</text>
+<text x="586" y="644" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">judged once, reviewed once</text>
+<rect x="1020" y="380" width="420" height="330" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
+<text x="1046" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">AI classification</text>
+<text x="1046" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Our model, on our own GPU</text>
+<text x="1046" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">1. Safety filter: explicit media</text>
+<text x="1046" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">    quarantined, never shown</text>
+<text x="1046" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">2. Pre-filter trained on our data</text>
+<text x="1046" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">3. Qwen3.5-9B judge + our policy</text>
+<text x="1046" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">    and annotated examples</text>
+<text x="1046" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Output: route, priority, summary</text>
+<rect x="1520" y="380" width="390" height="330" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
+<text x="1546" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Platform</text>
+<text x="1546" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Three lanes, one queue</text>
+<text x="1546" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Detection · community ·</text>
+<text x="1546" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">trained volunteers</text>
+<text x="1546" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">One item per content group,</text>
+<text x="1546" y="563" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">listing every copy (link,</text>
+<text x="1546" y="590" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform, lane)</text>
+<text x="1546" y="617" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Order: urgency, copies, date</text>
+<rect x="1990" y="380" width="360" height="330" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
+<text x="2016" y="420" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">ICRC review</text>
+<text x="2016" y="450" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">The AI proposes, a human decides</text>
+<text x="2016" y="482" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Two core questions:</text>
+<text x="2016" y="509" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">sexual violence? harmful</text>
+<text x="2016" y="536" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">information? Yes only if both</text>
+<rect x="2016" y="560" width="53.599999999999994" height="34" rx="17" fill="#e9f6ee" stroke="#2e7d4f" stroke-width="2"/>
+<text x="2042.8" y="583" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">Yes</text>
+<rect x="2079.6" y="560" width="44.4" height="34" rx="17" fill="#fbecec" stroke="#c0392b" stroke-width="2"/>
+<text x="2101.7999999999997" y="583" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">No</text>
+<text x="2016" y="634" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">One decision covers every copy</text>
+<text x="2016" y="660" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Restricted items never listed</text>
+<rect x="1990" y="790" width="360" height="250" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
+<text x="2016" y="830" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Case tagging</text>
+<text x="2016" y="860" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Basic tags on every review,</text>
+<text x="2016" y="887" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">advanced tags from the taxonomy</text>
+<rect x="2016" y="908" width="53.599999999999994" height="34" rx="17" fill="#fff" stroke="#2f5b8a" stroke-width="2"/>
+<text x="2042.8" y="931" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">men</text>
+<rect x="2079.6" y="908" width="72.0" height="34" rx="17" fill="#fff" stroke="#2f5b8a" stroke-width="2"/>
+<text x="2115.6" y="931" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">women</text>
+<rect x="2161.6" y="908" width="99.6" height="34" rx="17" fill="#fff" stroke="#2f5b8a" stroke-width="2"/>
+<text x="2211.4" y="931" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">children</text>
+<rect x="2016" y="950" width="164.0" height="34" rx="17" fill="#fff" stroke="#2f5b8a" stroke-width="2"/>
+<text x="2098.0" y="973" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">sexual violence</text>
+<rect x="2190.0" y="950" width="35.2" height="34" rx="17" fill="#fff" stroke="#2f5b8a" stroke-width="2" stroke-dasharray="4 4"/>
+<text x="2207.6" y="973" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">+</text>
+<rect x="2016" y="992" width="210.0" height="34" rx="17" fill="#fff" stroke="#2f5b8a" stroke-width="2"/>
+<text x="2121.0" y="1015" font-size="16" font-weight="normal" fill="#26313d" text-anchor="middle" font-style="normal">forced sexual action</text>
+<rect x="560" y="1090" width="1790" height="120" rx="14" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2.5"/>
+<text x="586" y="1130" font-size="23" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Classified dataset and analysis</text>
+<text x="586" y="1160" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">AI labels and score, human decision, tags and copies: one record per content group. Analysis dashboard by tag, source and platform.</text>
+<text x="586" y="1187" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Stored in the database, never in git. Restricted items are never exported.</text>
+<path d="M490,520 L556,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="498" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">posts</text>
+<path d="M950,520 L1016,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="962" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">new</text>
+<path d="M1230,300 L1230,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1242" y="345" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">policy</text>
+<path d="M1440,500 L1516,500" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1446" y="488" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">flagged</text>
+<path d="M1520,620 L1444,620" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1448" y="648" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">screen</text>
+<path d="M1715,300 L1715,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1727" y="345" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">report</text>
+<path d="M2170,300 L2170,340 L1860,340 L1860,376" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1872" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">priority lane, no screening</text>
+<path d="M1910,520 L1986,520" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1917" y="508" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">queue</text>
+<path d="M2170,710 L2170,786" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="2182" y="755" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">tags the case</text>
+<path d="M2170,1040 L2170,1086" fill="none" stroke="#46505c" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="2182" y="1070" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">decision + tags</text>
+<path d="M1230,1090 L1230,714" fill="none" stroke="#2e7d4f" stroke-width="2.5" stroke-dasharray="11 8" marker-end="url(#arrow-green)"/>
+<text x="1250" y="830" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">Planned feedback: past decisions and</text>
+<text x="1250" y="856" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">tags become prompt examples, then</text>
+<text x="1250" y="882" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start" font-style="normal">retraining data</text>
+<text x="1046" y="656" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start" font-style="normal">Possible minor: restricted,</text>
+<text x="1046" y="680" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start" font-style="normal">never sent, shown or exported</text>
+<rect x="60" y="1244" width="26" height="22" rx="5" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2"/>
+<text x="98" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">Inputs</text>
+<rect x="183.0" y="1244" width="26" height="22" rx="5" fill="#fbecec" stroke="#c0392b" stroke-width="2"/>
+<text x="221.0" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">ICRC local definition</text>
+<rect x="463.5" y="1244" width="26" height="22" rx="5" fill="#eaf0f7" stroke="#2f5b8a" stroke-width="2"/>
+<text x="501.5" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">Processing, review and data</text>
+<rect x="807.0" y="1244" width="26" height="22" rx="5" fill="#e9f6ee" stroke="#2e7d4f" stroke-width="2"/>
+<text x="845.0" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">New: duplicate filter</text>
+<rect x="1087.5" y="1244" width="26" height="22" rx="5" fill="#fff4e0" stroke="#c07a1a" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1125.5" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">Platform access constraint</text>
+<line x1="1420.5" y1="1255" x2="1476.5" y2="1255" stroke="#2e7d4f" stroke-width="3" stroke-dasharray="9 6"/>
+<text x="1490.5" y="1262" font-size="18" font-weight="normal" fill="#26313d" text-anchor="start" font-style="normal">Planned feedback loop</text>
+<rect x="60" y="1296" width="2290" height="140" rx="12" fill="#f3f4f6" stroke="#c9ced6" stroke-width="1.5"/>
+<text x="88" y="1330" font-size="19" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Safeguards</text>
+<text x="88" y="1362" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">No sexual-violence images or videos are stored or annotated: media is judged in a temporary folder, then deleted; only hashes and links are kept. Anything that may involve a child</text>
+<text x="88" y="1389" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">and sexual content is restricted: never shown, never sent to reviewers, never exported (escalation channel to ICRC legal, NCMEC and IWF still to be connected). Same rules for all</text>
+<text x="88" y="1416" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">sides. The AI proposes, an ICRC human decides: no automatic action. Each collector follows its platform&#x27;s terms of service.</text>
+</svg>

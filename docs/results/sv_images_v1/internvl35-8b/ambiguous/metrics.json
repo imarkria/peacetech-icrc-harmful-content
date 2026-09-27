@@ -1,0 +1,87 @@
+{
+  "model": "internvl35-8b",
+  "mode": "ambiguous",
+  "counts": {
+    "n": 57,
+    "valid": 57,
+    "invalid_json": 0,
+    "timeouts": 0,
+    "server_errors": 0,
+    "refusals": 0,
+    "restricted_possible_minor": 0,
+    "logprobs_missing": 0
+  },
+  "throughput": {
+    "total_seconds": 109.4,
+    "images_per_min": 31.3,
+    "vram_peak_mib": 22900,
+    "workers": 8,
+    "mean_latency_s": 14.95
+  },
+  "ambiguous": {
+    "pct_sexual_pred": 70.2,
+    "sexual_violence": {
+      "mean": 17.7,
+      "pct_ge50": 17.5,
+      "hist_0_25_50_75_100": [
+        43,
+        4,
+        7,
+        3
+      ]
+    },
+    "sexual_harassment": {
+      "mean": 44.3,
+      "pct_ge50": 54.4,
+      "hist_0_25_50_75_100": [
+        23,
+        3,
+        14,
+        17
+      ]
+    },
+    "hate": {
+      "mean": 19.6,
+      "pct_ge50": 15.8,
+      "hist_0_25_50_75_100": [
+        46,
+        2,
+        3,
+        6
+      ]
+    },
+    "misogyny": {
+      "mean": 47.0,
+      "pct_ge50": 56.1,
+      "hist_0_25_50_75_100": [
+        23,
+        2,
+        9,
+        23
+      ]
+    },
+    "other_violence": {
+      "mean": 8.1,
+      "pct_ge50": 1.8,
+      "hist_0_25_50_75_100": [
+        54,
+        2,
+        0,
+        1
+      ]
+    },
+    "p_sexual_hist_deciles": [
+      16,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      38
+    ],
+    "p_sexual_between_0.2_0.8": 1
+  }
+}

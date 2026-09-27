@@ -1,0 +1,18 @@
+{
+ "B": {
+  "short_snippet_videos": 1,
+  "top1": 1,
+  "top3": 1,
+  "chance_top1": 0.38,
+  "all_chance_top1": 0.86,
+  "snippet_coverage_mean": 0.79
+ },
+ "C": {
+  "short_snippet_videos": 1,
+  "top1": 1,
+  "top3": 1,
+  "chance_top1": 0.38,
+  "all_chance_top1": 0.86,
+  "snippet_coverage_mean": 0.79
+ }
+}

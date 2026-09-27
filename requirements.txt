@@ -1,5 +1,14 @@
-anthropic>=1.8
 pydantic>=2
 python-dotenv
+pandas
+numpy
+pillow
 telethon
 python-telegram-bot>=21
+pyyaml
+openai>=1.50
+imagehash       # harmwatch/cascade.py
+matplotlib      # scripts/make_*.py
+pytest
+apify-client     # harmwatch/social.py
+httpx            # media downloads

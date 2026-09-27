@@ -1,0 +1,15 @@
+{
+  "model": "qwen35-9b",
+  "api_model": "qwen3.5-9b",
+  "backend": "llama.cpp",
+  "mode": "image_text",
+  "n_items": 120,
+  "workers": 8,
+  "total_seconds": 180.9,
+  "images_per_min": 39.8,
+  "vram_peak_mib": 15328,
+  "prompt": "v3",
+  "prompt_sha256": "9160fe72836938169116baa9c1edf68918fd4e5c598c50bb1b5c7cb354760386",
+  "profile": "global-0.1/core-1.4+no-approved-entries",
+  "threshold": 50
+}

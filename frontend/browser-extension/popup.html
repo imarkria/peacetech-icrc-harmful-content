@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SignalSafe Report</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header class="header">
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div>
+          <div class="eyebrow">Public report</div>
+          <h1>Report this page</h1>
+        </div>
+      </header>
+
+      <p class="intro">Submit the current page if it may contain harmful information.</p>
+
+      <form id="report-form">
+        <label for="url">Page URL</label>
+        <input id="url" name="url" type="url" required />
+
+        <label for="reason">Reason <span>(optional)</span></label>
+        <textarea id="reason" name="reason" maxlength="1000" rows="4" placeholder="Briefly describe the concern."></textarea>
+        <div class="field-meta"><span>Do not include personal information.</span><span id="counter">0/1000</span></div>
+
+        <details class="settings">
+          <summary>Settings</summary>
+          <label for="api-url">SignalSafe API address</label>
+          <input id="api-url" name="api-url" type="url" placeholder="http://localhost:8000" />
+        </details>
+
+        <button id="submit" type="submit">Submit report</button>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+      </form>
+
+      <footer>No account required. Reports are checked, then reviewed by the ICRC.</footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

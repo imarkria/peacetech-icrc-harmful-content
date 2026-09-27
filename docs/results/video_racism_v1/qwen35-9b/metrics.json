@@ -1,0 +1,122 @@
+{
+  "B": {
+    "videos": {
+      "n": 30,
+      "TP": 15,
+      "FP": 1,
+      "FN": 0,
+      "TN": 14,
+      "precision": 0.938,
+      "recall": 1.0,
+      "f1": 0.968,
+      "accuracy": 0.967,
+      "specificity": 0.933
+    },
+    "auroc_max_p_racist": 1.0,
+    "localisation": {
+      "n_true_positives_with_snippet": 15,
+      "top1_hits": 14,
+      "top3_hits": 15,
+      "offsets_top1_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "top1_rate": 0.933,
+      "top3_rate": 1.0,
+      "mean_offset_top1_s": 0.2
+    },
+    "triggered_layer": {
+      "speech": 89,
+      "on_screen_text": 24,
+      "visuals": 1
+    },
+    "segments": {
+      "n": 191,
+      "errors": 0,
+      "racist": 114,
+      "invalid_json": 0,
+      "timeouts": 0
+    },
+    "judge_seconds": 290.8
+  },
+  "C": {
+    "videos": {
+      "n": 30,
+      "TP": 15,
+      "FP": 2,
+      "FN": 0,
+      "TN": 13,
+      "precision": 0.882,
+      "recall": 1.0,
+      "f1": 0.937,
+      "accuracy": 0.933,
+      "specificity": 0.867
+    },
+    "auroc_max_p_racist": 1.0,
+    "localisation": {
+      "n_true_positives_with_snippet": 15,
+      "top1_hits": 15,
+      "top3_hits": 15,
+      "offsets_top1_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_offset_top1_s": 0.0
+    },
+    "triggered_layer": {
+      "speech": 101,
+      "on_screen_text": 13,
+      "visuals": 0
+    },
+    "segments": {
+      "n": 191,
+      "errors": 0,
+      "racist": 114,
+      "invalid_json": 0,
+      "timeouts": 0
+    },
+    "judge_seconds": 177.2
+  },
+  "cost": {
+    "per_stage_total_s": {
+      "segmentation": 47.4,
+      "frames_and_safety": 40.5,
+      "whisper": 52.3,
+      "ocr": 143.9
+    },
+    "videos": 30,
+    "total_video_seconds": 2699.7,
+    "segments_per_video": 6.4,
+    "prep_seconds_per_video": 9.5,
+    "judge_seconds_per_video_B": 9.7,
+    "judge_seconds_per_video_C": 5.9
+  }
+}

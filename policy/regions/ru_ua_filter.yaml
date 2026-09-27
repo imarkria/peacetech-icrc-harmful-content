@@ -1,0 +1,38 @@
+# Candidate-extraction patterns for the ru_ua region (scripts/extract_sv.py).
+# Search patterns only: they select posts for assessment and are NEVER evidence for a label.
+# Source: RG-SVTERM / RG-SLUR entries (approved) + roots given by gmikou in the phase 2 brief (2026-09-26).
+# Matching runs on normalised text (lower-case, ё→е, look-alike symbols mapped to Cyrillic: н@силие → насилие).
+# strength: strong = explicit sexual-violence vocabulary; weak = framing that needs a second signal
+# (embedding similarity) to become a candidate.
+# near: [pattern_a, pattern_b, window] = both within `window` words.
+version: '0.1'
+region: ru_ua
+patterns:
+  # --- Russian ---
+  - {id: F-RU-01, lang: ru, strength: strong, regex: 'изнасил\w*', refers_to: RG-SVTERM-001}
+  - {id: F-RU-02, lang: ru, strength: strong, regex: 'насил(?:ова|у[юет]|уй)\w*|насильник\w*', refers_to: RG-SVTERM-001}
+  - {id: F-RU-03, lang: ru, strength: strong, regex: '(?:сексуальн|половы?)\w*\s+(?:насил|пытк|рабств|эксплуатац|унижен|домогат)\w*|секс[\s-]?(?:пытк|рабств|рабын)\w*', refers_to: RG-SVTERM-003}
+  - {id: F-RU-04, lang: ru, strength: strong, regex: 'кастр(?:ац|ир)\w*', refers_to: RG-SVTERM-009}
+  - {id: F-RU-05, lang: ru, strength: strong, regex: 'догола', refers_to: RG-SVTERM-008}
+  - {id: F-RU-06, lang: ru, strength: strong, regex: 'пусти\w*\s+(?:\w+\s+)?по\s+кругу', refers_to: RG-SVTERM-007}
+  - {id: F-RU-07, lang: ru, strength: strong, near: ['трофе\w*', '(?:баб|девк|девуш|девчон|женщин|жен(?:а|ы|у|ой|ам|ами|ах)?(?!\w)|пленниц)\w*', 6], refers_to: RG-SVTERM-005}
+  - {id: F-RU-08, lang: ru, strength: strong, near: ['(?:наград|отдых)\w*', '(?:баб|девк|девуш|девчон|женщин|пленниц)\w*', 6], refers_to: RG-SVTERM-006}
+  - {id: F-RU-09, lang: ru, strength: strong, regex: 'обесчест\w*', refers_to: RG-SVTERM-012}
+  - {id: F-RU-10, lang: ru, strength: strong, regex: 'подстилк\w*', refers_to: RG-SLUR-005}
+  - {id: F-RU-11, lang: ru, strength: strong, near: ['шлюх(?!ед)\w*', '(?:всу|зсу|укр|хохл|бандер|орк|оккупант|русн|кацап)\w*', 5], refers_to: RG-SLUR-005}
+  - {id: F-RU-12, lang: ru, strength: weak, regex: '(?:их|ваш\w*)\s+(?:баб|женщин|жен(?:а|ы|у|ой|ам|ами|ах)?(?!\w)|дочер|дочк)\w*', refers_to: RG-SVTERM-010}
+  - {id: F-RU-13, lang: ru, strength: weak, regex: 'опозор\w*|домогат\w*|принужд\w*\s+к\s+(?:проституц|сексу|интим)\w*|сексуальн\w*\s+эксплуат\w*', refers_to: RG-SVTERM-012}
+  - {id: F-RU-14, lang: ru, strength: weak, regex: 'торговл\w*\s+(?:людьми|детьми|женщинами)|трафикинг\w*', refers_to: SV-FORM-08}
+  # --- Ukrainian ---
+  - {id: F-UK-01, lang: uk, strength: strong, regex: 'з[ґг]валт\w*|ґвалт\w*|гвалт(?:ув|ів|уван)\w*', refers_to: RG-SVTERM-002, note: 'bare гвалт = "uproar" in Russian: excluded'}
+  - {id: F-UK-02, lang: uk, strength: strong, regex: 'сексуальн\w*\s+(?:насильств|катуван|рабств|експлуатац|домаган)\w*|снпк', refers_to: RG-SVTERM-004}
+  - {id: F-UK-03, lang: uk, strength: strong, regex: 'підстилк\w*', refers_to: RG-SLUR-009}
+  - {id: F-UK-04, lang: uk, strength: strong, regex: 'кастр(?:ац|ув)\w*', refers_to: RG-SVTERM-009}
+  - {id: F-UK-05, lang: uk, strength: strong, regex: 'насильник\w*', refers_to: RG-SVTERM-002}
+  - {id: F-UK-06, lang: uk, strength: strong, near: ['трофе\w*', '(?:жінк|дівчат|дівчин|полонян|баб)\w*', 6], refers_to: RG-SVTERM-005}
+  - {id: F-UK-07, lang: uk, strength: weak, regex: '(?:їхн\w*|ваш\w*|їх)\s+(?:жінк|дружин|доньк|дочк|баб)\w*', refers_to: RG-SVTERM-011}
+  # --- Transliteration, English, evasion (platform profile) ---
+  - {id: F-TR-01, lang: any, strength: strong, regex: 'iznasil\w*|z?gvaltuv\w*|nasilova\w*', refers_to: TG-evasion}
+  - {id: F-EN-01, lang: en, strength: strong, regex: '\brap(?:e[ds]?|ing|ists?)\b|sexual(?:ly)?\s+(?:violence|assault\w*|abuse\w*|tortur\w*|slaver\w*|exploit\w*)', refers_to: SV-FORM-01}
+  # F-EN-02 (grape / rpe / 🍇) removed 2026-09-26: not observed as evasion in this corpus, pure noise
+  # (Izium puns, fruit emojis). Kept in platforms/telegram.md as a proposed evasion to watch.

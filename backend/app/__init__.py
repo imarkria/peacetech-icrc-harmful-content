@@ -1,0 +1,1 @@
+"""SignalSafe backend application."""

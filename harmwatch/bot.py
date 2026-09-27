@@ -1,24 +1,42 @@
-"""Telegram bot: volunteers forward a suspicious post, it enters the review queue.
+"""Community Telegram bot: anyone in the local community forwards a suspicious channel post.
 
     python -m harmwatch.bot
 
-Needs TELEGRAM_BOT_TOKEN (create the bot with @BotFather). Only text and captions
-are stored; photos and videos are ignored on purpose.
+Needs TELEGRAM_BOT_TOKEN (create the bot with @BotFather). This is the broader-community lane: reports are
+anonymous (the sender is never stored), rate-limited per sender, judged by the model and grouped with copies of the
+same content before they reach reviewers. Trained volunteers report through their account on the web app instead.
+Only text and captions are read; photos and videos are ignored on purpose.
 """
 
+import logging
 import os
+import time
+from collections import defaultdict, deque
 
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
-from harmwatch import db
-from harmwatch.pipeline import classify_post
+from harmwatch import publish
+from harmwatch.intake import Post, ingest
 
 WELCOME = (
-    "Forward me a Telegram post you think is harmful (threats, mockery or exposure of survivors "
-    "of sexual violence, etc.). An ICRC analyst will review it. Do not send photos or videos."
+    "Forward me a post from a public Telegram channel that you think is harmful (threats, mockery or exposure of "
+    "survivors of sexual violence, etc.). It is checked, then reviewed by the ICRC. Your name is not kept. "
+    "Do not send photos or videos."
 )
+RATE_LIMIT, RATE_WINDOW = 5, 600  # reports per sender per 10 minutes, in memory only
+_recent: dict[int, deque] = defaultdict(deque)
+
+
+def allowed(sender_id: int) -> bool:
+    now, hits = time.monotonic(), _recent[sender_id]
+    while hits and now - hits[0] > RATE_WINDOW:
+        hits.popleft()
+    if len(hits) >= RATE_LIMIT:
+        return False
+    hits.append(now)
+    return True
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -27,30 +45,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.message
+    if msg.from_user and not allowed(msg.from_user.id):
+        await msg.reply_text("Thank you. You have sent many reports in a short time; please try again later.")
+        return
     text = msg.text or msg.caption
-    if not text:
-        await msg.reply_text("I can only take text. Please forward a post with text, or paste it.")
+    origin = msg.forward_origin
+    if not text or origin is None or origin.type != "channel" or not origin.chat.username:
+        await msg.reply_text("Please forward the post itself from a public channel. "
+                             "For other links, use the report form on the website.")
         return
 
-    channel, url = None, None
-    origin = msg.forward_origin
-    if origin is not None and origin.type == "channel":
-        channel = origin.chat.username or origin.chat.title
-        if origin.chat.username:
-            url = f"https://t.me/{origin.chat.username}/{origin.message_id}"
-
-    with db.connect() as conn:
-        post_id = db.add_post(
-            conn, source="volunteer", text=text, channel=channel, url=url,
-            posted_at=origin.date.isoformat() if origin else None,
-            reporter=f"tg:{msg.from_user.id}" if msg.from_user else None,
-        )
-        if post_id is None:
-            await msg.reply_text("Thanks, this post was already reported.")
-            return
-        post = conn.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
-        classify_post(conn, post)
-    await msg.reply_text("Thank you. The post was added to the review queue.")
+    channel = origin.chat.username
+    post = Post(platform="telegram", post_id=f"{channel}/{origin.message_id}", text=text,
+                url=f"https://t.me/{channel}/{origin.message_id}", posted_at=origin.date.isoformat())
+    result = ingest(post, source="telegram_bot")
+    if publish.enabled():
+        try:
+            publish.publish_pending()
+        except Exception:  # the sighting stays unsent; `python -m harmwatch.publish` retries it
+            logging.exception("Could not send the report to the review queue")
+    await msg.reply_text("Thank you, this post was already reported." if not result.new
+                         else "Thank you. The post was received and will be checked.")
 
 
 def main():

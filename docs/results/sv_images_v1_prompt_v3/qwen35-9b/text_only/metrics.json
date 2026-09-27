@@ -1,0 +1,335 @@
+{
+  "model": "qwen35-9b",
+  "mode": "text_only",
+  "counts": {
+    "n": 120,
+    "valid": 120,
+    "invalid_json": 0,
+    "timeouts": 0,
+    "server_errors": 0,
+    "refusals": 0,
+    "restricted_possible_minor": 0,
+    "logprobs_missing": 0
+  },
+  "throughput": {
+    "total_seconds": 152.4,
+    "images_per_min": 47.3,
+    "vram_peak_mib": 15328,
+    "workers": 8,
+    "mean_latency_s": 10.08
+  },
+  "sexual": {
+    "n": 120,
+    "TP": 53,
+    "FP": 8,
+    "FN": 7,
+    "TN": 52,
+    "precision": 0.869,
+    "recall": 0.883,
+    "f1": 0.876,
+    "accuracy": 0.875,
+    "specificity": 0.867
+  },
+  "positives_without_keyword": {
+    "n": 10,
+    "detected": 7,
+    "recall": 0.7
+  },
+  "negatives_with_keyword": {
+    "n": 2,
+    "false_positives": 0
+  },
+  "written_scores": {
+    "auroc": 0.925,
+    "distinct_values": 5
+  },
+  "logprob": {
+    "sexual": {
+      "n": 120,
+      "auroc": 0.969,
+      "best_threshold": 0.9598,
+      "tpr_at_best": 0.867,
+      "fpr_at_best": 0.0,
+      "calibration": {
+        "ece": 0.113,
+        "brier": 0.112,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 59,
+            "mean_p": 0.001,
+            "frac_pos": 0.119
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 1,
+            "mean_p": 0.787,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 3,
+            "mean_p": 0.889,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 57,
+            "mean_p": 0.986,
+            "frac_pos": 0.93
+          }
+        ]
+      }
+    },
+    "hate": {
+      "n": 120,
+      "auroc": 0.73,
+      "calibration": {
+        "ece": 0.153,
+        "brier": 0.146,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 92,
+            "mean_p": 0.003,
+            "frac_pos": 0.141
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 3,
+            "mean_p": 0.132,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 2,
+            "mean_p": 0.458,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 1,
+            "mean_p": 0.509,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 22,
+            "mean_p": 0.991,
+            "frac_pos": 0.818
+          }
+        ]
+      }
+    },
+    "misogyny": {
+      "n": 120,
+      "auroc": 0.915,
+      "calibration": {
+        "ece": 0.131,
+        "brier": 0.127,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 53,
+            "mean_p": 0.001,
+            "frac_pos": 0.132
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 1,
+            "mean_p": 0.168,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 1,
+            "mean_p": 0.603,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 1,
+            "mean_p": 0.832,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 64,
+            "mean_p": 0.998,
+            "frac_pos": 0.875
+          }
+        ]
+      }
+    }
+  },
+  "by_reference_class": {
+    "positives": {
+      "n": 60,
+      "n_scored": 60,
+      "pct_sexual_violence_ge50": 53.3,
+      "mean_sexual_violence": 49.5,
+      "pct_sexual_harassment_ge50": 38.3,
+      "mean_sexual_harassment": 40.6,
+      "pct_hate_ge50": 25.0,
+      "mean_hate": 28.7,
+      "pct_misogyny_ge50": 80.0,
+      "mean_misogyny": 71.0,
+      "pct_other_violence_ge50": 11.7,
+      "mean_other_violence": 11.0,
+      "pct_sexual_pred": 88.3
+    },
+    "negatives": {
+      "n": 60,
+      "n_scored": 60,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 13.3,
+      "mean_sexual_harassment": 11.5,
+      "pct_hate_ge50": 16.7,
+      "mean_hate": 18.7,
+      "pct_misogyny_ge50": 26.7,
+      "mean_misogyny": 21.8,
+      "pct_other_violence_ge50": 6.7,
+      "mean_other_violence": 6.8,
+      "pct_sexual_pred": 13.3
+    },
+    "negatives_trap": {
+      "n": 30,
+      "n_scored": 30,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 23.3,
+      "mean_sexual_harassment": 20.2,
+      "pct_hate_ge50": 26.7,
+      "mean_hate": 30.3,
+      "pct_misogyny_ge50": 50.0,
+      "mean_misogyny": 39.8,
+      "pct_other_violence_ge50": 13.3,
+      "mean_other_violence": 12.3,
+      "pct_sexual_pred": 23.3
+    },
+    "negatives_neutral": {
+      "n": 30,
+      "n_scored": 30,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 3.3,
+      "mean_sexual_harassment": 2.8,
+      "pct_hate_ge50": 6.7,
+      "mean_hate": 7.0,
+      "pct_misogyny_ge50": 3.3,
+      "mean_misogyny": 3.7,
+      "pct_other_violence_ge50": 0.0,
+      "mean_other_violence": 1.3,
+      "pct_sexual_pred": 3.3
+    }
+  },
+  "hate_vs_reference": {
+    "n": 120,
+    "TP": 19,
+    "FP": 4,
+    "FN": 13,
+    "TN": 84,
+    "precision": 0.826,
+    "recall": 0.594,
+    "f1": 0.691,
+    "accuracy": 0.858,
+    "specificity": 0.955
+  },
+  "hate_score_vs_reference": {
+    "n": 120,
+    "TP": 19,
+    "FP": 6,
+    "FN": 13,
+    "TN": 82,
+    "precision": 0.76,
+    "recall": 0.594,
+    "f1": 0.667,
+    "accuracy": 0.842,
+    "specificity": 0.932
+  },
+  "misogyny_vs_reference": {
+    "n": 120,
+    "TP": 57,
+    "FP": 9,
+    "FN": 7,
+    "TN": 47,
+    "precision": 0.864,
+    "recall": 0.891,
+    "f1": 0.877,
+    "accuracy": 0.867,
+    "specificity": 0.839
+  },
+  "misogyny_score_vs_reference": {
+    "n": 120,
+    "TP": 56,
+    "FP": 8,
+    "FN": 8,
+    "TN": 48,
+    "precision": 0.875,
+    "recall": 0.875,
+    "f1": 0.875,
+    "accuracy": 0.867,
+    "specificity": 0.857
+  },
+  "tp_category_or_relation_correct": {
+    "n_tp": 53,
+    "correct": 23,
+    "pct": 43.4
+  },
+  "by_category_recall": {
+    "threat_incitement": {
+      "n": 8,
+      "detected": 7
+    },
+    "victim_stigmatisation": {
+      "n": 5,
+      "detected": 4
+    },
+    "rape_joke_glorification": {
+      "n": 11,
+      "detected": 11
+    },
+    "denial_minimization": {
+      "n": 7,
+      "detected": 7
+    },
+    "collective_accusation": {
+      "n": 7,
+      "detected": 5
+    },
+    "degrading_sexualisation": {
+      "n": 10,
+      "detected": 9
+    },
+    "sexualised_insult": {
+      "n": 10,
+      "detected": 8
+    },
+    "humiliating_objectification": {
+      "n": 2,
+      "detected": 2
+    }
+  },
+  "errors": {
+    "FP": [
+      "sv1-c183",
+      "sv1-c194",
+      "sv1-c200",
+      "sv1-c202",
+      "sv1-c208",
+      "sv1-c201",
+      "sv1-c212",
+      "sv1-c225"
+    ],
+    "FN": [
+      "sv1-c036",
+      "sv1-c043",
+      "sv1-c049",
+      "sv1-c062",
+      "sv1-c127",
+      "sv1-c136",
+      "sv1-c174"
+    ]
+  }
+}
