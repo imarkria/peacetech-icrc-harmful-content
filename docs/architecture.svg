@@ -6,39 +6,45 @@
 <rect x="60" y="150" width="430" height="1060" rx="14" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2.5"/>
 <text x="86" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Collection</text>
 <text x="86" y="218" font-size="16" font-weight="normal" fill="#5b6570" text-anchor="start" font-style="italic">Public posts only: text, metadata, hashes</text>
-<rect x="82" y="240" width="386" height="196" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
+<rect x="82" y="240" width="386" height="220" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
 <text x="104" y="274" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Apify</text>
 <rect x="314.5" y="254" width="137.5" height="26" rx="13" fill="#6b4fa0" stroke="#6b4fa0" stroke-width="2"/>
 <text x="383.25" y="272.5" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle" font-style="normal">one collector</text>
-<text x="104" y="306" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Facebook · Instagram · TikTok · X</text>
-<text x="104" y="332" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Search terms, or one post by URL</text>
-<text x="104" y="358" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same adapter code for every</text>
-<text x="104" y="384" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">platform (harmwatch.social)</text>
-<rect x="82" y="452" width="386" height="120" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
-<text x="104" y="486" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Telegram</text>
-<rect x="409.5" y="466" width="42.5" height="26" rx="13" fill="#fff" stroke="#6b4fa0" stroke-width="2"/>
-<text x="430.75" y="484.5" font-size="14" font-weight="bold" fill="#6b4fa0" text-anchor="middle" font-style="normal">API</text>
-<text x="104" y="518" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Official API via Telethon</text>
-<text x="104" y="544" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Public channels, text only</text>
-<rect x="82" y="588" width="386" height="146" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
-<text x="104" y="622" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Media</text>
-<rect x="352.5" y="602" width="99.5" height="26" rx="13" fill="#fff" stroke="#6b4fa0" stroke-width="2"/>
-<text x="402.25" y="620.5" font-size="14" font-weight="bold" fill="#6b4fa0" text-anchor="middle" font-style="normal">temporary</text>
-<text x="104" y="654" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Downloaded only for the AI judge,</text>
-<text x="104" y="680" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">from the platform&#x27;s own servers,</text>
-<text x="104" y="706" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">deleted right after judging</text>
-<rect x="82" y="760" width="386" height="424" rx="14" fill="#fff4e0" stroke="#c07a1a" stroke-width="2.5" stroke-dasharray="10 7"/>
-<text x="104" y="798" font-size="22" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Scraping limits</text>
-<text x="104" y="832" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Rate limits and flood waits</text>
-<text x="104" y="859" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Apify cost per run (capped),</text>
-<text x="104" y="886" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">API read quotas</text>
-<text x="104" y="913" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Public content only</text>
-<text x="104" y="940" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Platform terms of service</text>
-<line x1="104" y1="980" x2="446" y2="980" stroke="#e0b870" stroke-width="1.5"/>
-<text x="104" y="1012" font-size="16" font-weight="bold" fill="#26313d" text-anchor="start" font-style="normal">Can be raised by:</text>
-<text x="104" y="1042" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">a paid Apify plan, or the ICRC</text>
-<text x="104" y="1069" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">requesting research or partner</text>
-<text x="104" y="1096" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">access from the platform</text>
+<rect x="104" y="292" width="165" height="38" rx="9" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2"/>
+<text x="186.5" y="318" font-size="19" font-weight="bold" fill="#1b2530" text-anchor="middle" font-style="normal">Facebook</text>
+<rect x="281" y="292" width="165" height="38" rx="9" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2"/>
+<text x="363.5" y="318" font-size="19" font-weight="bold" fill="#1b2530" text-anchor="middle" font-style="normal">Instagram</text>
+<rect x="104" y="340" width="165" height="38" rx="9" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2"/>
+<text x="186.5" y="366" font-size="19" font-weight="bold" fill="#1b2530" text-anchor="middle" font-style="normal">TikTok</text>
+<rect x="281" y="340" width="165" height="38" rx="9" fill="#f6f1fb" stroke="#6b4fa0" stroke-width="2"/>
+<text x="363.5" y="366" font-size="19" font-weight="bold" fill="#1b2530" text-anchor="middle" font-style="normal">X</text>
+<text x="104" y="412" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Search terms, or one post by URL</text>
+<text x="104" y="438" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Same code for every platform</text>
+<rect x="82" y="476" width="386" height="120" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="104" y="510" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Telegram</text>
+<rect x="409.5" y="490" width="42.5" height="26" rx="13" fill="#fff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="430.75" y="508.5" font-size="14" font-weight="bold" fill="#6b4fa0" text-anchor="middle" font-style="normal">API</text>
+<text x="104" y="542" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Official API via Telethon</text>
+<text x="104" y="568" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Public channels, text only</text>
+<rect x="82" y="612" width="386" height="146" rx="14" fill="#ffffff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="104" y="646" font-size="21" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Media</text>
+<rect x="352.5" y="626" width="99.5" height="26" rx="13" fill="#fff" stroke="#6b4fa0" stroke-width="2"/>
+<text x="402.25" y="644.5" font-size="14" font-weight="bold" fill="#6b4fa0" text-anchor="middle" font-style="normal">temporary</text>
+<text x="104" y="678" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Downloaded only for the AI judge,</text>
+<text x="104" y="704" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">from the platform&#x27;s own servers,</text>
+<text x="104" y="730" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">deleted right after judging</text>
+<rect x="82" y="784" width="386" height="400" rx="14" fill="#fff4e0" stroke="#c07a1a" stroke-width="2.5" stroke-dasharray="10 7"/>
+<text x="104" y="822" font-size="22" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">Scraping limits</text>
+<text x="104" y="856" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Rate limits and flood waits</text>
+<text x="104" y="883" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Apify cost per run (capped),</text>
+<text x="104" y="910" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">API read quotas</text>
+<text x="104" y="937" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Public content only</text>
+<text x="104" y="964" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Platform terms of service</text>
+<line x1="104" y1="994" x2="446" y2="994" stroke="#e0b870" stroke-width="1.5"/>
+<text x="104" y="1024" font-size="16" font-weight="bold" fill="#26313d" text-anchor="start" font-style="normal">Can be raised by:</text>
+<text x="104" y="1052" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">a paid Apify plan, or the ICRC</text>
+<text x="104" y="1079" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">requesting research or partner</text>
+<text x="104" y="1106" font-size="16" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">access from the platform</text>
 <rect x="560" y="150" width="420" height="172" rx="14" fill="#fbecec" stroke="#c0392b" stroke-width="2.5"/>
 <text x="586" y="190" font-size="24" font-weight="bold" fill="#1b2530" text-anchor="start" font-style="normal">ICRC local definition</text>
 <text x="586" y="220" font-size="17" font-weight="normal" fill="#36424f" text-anchor="start" font-style="normal">Layered policy: core, children rules,</text>
