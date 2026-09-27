@@ -10,6 +10,12 @@ how to read that table.
 - The definitions it applies are in [`policy/README.md`](../../policy/README.md). The measured results are in
   [`docs/presentation/RESULTS_FOR_SLIDES.md`](../presentation/RESULTS_FOR_SLIDES.md).
 
+**How rows reach reviewers.** Collected posts (Apify, Telegram, community reports) go through
+`harmwatch/intake.py`: copies of the same content are grouped by fingerprints (`harmwatch/dedup.py`), `analyze()` runs
+once per group, and `harmwatch/publish.py` sends groups routed for review to the SignalSafe backend, where they appear
+as one queue item per group. Restricted rows are never sent. Human decisions are recorded in the backend (`reviews`).
+See the [root README](../../README.md#architecture).
+
 ## 1. The pipeline
 
 ```mermaid
@@ -239,6 +245,6 @@ All numbers come from [`docs/presentation/RESULTS_FOR_SLIDES.md`](../presentatio
    never used for training.
 3. **Never store the raw media.** Delete the uploaded file after `analyze()`. Keep only the `url` and the
    `media_hash`; the table was designed for this.
-4. **The judge proposes, a human decides.** Scores and routes prioritise review; they are not a verdict. Record the
-   human decisions (for example in the `decisions` table of `harmwatch/db.py`).
+4. **The judge proposes, a human decides.** Scores and routes prioritise review; they are not a verdict. The platform
+   records the human decisions (backend table `reviews`).
 5. **Keep `.env`, `data/` and `results/` out of git** (already in `.gitignore`).
