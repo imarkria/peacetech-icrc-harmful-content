@@ -1,9 +1,9 @@
 """Judge one post (text + downloaded media) and return the row of `detections` that represents it.
 
-- CLASSIFIER=local: `harmwatch.analyze` (safety filter, pre-filter, Qwen3.5-9B judge) on the text and on each media
-  file. Needs the judge server (scripts/serve_llm.sh). The post keeps its most serious row.
-- any other CLASSIFIER (claude, keywords, auto): the text only, with harmwatch.classify, written to `detections` in
-  the same shape. Media is not analysed in this mode; a media-only post gets no row.
+- CLASSIFIER=local (default): our Qwen model through `harmwatch.analyze` (safety filter, pre-filter, judge) on the
+  text and on each media file. Needs the judge server (scripts/serve_llm.sh). The post keeps its most serious row.
+- CLASSIFIER=keywords: offline baseline for tests and demos, text only, written to `detections` in the same shape.
+  Media is not analysed in this mode; a media-only post gets no row.
 """
 
 import hashlib
@@ -48,7 +48,7 @@ def detect_post(text: str, media: list[MediaFile], *, url: str | None, source: s
 
 
 def classify_text(text: str, *, url: str | None, source: str, region: str, db=None) -> dict:
-    """Claude or keyword classification of the text, stored as a `detections` row (CH-5 applied by insert)."""
+    """Keyword baseline classification of the text, stored as a `detections` row (CH-5 applied by insert)."""
     c, backend = classify(text)
     bucket = triage(c)
     route, priority = BUCKET_ROUTES[bucket]

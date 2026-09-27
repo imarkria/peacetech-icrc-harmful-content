@@ -20,7 +20,7 @@ PUBLISH_ROUTES = REVIEW_ROUTES
 COMMUNITY_SOURCES = {"telegram_bot", "community"}  # the broader local community; everything else is detection
 ROUTE_LABELS = {"explicit_alert": "Explicit media", "priority_review": "Priority review",
                 "standard_review": "Review", "judge_error": "Not judged"}
-# The text classifiers (claude, keywords) give a confidence level, not a probability.
+# The keyword baseline gives a confidence level, not a probability.
 LEVEL_CONFIDENCE = {"high": 0.9, "medium": 0.7, "low": 0.4}
 
 

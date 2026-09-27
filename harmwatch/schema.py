@@ -1,6 +1,6 @@
 """Output schemas.
 
-Classification mirrors policy.md (v0) and is what triage.py consumes.
+Classification is the short label set (harm types, tone, victims...) that triage.py and the keyword baseline use.
 CRSVAssessment mirrors policy/core.md; `finalize` applies its hard rules and
 `to_classification` adapts it so the existing platform keeps working.
 """

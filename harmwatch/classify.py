@@ -1,31 +1,23 @@
-"""Classifiers: Claude (policy-following), a local open model, and an offline keyword fallback.
+"""Text classifiers: our Qwen model (the classifier) and an offline keyword baseline.
 
-CLASSIFIER=claude | local | keywords | auto (default: claude when ANTHROPIC_API_KEY is set).
-local = llama-server (OpenAI-compatible, LOCAL_LLM_URL) applying policy/ layers for REGION.
+CLASSIFIER=local (default) | keywords
+local    = our Qwen model on llama-server (OpenAI-compatible, LOCAL_LLM_URL, LOCAL_LLM_MODEL), applying the policy/
+           layers for REGION. Needs scripts/serve_llm.sh on a GPU.
+keywords = crude keyword matching, for tests and demos without a GPU. Not a classifier to rely on.
 """
 
 import os
 import re
-from pathlib import Path
 
 from harmwatch.schema import Classification
 
-POLICY_PATH = Path(__file__).resolve().parent.parent / "policy.md"
-DEFAULT_MODEL = "claude-opus-5"
-
-SYSTEM_PROMPT = """You label public social media posts for ICRC analysts who monitor harmful content related to sexual violence in armed conflict. Your output is a proposal; a trained human reviews every post before any action.
-
-Apply the policy below exactly. Posts may be in Russian, Ukrainian or English; answer in English. Judge only the text you are given.
-
-<policy>
-{policy}
-</policy>"""
+BACKENDS = ("local", "keywords")
 
 
 def backend_name() -> str:
-    choice = os.getenv("CLASSIFIER", "auto")
-    if choice == "auto":
-        return "claude" if os.getenv("ANTHROPIC_API_KEY") else "keywords"
+    choice = os.getenv("CLASSIFIER", "local")
+    if choice not in BACKENDS:
+        raise ValueError(f"CLASSIFIER must be one of {BACKENDS}, got {choice!r}")
     return choice
 
 
@@ -37,10 +29,7 @@ def classify(text: str) -> tuple[Classification, str]:
 
 def classify_full(text: str):
     """Return (classification, backend label, CRSVAssessment or None)."""
-    backend = backend_name()
-    if backend == "claude":
-        return (*classify_claude(text), None)
-    if backend == "local":
+    if backend_name() == "local":
         return classify_local(text)
     return classify_keywords(text), "keywords", None
 
@@ -56,37 +45,6 @@ def classify_local(text: str):
     if assessment is None:
         return _needs_human("The local model returned no valid assessment; review manually."), f"{label} (failed)", None
     return to_classification(assessment), label, assessment
-
-
-# --- Claude -----------------------------------------------------------------
-
-_client = None
-
-
-def _get_client():
-    global _client
-    if _client is None:
-        import anthropic
-
-        _client = anthropic.Anthropic()
-    return _client
-
-
-def classify_claude(text: str) -> tuple[Classification, str]:
-    model = os.getenv("CLAUDE_MODEL", DEFAULT_MODEL)
-    response = _get_client().messages.parse(
-        model=model,
-        max_tokens=2048,
-        system=SYSTEM_PROMPT.format(policy=POLICY_PATH.read_text(encoding="utf-8")),
-        messages=[{"role": "user", "content": f"<post>\n{text}\n</post>"}],
-        output_format=Classification,
-        # If a safety classifier declines, retry server-side on Anthropic's recommended fallback model.
-        extra_headers={"anthropic-beta": "server-side-fallback-2026-07-01"},
-        extra_body={"fallbacks": "default"},
-    )
-    if response.stop_reason == "refusal" or response.parsed_output is None:
-        return _needs_human("The model declined or returned no label; review manually."), f"{model} (declined)"
-    return response.parsed_output, model
 
 
 def _needs_human(reason: str) -> Classification:

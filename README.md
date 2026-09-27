@@ -57,14 +57,13 @@ Content reaches ICRC reviewers through three lanes. Every copy of the same conte
 | `frontend/` | Next.js app: public report (`/report`), sign-in, reviewer queue and review form (`/review`), analysis (`/analysis`), volunteer report (`/volunteer/report`). The Chrome/Edge extension is in `frontend/browser-extension/`. See [frontend/README.md](frontend/README.md). |
 | `backend/` | FastAPI service: accounts, the three lanes, duplicate grouping, screening, review queue, decisions, analysis. See [backend/README.md](backend/README.md). |
 | `policy/` | The layered policy the local model applies: universal core, children rules, modalities, platform and region profiles. See [policy/README.md](policy/README.md). |
-| `policy.md` | The short v0 policy, still used by the Claude and keyword backends. |
 | `harmwatch/social.py` | Apify collector for Facebook, Instagram, TikTok and X (search, or one post by URL) |
 | `harmwatch/collector.py`, `bot.py` | Telegram channel reader (text only), and the anonymous community bot |
 | `harmwatch/intake.py`, `dedup.py` | One path for every source: fingerprints, duplicate groups, judge once per group |
 | `harmwatch/detect.py` | Picks the judge: `analyze()` with the local model, or the text classifier |
 | `harmwatch/analyze.py`, `detections.py` | Safety filter, pre-filter and AI judge for text, images, memes and video; the `detections` table. See [docs/platform/README.md](docs/platform/README.md). |
 | `harmwatch/publish.py`, `screen.py` | Send flagged content groups to the queue; screen community reports |
-| `harmwatch/classify.py`, `triage.py` | Text classifiers (`claude`, `keywords`) and their triage buckets |
+| `harmwatch/classify.py`, `triage.py` | Classifier switch (our Qwen model, or the keyword baseline) and the triage buckets |
 | `harmwatch/crsv.py`, `schema.py`, `policy_loader.py`, `lexicon.py` | Full text assessment against `policy/core.md`, prompt assembly, age-indicator checks |
 | `harmwatch/vision.py`, `sv_scores.py`, `safety.py`, `cascade.py`, `prefilter.py`, `video_segments.py` | Image, meme and video judging, explicit-image quarantine, trained pre-filter |
 | `harmwatch/db.py`, `pipeline.py`, `evaluate.py` | Older text-only tables and the classifier evaluation on the samples |
@@ -106,15 +105,25 @@ From the repository root:
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt            # add requirements-detection.txt for the local judge (GPU)
 cp .env.example .env
+scripts/serve_llm.sh &                     # our Qwen model, on a GPU (see below)
 python -m harmwatch.seed                   # run the sample posts through intake
-pytest                                     # tests
+pytest                                     # tests (no GPU needed)
 ```
 
-Pick the judge with `CLASSIFIER` in `.env`:
+Without a GPU, set `CLASSIFIER=keywords` to try the pipeline end to end with the keyword baseline.
 
-- `local`: the full pipeline of [docs/platform/README.md](docs/platform/README.md) (safety filter, pre-filter, Qwen3.5-9B) on text, images and video. Needs `scripts/serve_llm.sh` on a GPU. Only this mode downloads and judges media.
-- `claude`: text only, needs `ANTHROPIC_API_KEY`. Applies `policy.md`.
-- `keywords`: text only, offline baseline. `auto` falls back to it when no API key is set.
+### The classifier
+
+The classifier is our own model, served on our own GPU: nothing is sent to an outside AI service.
+
+- **AI judge:** Qwen3.5-9B (open weights, text and vision) on llama.cpp (`scripts/serve_llm.sh`), instructed with our policy layers (`policy/`) and our annotated examples through the frozen prompt v3, which the code checks at load. It reads text, images, memes and video segments. To use another checkpoint, such as a fine-tuned one, point `MODEL` in `scripts/serve_llm.sh` and `LOCAL_LLM_MODEL` at it.
+- **Fast pre-filter:** a small model trained on our data (`models/`, distilled from the judge's labels on our meme pool). It skips the judge for clearly harmless images.
+- Measured results and limits: [docs/platform/README.md](docs/platform/README.md#5-measured-performance-and-limits).
+
+`CLASSIFIER` in `.env`:
+
+- `local` (default): the full pipeline above. Only this mode downloads and judges media.
+- `keywords`: crude keyword matching on text only, for tests and demos on a machine without a GPU. Not a classifier to rely on.
 
 ### Connect to the review queue
 
@@ -148,7 +157,7 @@ Copies are grouped by fingerprints, never by storing the content: the same text 
 ### Other commands
 
 ```bash
-python -m harmwatch.evaluate                # precision/recall, false flags on safe posts, parity by side
+python -m harmwatch.evaluate                # precision/recall on the samples (CLASSIFIER=keywords for the baseline)
 python -m harmwatch.analyze text "..."      # one item through the local pipeline
 python scripts/check_policy_ids.py          # every policy ID is defined, nothing cites an unknown one
 python scripts/approve_region.py ru_ua --list
