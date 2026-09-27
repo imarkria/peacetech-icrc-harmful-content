@@ -19,7 +19,6 @@ import {isReviewerAuthenticated} from "../../../components/app-shell";
 import {CategoryBadge} from "../../../components/status-badge";
 import {ApiError, getReviewRequest, submitReviewRequest} from "../../../lib/api";
 import {decisionLabels, DetectedLink, formatDate, ReviewDecision, ReviewEvidence} from "../../../lib/review-data";
-import {ReviewerSidebar} from "../../../components/reviewer-sidebar";
 
 const decisions: ReviewDecision[] = ["SEXUAL_VIOLENCE", "CHILD_RELATED_HARM", "HATE_RELATED", "OTHER", "NOT_A_VIOLATION", "UNCLEAR"];
 
@@ -180,8 +179,9 @@ export default function ReviewDetailPage() {
     // must not decide which guidance a reviewer is allowed to see.
     const showSexualGuidance = true;
     const showHarmfulGuidance = true;
+    const isPublicReport = link.source === "PUBLIC";
 
-    return <ReviewerSidebar><section className="inner-page">
+    return <section className="inner-page">
         <div className="page-container">
             <Link className="detail-back" href="/reviewer"><ArrowLeft size={14}/> Back to review queue</Link>
             <div className="review-detail-heading">
@@ -201,11 +201,11 @@ export default function ReviewDetailPage() {
                 <div>
                     <div className="detail-card source-detail-card">
                         <div className="card-kicker">Source</div>
-                        <h2>Detected link</h2>
+                        <h2>{isPublicReport ? "Public report" : "Detected link"}</h2>
                         <div className="source-box"><h3>Source link</h3>
                             <div className="source-url">{link.url}</div>
                             <div className="source-meta"><span><Link2
-                                size={13}/> {link.platform}</span><span>{link.channel}</span><span>Detected {formatDate(link.detectedAt)}</span><a
+                                size={13}/> {link.platform}</span><span>{link.source === "PUBLIC" ? "Public report" : "Scrap"}</span><span>Detected {formatDate(link.detectedAt)}</span><a
                                 href={link.url} target="_blank" rel="noreferrer" style={{
                                 color: "var(--teal-dark)",
                                 display: "inline-flex",
@@ -214,9 +214,11 @@ export default function ReviewDetailPage() {
                             }}>Open link <ExternalLink size={12}/></a></div>
                         </div>
                         <div className="guidance-callout"><TriangleAlert size={16}/>
-                            <div><strong>Model context</strong><p>{link.context}</p></div>
+                            <div>
+                                <p>{link.context}</p></div>
                         </div>
-                        <p className="micro-note"><ShieldCheck size={14}/> Do not download, copy or share sensitive content.</p></div>
+                        <p className="micro-note"><ShieldCheck size={14}/> Do not download, copy or share sensitive
+                            content.</p></div>
 
                     {!reviewed ? <form onSubmit={submit}>
 
@@ -304,7 +306,8 @@ export default function ReviewDetailPage() {
 
                         <div className="detail-card decision-card">
                             <div className="card-kicker">Step 3 · Final label</div>
-                            <h2>Final label</h2><p className="card-intro">Select the label supported by the available context. The model output is not the final label.</p>
+                            <h2>Final label</h2><p className="card-intro">Select the label supported by the available
+                            context. The model output is not the final label.</p>
                             <div className="decision-card-grid">{decisions.map((item) => <div
                                 className="decision-option" key={item}><input id={item} type="radio" name="decision"
                                                                               checked={decision === item}
@@ -317,7 +320,8 @@ export default function ReviewDetailPage() {
                         {!reviewed && <div className="detail-actions detail-actions-sticky">
                             <button className="button-primary" type="submit">Save decision <ArrowRight size={16}/>
                             </button>
-                            <Link className="button-secondary" href="/reviewer">Cancel</Link><span className="save-hint">You can review the item again before saving.</span>
+                            <Link className="button-secondary" href="/reviewer">Cancel</Link><span
+                            className="save-hint">You can review the item again before saving.</span>
                         </div>}
                     </form> : <div className="detail-card reviewed-card">
                         <div className="reviewed-callout"><CheckCircle2
@@ -327,16 +331,20 @@ export default function ReviewDetailPage() {
                 </div>
                 <aside>
                     <div className="detail-card model-card">
-                        <div className="card-kicker">Model signal</div>
-                        <h2>Model prediction</h2>
+                        <div className="card-kicker">{isPublicReport ? "Public report" : "Model signal"}</div>
+                        <h2>{isPublicReport ? "Reported category" : "Model prediction"}</h2>
                         <div className="prediction-row"><span
-                            className="prediction-label">Predicted category</span><span
+                            className="prediction-label">{isPublicReport ? "Reporter selected" : "Predicted category"}</span><span
                             className="prediction-value"><CategoryBadge category={link.predictedCategory}/></span></div>
-                        <div className="prediction-row"><span className="prediction-label">Confidence</span><span
-                            className="prediction-value prediction-confidence">{Math.round(link.confidence * 100)}%</span>
-                        </div>
-                        <div className="confidence-track confidence-track-wide"><span
-                            style={{width: `${link.confidence * 100}%`}}/></div>
+                        {!isPublicReport && <>
+                            <div className="prediction-row"><span className="prediction-label">Confidence</span><span
+                                className="prediction-value prediction-confidence">{Math.round(link.confidence * 100)}%</span>
+                            </div>
+                            <div className="confidence-track confidence-track-wide"><span
+                                style={{width: `${link.confidence * 100}%`}}/></div>
+                        </>}
+                        {isPublicReport && <div className="prediction-row"><span className="prediction-label">Model confidence</span><span
+                            className="prediction-value">Not available</span></div>}
                         <div className="prediction-row"><span className="prediction-label">Queue status</span><span
                             className="prediction-value">{reviewed ? "Reviewed" : "Pending review"}</span></div>
                     </div>
@@ -352,5 +360,5 @@ export default function ReviewDetailPage() {
                 </aside>
             </div>
         </div>
-    </section></ReviewerSidebar>;
+    </section>;
 }

@@ -57,9 +57,9 @@ class DetectedLinkResponse(BaseModel):
     id: str
     url: HttpUrl
     platform: str
-    channel: str
     predicted_category: ViolationCategory
     confidence: float = Field(ge=0, le=1)
+    source: str
     status: ReviewStatus
     detected_at: datetime
     context: str
@@ -74,6 +74,26 @@ class ReviewQueueResponse(BaseModel):
     total_pages: int
     pending_count: int
     reviewed_count: int
+
+
+class AnalysisCount(BaseModel):
+    key: str
+    count: int
+
+
+class AnalysisTrendPoint(BaseModel):
+    date: str
+    count: int
+
+
+class AnalysisResponse(BaseModel):
+    reviewed_total: int
+    source_counts: list[AnalysisCount]
+    decision_counts: list[AnalysisCount]
+    platform_counts: list[AnalysisCount]
+    post_trend: list[AnalysisTrendPoint]
+    post_trends: dict[str, list[AnalysisTrendPoint]]
+    evidence_counts: dict[str, list[AnalysisCount]]
 
 
 class ReviewSubmit(BaseModel):

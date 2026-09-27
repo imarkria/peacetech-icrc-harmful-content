@@ -41,3 +41,13 @@ def initialize_database() -> None:
     if "evidence" not in review_columns:
         with engine.begin() as connection:
             connection.execute(text("ALTER TABLE reviews ADD COLUMN evidence JSON"))
+    detected_link_columns = {column["name"] for column in inspect(engine).get_columns("detected_links")}
+    if "source" not in detected_link_columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE detected_links ADD COLUMN source VARCHAR(32) DEFAULT 'SCRAP'"))
+    with engine.begin() as connection:
+        connection.execute(text("UPDATE detected_links SET source = 'SCRAP' WHERE source IS NULL OR source = 'MODEL'"))
+        connection.execute(text("UPDATE detected_links SET source = 'PUBLIC' WHERE source = 'PUBLIC_REPORT'"))
+    if "channel" in detected_link_columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE detected_links DROP COLUMN channel"))

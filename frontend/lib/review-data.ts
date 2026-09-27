@@ -26,9 +26,9 @@ export type DetectedLink = {
   id: string;
   url: string;
   platform: "Telegram" | "Web";
-  channel: string;
   predictedCategory: ViolationCategory;
   confidence: number;
+  source?: "SCRAP" | "PUBLIC";
   status: ReviewStatus;
   detectedAt: string;
   context: string;
@@ -60,7 +60,6 @@ export const initialDetectedLinks: DetectedLink[] = [
     id: "link-1001",
     url: "https://t.me/example_channel/1842",
     platform: "Telegram",
-    channel: "Community channel 01",
     predictedCategory: "sexual_violence",
     confidence: 0.93,
     status: "PENDING",
@@ -71,7 +70,6 @@ export const initialDetectedLinks: DetectedLink[] = [
     id: "link-1002",
     url: "https://t.me/public_updates/771",
     platform: "Telegram",
-    channel: "Public updates",
     predictedCategory: "hate_related",
     confidence: 0.88,
     status: "PENDING",
@@ -82,7 +80,6 @@ export const initialDetectedLinks: DetectedLink[] = [
     id: "link-1003",
     url: "https://t.me/community_watch/338",
     platform: "Telegram",
-    channel: "Community watch",
     predictedCategory: "child_related_harm",
     confidence: 0.81,
     status: "PENDING",
@@ -93,7 +90,6 @@ export const initialDetectedLinks: DetectedLink[] = [
     id: "link-1004",
     url: "https://t.me/news_digest/904",
     platform: "Telegram",
-    channel: "News digest",
     predictedCategory: "sexual_violence",
     confidence: 0.76,
     status: "PENDING",
@@ -104,7 +100,6 @@ export const initialDetectedLinks: DetectedLink[] = [
     id: "link-1005",
     url: "https://t.me/example_channel/1760",
     platform: "Telegram",
-    channel: "Community channel 01",
     predictedCategory: "other",
     confidence: 0.69,
     status: "REVIEWED",
@@ -119,7 +114,6 @@ export const initialDetectedLinks: DetectedLink[] = [
     id: "link-1006",
     url: "https://t.me/field_reports/121",
     platform: "Telegram",
-    channel: "Field reports",
     predictedCategory: "hate_related",
     confidence: 0.91,
     status: "REVIEWED",

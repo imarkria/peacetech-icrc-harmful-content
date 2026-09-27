@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     jwt_secret: str = "replace-this-in-a-real-environment"
     access_token_expire_minutes: int = 480
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
+    cors_origin_regex: str = r"chrome-extension://.*"
     cookie_secure: bool = False
     seed_demo_data: bool = True
 

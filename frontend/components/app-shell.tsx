@@ -46,6 +46,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const isReviewArea = pathname.startsWith("/reviewer") || pathname.startsWith("/review") || pathname === "/login";
+  const isAnalysisArea = pathname.startsWith("/analysis");
 
   return (
     <div className="site-frame">
@@ -66,8 +67,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Link>
             {mounted && authenticated ? (
               <>
-                <Link className={isReviewArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
+                <Link className={isReviewArea && !isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/reviewer" onClick={() => setMobileOpen(false)}>
                   Reviewer workspace
+                </Link>
+                <Link className={isAnalysisArea ? "nav-link nav-link-active" : "nav-link"} href="/analysis" onClick={() => setMobileOpen(false)}>
+                  Data analysis
                 </Link>
                 <button className="nav-button" onClick={signOut}>
                   <LogOut size={15} />

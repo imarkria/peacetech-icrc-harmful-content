@@ -42,9 +42,9 @@ type ApiReview = {
   id: string;
   url: string;
   platform: "Telegram" | "Web";
-  channel: string;
   predicted_category: ViolationCategory;
   confidence: number;
+  source: "SCRAP" | "PUBLIC";
   status: ReviewStatus;
   detected_at: string;
   context: string;
@@ -72,9 +72,9 @@ function mapReview(item: ApiReview): DetectedLink {
     id: item.id,
     url: item.url,
     platform: item.platform,
-    channel: item.channel,
     predictedCategory: item.predicted_category,
     confidence: item.confidence,
+    source: item.source,
     status: item.status,
     detectedAt: item.detected_at,
     context: item.context,
@@ -104,14 +104,32 @@ export async function createReportRequest(payload: { url: string; category: Viol
   });
 }
 
-export async function getReviewQueue(status: ReviewStatus, query = "", page = 1, pageSize = 10) {
-  const params = new URLSearchParams({ status, page: String(page), page_size: String(pageSize) });
+export async function getReviewQueue(status?: ReviewStatus, query = "", page = 1, pageSize = 10) {
+  const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) });
+  if (status) params.set("status", status);
   if (query.trim()) params.set("query", query.trim());
   const result = await request<ApiQueue>(`/api/reviews/queue?${params.toString()}`);
   return {
     ...result,
     items: result.items.map(mapReview),
   };
+}
+
+export type AnalysisCount = { key: string; count: number };
+export type AnalysisTrendPoint = { date: string; count: number };
+export type AnalysisSummary = {
+  reviewed_total: number;
+  source_counts: AnalysisCount[];
+  decision_counts: AnalysisCount[];
+  platform_counts: AnalysisCount[];
+  post_trend: AnalysisTrendPoint[];
+  post_trends: Record<string, AnalysisTrendPoint[]>;
+  evidence_counts: Record<string, AnalysisCount[]>;
+};
+
+export async function getAnalysisSummary(category?: string) {
+  const query = category ? `?category=${encodeURIComponent(category)}` : "";
+  return request<AnalysisSummary>(`/api/analysis/summary${query}`);
 }
 
 export async function getReviewRequest(id: string) {

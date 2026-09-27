@@ -44,7 +44,7 @@ export default function ReportPage() {
     <section className="inner-page">
       <div className="page-container content-narrow">
         <Link className="breadcrumb" href="/"><ArrowLeft size={14} /> Back to home</Link>
-        <div className="page-heading"><span className="eyebrow">Public report</span><h1>Submit a link</h1><p>No sign-in required. This report is stored separately and is not sent to the reviewer queue.</p></div>
+        <div className="page-heading"><h1>Submit a link</h1><p>No sign-in required. Your report will be added to the reviewer queue.</p></div>
         <form className="form-card" onSubmit={submit} noValidate>
           <div className="form-section">
             <label className="form-label" htmlFor="url">Link to report <span>*</span></label>
@@ -77,7 +77,7 @@ export default function ReportPage() {
             <button className="button-primary" type="submit" disabled={submitting}>{submitting ? "Submitting…" : "Submit report"} {!submitting && <ArrowRight size={16} />}</button>
           </div>
         </form>
-        <p className="hero-note"><ShieldCheck size={15} /> No sign-in required. This report is not reviewed in the ICRC queue.</p>
+        <p className="hero-note"><ShieldCheck size={15} /> No sign-in required. Reports are reviewed by authorised ICRC reviewers.</p>
       </div>
     </section>
   );

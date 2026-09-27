@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
+from urllib.parse import urlparse
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,7 +11,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from .config import get_settings
 from .database import SessionLocal, engine, get_db, initialize_database
-from .models import DetectedLink, PublicReport, Review, ReviewStatus, User
+from .models import DetectedLink, PublicReport, Review, ReviewDecision, ReviewStatus, User
 from .schemas import (
     DetectedLinkResponse,
     HealthResponse,
@@ -18,6 +20,9 @@ from .schemas import (
     ReportCreate,
     ReportResponse,
     ReviewQueueResponse,
+    AnalysisResponse,
+    AnalysisCount,
+    AnalysisTrendPoint,
     ReviewSubmit,
     ReviewSummary,
     UserResponse,
@@ -34,6 +39,8 @@ async def lifespan(_: FastAPI):
     if settings.seed_demo_data:
         with SessionLocal() as db:
             seed_demo_data(db)
+    with SessionLocal() as db:
+        sync_public_reports_to_queue(db)
     yield
 
 
@@ -41,6 +48,7 @@ app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
+    allow_origin_regex=settings.cors_origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -60,14 +68,42 @@ def to_link_response(link: DetectedLink) -> DetectedLinkResponse:
         id=link.id,
         url=link.url,
         platform=link.platform,
-        channel=link.channel,
         predicted_category=link.predicted_category,
         confidence=link.confidence,
+        source=link.source,
         status=link.status,
         detected_at=link.detected_at,
         context=link.context,
         review=review,
     )
+
+
+def public_report_platform(url: str) -> str:
+    hostname = (urlparse(url).hostname or "").lower()
+    return "Telegram" if hostname in {"t.me", "telegram.me", "www.t.me", "www.telegram.me"} else "Web"
+
+
+def sync_public_reports_to_queue(db: Session) -> None:
+    reports = db.scalars(select(PublicReport).order_by(PublicReport.id)).all()
+    created = False
+    for report in reports:
+        link_id = f"public-{report.id}"
+        if db.get(DetectedLink, link_id):
+            continue
+        db.add(DetectedLink(
+            id=link_id,
+            url=report.url,
+            platform=public_report_platform(report.url),
+            predicted_category=report.category,
+            confidence=0.0,
+            source="PUBLIC",
+            status=ReviewStatus.PENDING.value,
+            detected_at=report.created_at,
+            context=report.reason or "Submitted by a public user for reviewer assessment.",
+        ))
+        created = True
+    if created:
+        db.commit()
 
 
 @app.get("/", tags=["system"])
@@ -114,8 +150,23 @@ def me(user: User = Depends(require_reviewer)) -> UserResponse:
 
 @app.post("/api/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED, tags=["public reports"])
 def create_report(payload: ReportCreate, db: Session = Depends(get_db)) -> ReportResponse:
-    report = PublicReport(url=str(payload.url), category=payload.category.value, reason=payload.reason.strip() or None if payload.reason else None)
+    report_url = str(payload.url)
+    report_reason = payload.reason.strip() or None if payload.reason else None
+    report = PublicReport(url=report_url, category=payload.category.value, reason=report_reason)
     db.add(report)
+    db.flush()
+
+    db.add(DetectedLink(
+        id=f"public-{report.id}",
+        url=report_url,
+        platform=public_report_platform(report_url),
+        predicted_category=payload.category.value,
+        confidence=0.0,
+            source="PUBLIC",
+        status=ReviewStatus.PENDING.value,
+        detected_at=datetime.now(timezone.utc),
+        context=report_reason or "Submitted by a public user for reviewer assessment.",
+    ))
     db.commit()
     db.refresh(report)
     return ReportResponse(
@@ -142,7 +193,7 @@ def review_queue(
         filters.append(DetectedLink.status == status_filter.value)
     if query:
         search = f"%{query.lower()}%"
-        filters.append(func.lower(DetectedLink.url).like(search) | func.lower(DetectedLink.channel).like(search))
+        filters.append(func.lower(DetectedLink.url).like(search))
 
     total = db.scalar(select(func.count()).select_from(DetectedLink).where(*filters)) or 0
     total_pages = max(1, (total + page_size - 1) // page_size)
@@ -174,6 +225,49 @@ def get_review(link_id: str, _: User = Depends(require_reviewer), db: Session = 
     if not link:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Detected link not found")
     return to_link_response(link)
+
+
+@app.get("/api/analysis/summary", response_model=AnalysisResponse, tags=["analysis"])
+def analysis_summary(
+    category: ReviewDecision | None = Query(default=None),
+    _: User = Depends(require_reviewer),
+    db: Session = Depends(get_db),
+) -> AnalysisResponse:
+    filters = [DetectedLink.status == ReviewStatus.REVIEWED.value]
+    if category:
+        filters.append(Review.decision == category.value)
+    reviewed_items = db.execute(
+        select(DetectedLink.source, DetectedLink.platform, Review.decision, Review.evidence, DetectedLink.detected_at)
+        .join(Review, Review.detected_link_id == DetectedLink.id)
+        .where(*filters)
+        .order_by(DetectedLink.detected_at.asc())
+    ).all()
+
+    source_counts = Counter()
+    decision_counts = Counter()
+    platform_counts = Counter()
+    trend_counts = Counter()
+    trend_counts_by_decision: dict[str, Counter] = defaultdict(Counter)
+    evidence_counts: dict[str, Counter] = defaultdict(Counter)
+    for source, platform, decision, evidence, detected_at in reviewed_items:
+        source_counts[source] += 1
+        decision_counts[decision] += 1
+        platform_counts[platform] += 1
+        trend_counts[detected_at.date().isoformat()] += 1
+        trend_counts_by_decision[decision][detected_at.date().isoformat()] += 1
+        for evidence_key in ("sexualElements", "coerciveCircumstances", "sexualForms", "harmfulTypes", "harmPathways"):
+            for value in (evidence or {}).get(evidence_key, []):
+                evidence_counts[evidence_key][value] += 1
+
+    return AnalysisResponse(
+        reviewed_total=len(reviewed_items),
+        source_counts=[AnalysisCount(key=key, count=count) for key, count in source_counts.most_common()],
+        decision_counts=[AnalysisCount(key=key, count=count) for key, count in decision_counts.most_common()],
+        platform_counts=[AnalysisCount(key=key, count=count) for key, count in platform_counts.most_common()],
+        post_trend=[AnalysisTrendPoint(date=date, count=trend_counts[date]) for date in sorted(trend_counts)],
+        post_trends={decision: [AnalysisTrendPoint(date=date, count=count) for date, count in sorted(dates.items())] for decision, dates in trend_counts_by_decision.items()},
+        evidence_counts={key: [AnalysisCount(key=item, count=count) for item, count in values.most_common()] for key, values in evidence_counts.items()},
+    )
 
 
 @app.post("/api/reviews/{link_id}", response_model=DetectedLinkResponse, tags=["reviews"])

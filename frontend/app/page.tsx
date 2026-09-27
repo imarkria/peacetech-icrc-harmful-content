@@ -23,12 +23,12 @@ export default function HomePage() {
         <div className="page-container">
           <div className="icrc-section-heading">
             <span className="icrc-section-label">What happens next</span>
-            <h2>Your report is stored separately.</h2>
+            <h2>Your report is reviewed safely.</h2>
           </div>
           <div className="public-steps">
             <article><span>01</span><h3>Submit a link</h3><p>Enter the direct URL and, if useful, add a short reason.</p></article>
-            <article><span>02</span><h3>It is stored</h3><p>Your report is saved separately from the reviewer queue.</p></article>
-            <article><span>03</span><h3>It may support future models</h3><p>Stored reports may be used for future research and model development.</p></article>
+            <article><span>02</span><h3>It is reviewed</h3><p>Your report is added to the authorised reviewer queue.</p></article>
+            <article><span>03</span><h3>It may support future models</h3><p>Reports may also support future research and model development.</p></article>
           </div>
         </div>
       </section>
