@@ -1,0 +1,17 @@
+# Detection part (harmwatch/analyze.py): safety filter, fast pre-filter, AI judge, video.
+# Install:  pip install -r requirements-detection.txt   (includes requirements.txt)
+# Tested with Python 3.11, 1x NVIDIA V100 32 GB, CUDA 12.8. The Qwen3.5-9B judge runs in llama.cpp (scripts/serve_llm.sh).
+-r requirements.txt
+openai>=1.50
+# images: safety classifiers, SigLIP 2 embeddings, pre-filter weights (models/ was saved with scikit-learn 1.9.1)
+torch>=2.8
+transformers>=4.57
+scikit-learn==1.9.1
+joblib>=1.4
+ImageHash>=4.3
+# video: scenes, frames, speech-to-text, on-screen text
+imageio-ffmpeg>=0.6
+scenedetect>=0.7
+opencv-python-headless>=4.10
+faster-whisper>=1.2
+rapidocr-onnxruntime>=1.4

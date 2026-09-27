@@ -4,6 +4,10 @@
 
 Challenge given by the International Committee of the Red Cross (ICRC) for the PeaceTech Hackathon.
 
+> **Detection part (safety filter → fast pre-filter → AI judge → SQLite table `detections`):** start with
+> [`docs/platform/README.md`](docs/platform/README.md): pipeline, who does what, quick start, how to read the table.
+> The definitions the AI judge applies are in [`policy/README.md`](policy/README.md).
+
 ## Team
 
 - _Add names here_
