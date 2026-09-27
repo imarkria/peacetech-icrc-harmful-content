@@ -1,8 +1,9 @@
 anthropic>=1.8
 pydantic>=2
 python-dotenv
-streamlit>=1.40
 pandas
+numpy
+pillow
 telethon
 python-telegram-bot>=21
 pyyaml
