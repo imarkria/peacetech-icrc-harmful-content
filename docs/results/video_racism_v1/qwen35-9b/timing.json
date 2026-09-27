@@ -1,0 +1,14 @@
+{
+  "per_stage_total_s": {
+    "segmentation": 47.4,
+    "frames_and_safety": 40.5,
+    "whisper": 52.3,
+    "ocr": 143.9
+  },
+  "videos": 30,
+  "total_video_seconds": 2699.7,
+  "segments_per_video": 6.4,
+  "prep_seconds_per_video": 9.5,
+  "judge_seconds_per_video_B": 9.7,
+  "judge_seconds_per_video_C": 5.9
+}

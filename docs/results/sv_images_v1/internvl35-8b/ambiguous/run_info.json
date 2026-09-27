@@ -1,0 +1,14 @@
+{
+  "model": "internvl35-8b",
+  "api_model": "internvl3.5-8b",
+  "backend": "llama.cpp",
+  "mode": "ambiguous",
+  "n_items": 57,
+  "workers": 8,
+  "total_seconds": 109.4,
+  "images_per_min": 31.3,
+  "vram_peak_mib": 22900,
+  "prompt_sha256": "ecaefeee7cb18e9883f09e417e5fc20dbb115014b138dd62d26bd506b6445101",
+  "profile": "global-0.1/core-1.2+no-approved-entries",
+  "threshold": 50
+}

@@ -1,0 +1,18 @@
+{
+  "model": "qwen35-9b",
+  "api_model": "qwen3.5-9b",
+  "backend": "llama.cpp",
+  "n_items": 120,
+  "workers": 8,
+  "total_seconds": 154.2,
+  "images_per_min": 46.7,
+  "vram_peak_mib": 15334,
+  "shots": [
+    "G03",
+    "G05",
+    "G06",
+    "G09"
+  ],
+  "profile": "global-0.1/core-1.1+no-approved-entries",
+  "threshold": 50
+}

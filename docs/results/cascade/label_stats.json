@@ -1,0 +1,36 @@
+{
+  "pool": 3000,
+  "labelled_usable": 2880,
+  "excluded_from_training": {
+    "teacher_possible_minor": 120
+  },
+  "teacher_sexual_by_part": {
+    "train": {
+      "n": 2300,
+      "sexual": 464
+    },
+    "dev": {
+      "n": 580,
+      "sexual": 121
+    }
+  },
+  "teacher_sexual_by_stratum": {
+    "mami_violence_pos": "63/149",
+    "mami_objectification_pos": "184/243",
+    "mami_shaming_pos": "84/199",
+    "mami_misogynous_other_pos": "43/145",
+    "mami_neg": "90/718",
+    "fhm_pos": "60/343",
+    "fhm_neg": "35/348",
+    "mmhs_pos": "12/367",
+    "mmhs_neg": "14/368"
+  },
+  "teacher_seconds_mean": 11.51,
+  "p_sexual_missing": 0,
+  "pool_construction_exclusions": {
+    "explicit_quarantine": 406,
+    "age_indicator_in_text": 146,
+    "benchmark_near_copy": 34,
+    "pool_near_duplicate": 95
+  }
+}

@@ -1,0 +1,5 @@
+model,status,f1_image_text,recall_image_text,precision_image_text,f1_text_only,recall_text_only,recall_no_keyword,FP,FN,auroc_logprob_sexual,ece_sexual,auroc_written,auroc_hate,auroc_misogyny,pct_hate_pos_vs_neg,pct_misogyny_pos_vs_neg,f1_hate,f1_misogyny,category_ok_pct,valid_json,possible_minor_false_alarms,images_per_min,vram_peak_mib,ambiguous_pct_sexual
+qwen35-9b,ok,0.912,0.95,0.877,0.892,0.9,8/10,8,3,0.975,0.082,0.949,0.763,0.943,25.4 / 20.0,72.9 / 15.0,0.678,0.817,37.5,120/120,1,36.6,15328,66.7
+qwen35-4b,ok,0.912,0.95,0.877,0.9,0.967,8/10,8,3,0.974,0.055,0.958,0.79,0.908,28.1 / 23.3,63.2 / 10.0,0.71,0.736,44.4,120/120,3,46.0,9164,71.9
+gemma4-12b,ok,0.918,0.933,0.903,0.897,0.867,8/10,6,4,0.952,0.086,0.961,0.83,0.936,20.3 / 20.0,47.5 / 16.7,0.75,0.765,54.5,120/120,1,21.9,18506,54.4
+internvl35-8b,ok,0.898,0.95,0.851,0.907,0.9,8/10,10,3,0.948,0.105,0.922,0.769,0.95,16.9 / 23.3,74.6 / 25.0,0.597,0.9,26.8,120/120,1,32.4,22900,70.2

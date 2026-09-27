@@ -1,0 +1,32 @@
+{
+  "n": 22,
+  "profile": "global-0.1/core-1.4+no-approved-entries",
+  "model": "qwen3.5-9b",
+  "flag": {
+    "n": 22,
+    "TP": 9,
+    "FP": 3,
+    "FN": 0,
+    "TN": 10,
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1": 0.857,
+    "accuracy": 0.864,
+    "specificity": 0.769
+  },
+  "route_correct": 18,
+  "sexual": {
+    "n": 22,
+    "TP": 11,
+    "FP": 1,
+    "FN": 1,
+    "TN": 9,
+    "precision": 0.917,
+    "recall": 0.917,
+    "f1": 0.917,
+    "accuracy": 0.909,
+    "specificity": 0.9
+  },
+  "category_correct_on_positives": 9,
+  "errors": {}
+}

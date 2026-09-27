@@ -1,0 +1,10 @@
+gold\pred,positive,negative
+positive,38,42
+negative,33,47
+
+n,160
+precision,0.535
+recall,0.475
+f1,0.503
+accuracy,0.531
+specificity,0.588

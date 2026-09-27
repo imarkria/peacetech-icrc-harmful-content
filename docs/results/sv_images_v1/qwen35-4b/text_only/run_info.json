@@ -1,0 +1,14 @@
+{
+  "model": "qwen35-4b",
+  "api_model": "qwen3.5-4b",
+  "backend": "llama.cpp",
+  "mode": "text_only",
+  "n_items": 120,
+  "workers": 8,
+  "total_seconds": 132.8,
+  "images_per_min": 54.2,
+  "vram_peak_mib": 9164,
+  "prompt_sha256": "ecaefeee7cb18e9883f09e417e5fc20dbb115014b138dd62d26bd506b6445101",
+  "profile": "global-0.1/core-1.2+no-approved-entries",
+  "threshold": 50
+}
