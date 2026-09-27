@@ -191,9 +191,41 @@ def safety():
         labels=("minor + sexual element", "minor without sexual element"))
 
 
+# --- e) cascade images ------------------------------------------------------------------------------------------------
+def cascade():
+    p = R / "cascade" / "metrics.json"
+    if not p.exists():
+        return
+    m = json.loads(p.read_text())
+    best = m["best_student"]
+    ds = "sv_images_v1 (60 pos / 60 neg)"
+    lab = ("sexual character", "not sexual")
+    for pv, c in m["judge_alone"].items():
+        add("cascade_images", "2026-09-27", "image", ds, "qwen3.5-9b", pv, "judge_alone", "sexual", c,
+            throughput=round(60 / c["seconds_per_image"], 1), notes=f"reference for the cascade; time/img={c['seconds_per_image']}", labels=lab)
+    for name, st in m["students"].items():
+        tgt = "teacher-distilled" if st["target"] == "teacher" else "dataset labels"
+        research = "" if name.startswith("T_") else "; image features: research experiment (B5-4)"
+        for k, c in st["alone"].items():
+            add("cascade_images", "2026-09-27", "image", ds, f"student {name}", "-", f"student_{k}", "sexual", c,
+                st["auroc_vs_reference"], round(60 * st["images_per_second"], 1),
+                f"{tgt}; threshold for DEV recall {k} % vs teacher{research}" + ("; SELECTED ON DEV" if name == best else ""),
+                labels=lab)
+        if name != best:
+            continue
+        for pv, ks in st["cascade"].items():
+            for k, c in ks.items():
+                add("cascade_images", "2026-09-27", "image", ds, f"cascade {name} -> qwen3.5-9b", pv, f"cascade_{k}",
+                    "sexual", c, None, round(60 * 120 / c["estimated_seconds"], 1),
+                    f"sent={c['sent_fraction']}; lost={c['reference_positives_lost_by_filter']}/60; "
+                    f"speedup={c['speedup']}; time/img={round(c['estimated_seconds'] / 120, 3)}{research}", labels=lab)
+    RECOMPUTED.append("cascade: rows from results/cascade/metrics.json (judge alone, students alone, cascade v1/v3)")
+
+
 # --- copy aggregated files ---------------------------------------------------------------------------------------------
 AGGREGATED = ("metrics.json", "run_info.json", "summary.md", "leaderboard.md", "leaderboard.csv", "significance.json",
-              "error_consensus.json", "localisation_vs_chance.json", "timing.json", "FINAL_IMAGES.md", "label_stats.json")
+              "error_consensus.json", "localisation_vs_chance.json", "timing.json", "FINAL_IMAGES.md", "label_stats.json",
+              "train_metrics.json", "prevalence_projection.json")
 
 
 def is_matplotlib_png(p: Path) -> bool:
@@ -222,6 +254,13 @@ def copy_aggregated():
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(f, dst)
             copied += 1
+    # per-item student scores are line-by-line predictions: removed from the versioned copy (kept in results/)
+    cm = OUT / "cascade" / "metrics.json"
+    if cm.exists():
+        d = json.loads(cm.read_text())
+        for st in d.get("students", {}).values():
+            st.pop("scores", None)
+        cm.write_text(json.dumps(d, indent=2))
     # Telegram extraction: counts only (no ground truth, no text)
     tg = OUT / "telegram_extraction"
     tg.mkdir(parents=True, exist_ok=True)
@@ -251,6 +290,7 @@ def main():
     baselines()
     video()
     safety()
+    cascade()
     OUT.mkdir(parents=True, exist_ok=True)
     with open(OUT / "ALL_METRICS.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)

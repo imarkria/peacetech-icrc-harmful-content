@@ -162,20 +162,43 @@ def fig_video(R):
 
 
 def fig_cascade(R):
-    rs = pick(R, experiment="cascade")
-    if not rs:
-        print("skip cascade: no cascade rows in ALL_METRICS.csv (students not trained yet)")
+    """Cascade: recall vs share sent to Qwen (v3 judge) and time per image, from the cascade rows only."""
+    rs = pick(R, experiment="cascade_images", prompt="v3")
+    casc = sorted((r for r in rs if r["variant"].startswith("cascade_")), key=lambda r: r["variant"])
+    judge = [r for r in rs if r["variant"] == "judge_alone"]
+    if not casc or not judge:
+        print("skip cascade: no cascade rows in ALL_METRICS.csv")
         return
-    fig, axes = plt.subplots(1, 2, figsize=(9, 3.2))
-    for k, kind in enumerate(sorted({r["variant"].split("_")[0] for r in rs})):
-        sub = sorted((r for r in rs if r["variant"].startswith(kind)), key=lambda r: r["notes"])
-        xs = [float(r["notes"].split("sent=")[1].split(";")[0]) for r in sub]
-        axes[0].plot(xs, [r["recall"] for r in sub], marker="o", ms=8, lw=2, color=SERIES[k % 4], label=kind)
-    axes[0].set_xlabel("share of images sent to the judge")
-    axes[0].set_ylabel("recall")
-    axes[0].set_title("Cascade · recall vs share sent to Qwen")
-    axes[0].legend(fontsize=8)
-    save(fig, "cascade.png")
+    field = lambda r, k: float(r["notes"].split(f"{k}=")[1].split(";")[0].split("/")[0])  # noqa: E731
+    fig, axes = plt.subplots(1, 2, figsize=(11, 3.4), gridspec_kw={"wspace": 0.75})
+    ax = axes[0]
+    xs, ys = [field(r, "sent") for r in casc], [r["recall"] for r in casc]
+    ax.plot(xs, ys, color=SERIES[1], lw=2, marker="o", ms=8, markeredgecolor=SURFACE, markeredgewidth=2,
+            label="cascade (student → Qwen v3)")
+    for r, x, y, off in zip(casc, xs, ys, ((-14, -16), (14, -16), (0, 9))):
+        ax.annotate(r["variant"].replace("cascade_", "") + " %", (x, y), xytext=off, textcoords="offset points",
+                    ha="center", fontsize=8, color=INK2)
+    ax.scatter([1.0], [judge[0]["recall"]], s=80, color=SERIES[0], edgecolor=SURFACE, linewidth=2, zorder=3,
+               label="Qwen v3 on every image")
+    ax.set_xlim(0, 1.05)
+    ax.set_ylim(0.8, 1.0)
+    ax.set_xlabel("share of images sent to Qwen")
+    ax.set_ylabel("recall (benchmark)")
+    ax.set_title("Cascade · recall vs share sent")
+    ax.legend(loc="lower left", fontsize=8)
+    ax = axes[1]
+    labels = ["Qwen v3 on every image"] + [f"cascade {r['variant'].replace('cascade_', '')} %" for r in casc]
+    vals = [float(judge[0]["notes"].split("time/img=")[1])] + [field(r, "time/img") for r in casc]
+    yy = list(range(len(labels)))[::-1]
+    for yi, v, c in zip(yy, vals, [SERIES[0]] + [SERIES[1]] * len(casc)):
+        ax.barh(yi, v, color=c, height=0.55, edgecolor=SURFACE, linewidth=2)
+        ax.text(v + 0.02, yi, f"{v:.2f} s", va="center", fontsize=8, color=INK)
+    ax.set_yticks(yy, labels)
+    ax.set_xlim(0, max(vals) * 1.25)
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("seconds per image")
+    ax.set_title("Time per image")
+    save(fig, "cascade.png", "sv_images_v1 is 50 % positive: the filter must pass at least half of the images, which caps the speed-up.")
 
 
 def fig_confusions():
@@ -189,6 +212,7 @@ def fig_confusions():
         "baseline_general_core_only|qwen3.5-9b|core v1.4|text|sexual": "General examples · core only · sexual",
         "safety_explicit_filter|OR(CLIP≥0.9, AdamCodd≥0.7, Falconsai≥0.3)|-|default|explicit_image":
             "Explicit-image filter · retained default",
+        "cascade_images|cascade I_logreg -> qwen3.5-9b|v3|cascade_95|sexual": "Cascade I_logreg → Qwen v3 (DEV recall 95 %)",
     }
     for c in C:
         if c["id"] not in key:
@@ -210,7 +234,8 @@ def fig_confusions():
             s.set_visible(False)
         slug = c["id"].split("|")
         name = "confusion_" + "_".join(x for x in (slug[0], slug[1].split("(")[0], slug[2], slug[3], slug[4]) if x and x != "-")
-        save(fig, name.replace(" ", "").replace(".", "").replace("≥", "") + ".png")
+        import re
+        save(fig, re.sub(r"[^A-Za-z0-9_-]", "", name.replace("->", "_to_").replace(" ", "")) + ".png")
 
 
 def main():

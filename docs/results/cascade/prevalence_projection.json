@@ -1,0 +1,62 @@
+{
+ "95": {
+  "dev_tpr": 0.95,
+  "dev_fpr": 0.412,
+  "prev_0.5": {
+   "sent": 0.681,
+   "speedup": 1.43
+  },
+  "prev_0.21": {
+   "sent": 0.525,
+   "speedup": 1.83
+  },
+  "prev_0.05": {
+   "sent": 0.439,
+   "speedup": 2.18
+  },
+  "prev_0.01": {
+   "sent": 0.417,
+   "speedup": 2.29
+  }
+ },
+ "97": {
+  "dev_tpr": 0.975,
+  "dev_fpr": 0.521,
+  "prev_0.5": {
+   "sent": 0.748,
+   "speedup": 1.3
+  },
+  "prev_0.21": {
+   "sent": 0.616,
+   "speedup": 1.57
+  },
+  "prev_0.05": {
+   "sent": 0.543,
+   "speedup": 1.77
+  },
+  "prev_0.01": {
+   "sent": 0.525,
+   "speedup": 1.83
+  }
+ },
+ "99": {
+  "dev_tpr": 0.992,
+  "dev_fpr": 0.634,
+  "prev_0.5": {
+   "sent": 0.813,
+   "speedup": 1.2
+  },
+  "prev_0.21": {
+   "sent": 0.709,
+   "speedup": 1.37
+  },
+  "prev_0.05": {
+   "sent": 0.652,
+   "speedup": 1.49
+  },
+  "prev_0.01": {
+   "sent": 0.638,
+   "speedup": 1.52
+  }
+ }
+}

@@ -1,0 +1,379 @@
+{
+  "n_train": 2300,
+  "n_dev": 580,
+  "teacher_positive_train": 464,
+  "teacher_positive_dev": 121,
+  "budget": 0.5,
+  "candidates": {
+    "T_logreg_weight": {
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.854,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 9.0,
+      "dev_auroc_vs_teacher": 0.813,
+      "dev_recall_at_budget": 0.835
+    },
+    "T_logreg_undersample": {
+      "balance": "undersample",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.848,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 5.8,
+      "dev_auroc_vs_teacher": 0.816,
+      "dev_recall_at_budget": 0.835
+    },
+    "T_mlp_weight": {
+      "balance": "weight",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.837,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 9.4,
+      "dev_auroc_vs_teacher": 0.801,
+      "dev_recall_at_budget": 0.843
+    },
+    "T_mlp_undersample": {
+      "balance": "undersample",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.823,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 5.7,
+      "dev_auroc_vs_teacher": 0.786,
+      "dev_recall_at_budget": 0.818
+    },
+    "I_logreg_weight": {
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.924,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 11.4,
+      "dev_auroc_vs_teacher": 0.905,
+      "dev_recall_at_budget": 0.942
+    },
+    "I_logreg_undersample": {
+      "balance": "undersample",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.916,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 8.0,
+      "dev_auroc_vs_teacher": 0.898,
+      "dev_recall_at_budget": 0.942
+    },
+    "I_mlp_weight": {
+      "balance": "weight",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.911,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 20.6,
+      "dev_auroc_vs_teacher": 0.889,
+      "dev_recall_at_budget": 0.917
+    },
+    "I_mlp_undersample": {
+      "balance": "undersample",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.9,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 8.1,
+      "dev_auroc_vs_teacher": 0.882,
+      "dev_recall_at_budget": 0.909
+    },
+    "IT_logreg_weight": {
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.924,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 11.7,
+      "dev_auroc_vs_teacher": 0.902,
+      "dev_recall_at_budget": 0.934
+    },
+    "IT_logreg_undersample": {
+      "balance": "undersample",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.919,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 6.8,
+      "dev_auroc_vs_teacher": 0.898,
+      "dev_recall_at_budget": 0.942
+    },
+    "IT_mlp_weight": {
+      "balance": "weight",
+      "best_params": {
+        "clf__alpha": 0.01
+      },
+      "cv_auroc": 0.913,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 30.7,
+      "dev_auroc_vs_teacher": 0.897,
+      "dev_recall_at_budget": 0.926
+    },
+    "IT_mlp_undersample": {
+      "balance": "undersample",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.91,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 12.9,
+      "dev_auroc_vs_teacher": 0.889,
+      "dev_recall_at_budget": 0.942
+    }
+  },
+  "students": {
+    "T_logreg": {
+      "kind": "T",
+      "model": "logreg",
+      "target": "teacher",
+      "balance": "undersample",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.848,
+      "n_fit": 928,
+      "positives_fit": 464,
+      "fit_seconds": 5.8,
+      "dev_auroc_vs_teacher": 0.816,
+      "dev_recall_at_budget": 0.835,
+      "thresholds": {
+        "95": 0.2255614846944809,
+        "97": 0.19015443325042725,
+        "99": 0.11497712880373001
+      },
+      "dev_sent_fraction": {
+        "95": 0.705,
+        "97": 0.786,
+        "99": 0.934
+      }
+    },
+    "T_mlp": {
+      "kind": "T",
+      "model": "mlp",
+      "target": "teacher",
+      "balance": "weight",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.837,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 9.4,
+      "dev_auroc_vs_teacher": 0.801,
+      "dev_recall_at_budget": 0.843,
+      "thresholds": {
+        "95": 0.023048628121614456,
+        "97": 0.019493110477924347,
+        "99": 0.010149302892386913
+      },
+      "dev_sent_fraction": {
+        "95": 0.695,
+        "97": 0.733,
+        "99": 0.831
+      }
+    },
+    "I_logreg": {
+      "kind": "I",
+      "model": "logreg",
+      "target": "teacher",
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.924,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 11.4,
+      "dev_auroc_vs_teacher": 0.905,
+      "dev_recall_at_budget": 0.942,
+      "thresholds": {
+        "95": 0.18230441212654114,
+        "97": 0.12057986110448837,
+        "99": 0.087439626455307
+      },
+      "dev_sent_fraction": {
+        "95": 0.524,
+        "97": 0.616,
+        "99": 0.709
+      }
+    },
+    "I_mlp": {
+      "kind": "I",
+      "model": "mlp",
+      "target": "teacher",
+      "balance": "weight",
+      "best_params": {
+        "clf__alpha": 0.001
+      },
+      "cv_auroc": 0.911,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 20.6,
+      "dev_auroc_vs_teacher": 0.889,
+      "dev_recall_at_budget": 0.917,
+      "thresholds": {
+        "95": 0.03057570941746235,
+        "97": 0.02171183191239834,
+        "99": 0.006384335923939943
+      },
+      "dev_sent_fraction": {
+        "95": 0.543,
+        "97": 0.597,
+        "99": 0.767
+      }
+    },
+    "IT_logreg": {
+      "kind": "IT",
+      "model": "logreg",
+      "target": "teacher",
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.001
+      },
+      "cv_auroc": 0.924,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 11.7,
+      "dev_auroc_vs_teacher": 0.902,
+      "dev_recall_at_budget": 0.934,
+      "thresholds": {
+        "95": 0.11195109039545059,
+        "97": 0.09478075057268143,
+        "99": 0.08389921486377716
+      },
+      "dev_sent_fraction": {
+        "95": 0.576,
+        "97": 0.626,
+        "99": 0.65
+      }
+    },
+    "IT_mlp": {
+      "kind": "IT",
+      "model": "mlp",
+      "target": "teacher",
+      "balance": "weight",
+      "best_params": {
+        "clf__alpha": 0.01
+      },
+      "cv_auroc": 0.913,
+      "n_fit": 2300,
+      "positives_fit": 464,
+      "fit_seconds": 30.7,
+      "dev_auroc_vs_teacher": 0.897,
+      "dev_recall_at_budget": 0.926,
+      "thresholds": {
+        "95": 0.003946722485125065,
+        "97": 0.0009263966931030154,
+        "99": 0.00033714622259140015
+      },
+      "dev_sent_fraction": {
+        "95": 0.526,
+        "97": 0.629,
+        "99": 0.709
+      }
+    },
+    "T_logreg_datasetlabels": {
+      "kind": "T",
+      "model": "logreg",
+      "target": "dataset",
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.0003
+      },
+      "cv_auroc": 0.719,
+      "n_fit": 2300,
+      "positives_fit": 1157,
+      "thresholds": {
+        "95": 0.33249184489250183,
+        "97": 0.2906586229801178,
+        "99": 0.22532537579536438
+      },
+      "dev_auroc_vs_teacher": 0.67,
+      "dev_recall_at_budget": 0.711,
+      "dev_sent_fraction": {
+        "95": 0.888,
+        "97": 0.933,
+        "99": 0.984
+      }
+    },
+    "I_logreg_datasetlabels": {
+      "kind": "I",
+      "model": "logreg",
+      "target": "dataset",
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.0003
+      },
+      "cv_auroc": 0.785,
+      "n_fit": 2300,
+      "positives_fit": 1157,
+      "thresholds": {
+        "95": 0.3166941702365875,
+        "97": 0.3021811246871948,
+        "99": 0.2402718961238861
+      },
+      "dev_auroc_vs_teacher": 0.736,
+      "dev_recall_at_budget": 0.752,
+      "dev_sent_fraction": {
+        "95": 0.822,
+        "97": 0.838,
+        "99": 0.907
+      }
+    },
+    "IT_logreg_datasetlabels": {
+      "kind": "IT",
+      "model": "logreg",
+      "target": "dataset",
+      "balance": "weight",
+      "best_params": {
+        "clf__C": 0.0003
+      },
+      "cv_auroc": 0.791,
+      "n_fit": 2300,
+      "positives_fit": 1157,
+      "thresholds": {
+        "95": 0.3039471507072449,
+        "97": 0.3016170263290405,
+        "99": 0.27255481481552124
+      },
+      "dev_auroc_vs_teacher": 0.728,
+      "dev_recall_at_budget": 0.752,
+      "dev_sent_fraction": {
+        "95": 0.8,
+        "97": 0.809,
+        "99": 0.843
+      }
+    }
+  },
+  "best_student": "I_logreg",
+  "stop": false
+}
