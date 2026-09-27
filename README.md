@@ -22,7 +22,7 @@ A working end-to-end prototype, meant to be deepened in parallel:
 ```
 Volunteers ── Telegram bot ──┐
                              ▼
-Telegram channels ── collector ──► SQLite ──► review UI (`feature/browser-extension`)
+Telegram channels ── collector ──► SQLite ──► review UI (frontend/ + backend/)
                                      │  ▲
                                      ▼  │
                           classifier (Claude + policy.md)
@@ -30,6 +30,8 @@ Telegram channels ── collector ──► SQLite ──► review UI (`featur
 
 | File | Role |
 |---|---|
+| `frontend/` | Next.js web app: public report flow, ICRC reviewer workspace, browser extension (see `frontend/README.md`) |
+| `backend/` | FastAPI service behind the web app (see `backend/README.md`) |
 | `policy.md` | The harm definitions the classifier applies. **Edit this first** (task M1). |
 | `harmwatch/classify.py` | Claude classifier (structured output) + offline keyword fallback |
 | `harmwatch/triage.py` | Rules that turn labels into Escalate / Harmful / Potentially harmful / Not harmful, plus a priority score |

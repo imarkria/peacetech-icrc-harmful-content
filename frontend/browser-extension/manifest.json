@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "SignalSafe Report",
+  "version": "0.1.0",
+  "description": "Submit the current page as a public harmful-information report.",
+  "action": {
+    "default_title": "Report this page",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab"],
+  "host_permissions": ["http://localhost:8000/*", "http://127.0.0.1:8000/*"]
+}
