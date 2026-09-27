@@ -23,11 +23,6 @@ CREATE TABLE IF NOT EXISTS posts (
     forwards    INTEGER,
     reporter    TEXT,                   -- volunteer who flagged it
     note        TEXT,                   -- volunteer context
-    platform    TEXT,                   -- reported by an outside user
-    location    TEXT,
-    targets     TEXT,                   -- JSON list, e.g. ["child", "woman"]
-    kinds       TEXT,                   -- JSON list, e.g. ["threat"]
-    contact     TEXT,                   -- empty = anonymous
     created_at  TEXT NOT NULL,
     UNIQUE (channel, url)
 );
@@ -54,38 +49,24 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
-REPORT_COLUMNS = ["platform", "location", "targets", "kinds", "contact"]
-
-
 def connect() -> sqlite3.Connection:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
-    existing = {r["name"] for r in conn.execute("PRAGMA table_info(posts)")}
-    for column in REPORT_COLUMNS:  # databases created before these columns existed
-        if column not in existing:
-            conn.execute(f"ALTER TABLE posts ADD COLUMN {column} TEXT")
     return conn
 
 
 def add_post(conn, *, source, text, channel=None, side=None, url=None, posted_at=None,
-             views=None, forwards=None, reporter=None, note=None, platform=None,
-             location=None, targets=None, kinds=None, contact=None) -> int | None:
+             views=None, forwards=None, reporter=None, note=None) -> int | None:
     """Insert a post; returns its id, or None if it was already stored."""
     cur = conn.execute(
         "INSERT OR IGNORE INTO posts (source, channel, side, url, text, posted_at, views, forwards,"
-        " reporter, note, platform, location, targets, kinds, contact, created_at)"
-        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        (source, channel, side, url, text, posted_at, views, forwards, reporter, note, platform, location,
-         json.dumps(targets) if targets else None, json.dumps(kinds) if kinds else None, contact, now()),
+        " reporter, note, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+        (source, channel, side, url, text, posted_at, views, forwards, reporter, note, now()),
     )
     conn.commit()
     return cur.lastrowid if cur.rowcount else None
-
-
-def get_post(conn, post_id: int) -> sqlite3.Row:
-    return conn.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
 
 
 def unclassified(conn) -> list[sqlite3.Row]:
@@ -120,14 +101,7 @@ def queue(conn, include_decided: bool = False) -> list[dict]:
         ORDER BY c.priority DESC, p.id
         """
     ).fetchall()
-    items = [
-        dict(r) | {
-            "result": Classification(**json.loads(r["result"])),
-            "targets": json.loads(r["targets"]) if r["targets"] else [],
-            "kinds": json.loads(r["kinds"]) if r["kinds"] else [],
-        }
-        for r in rows
-    ]
+    items = [dict(r) | {"result": Classification(**json.loads(r["result"]))} for r in rows]
     return items if include_decided else [i for i in items if i["decision"] is None]
 
 
