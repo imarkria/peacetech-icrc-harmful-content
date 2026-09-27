@@ -1,0 +1,436 @@
+{
+  "tasks": {
+    "T1_hate": {
+      "Hateful_en_FHM": {
+        "n": 80,
+        "TP": 27,
+        "FP": 19,
+        "FN": 13,
+        "TN": 21,
+        "precision": 0.587,
+        "recall": 0.675,
+        "f1": 0.628,
+        "accuracy": 0.6,
+        "specificity": 0.525
+      },
+      "Hateful_en__MMHS": {
+        "n": 40,
+        "TP": 1,
+        "FP": 3,
+        "FN": 19,
+        "TN": 17,
+        "precision": 0.25,
+        "recall": 0.05,
+        "f1": 0.083,
+        "accuracy": 0.45,
+        "specificity": 0.85
+      },
+      "toxic_ru__Toxic_Memes_Detection_Dataset": {
+        "n": 40,
+        "TP": 10,
+        "FP": 11,
+        "FN": 10,
+        "TN": 9,
+        "precision": 0.476,
+        "recall": 0.5,
+        "f1": 0.488,
+        "accuracy": 0.475,
+        "specificity": 0.45
+      },
+      "all": {
+        "n": 160,
+        "TP": 38,
+        "FP": 33,
+        "FN": 42,
+        "TN": 47,
+        "precision": 0.535,
+        "recall": 0.475,
+        "f1": 0.503,
+        "accuracy": 0.531,
+        "specificity": 0.588
+      }
+    },
+    "T2_misogyny": {
+      "violence_en__MAMI": {
+        "n": 40,
+        "TP": 16,
+        "FP": 6,
+        "FN": 4,
+        "TN": 14,
+        "precision": 0.727,
+        "recall": 0.8,
+        "f1": 0.762,
+        "accuracy": 0.75,
+        "specificity": 0.7
+      },
+      "objectification_en__MAMI": {
+        "n": 20,
+        "TP": 7,
+        "FP": 1,
+        "FN": 3,
+        "TN": 9,
+        "precision": 0.875,
+        "recall": 0.7,
+        "f1": 0.778,
+        "accuracy": 0.8,
+        "specificity": 0.9
+      },
+      "shaming_en__MAMI": {
+        "n": 20,
+        "TP": 7,
+        "FP": 5,
+        "FN": 3,
+        "TN": 5,
+        "precision": 0.583,
+        "recall": 0.7,
+        "f1": 0.636,
+        "accuracy": 0.6,
+        "specificity": 0.5
+      },
+      "all": {
+        "n": 80,
+        "TP": 30,
+        "FP": 12,
+        "FN": 10,
+        "TN": 28,
+        "precision": 0.714,
+        "recall": 0.75,
+        "f1": 0.732,
+        "accuracy": 0.725,
+        "specificity": 0.7
+      }
+    },
+    "T3_sv_related": {
+      "violence_en__MAMI": {
+        "n": 40,
+        "TP": 2,
+        "FP": 0,
+        "FN": 18,
+        "TN": 20,
+        "precision": 1.0,
+        "recall": 0.1,
+        "f1": 0.182,
+        "accuracy": 0.55,
+        "specificity": 1.0
+      },
+      "objectification_en__MAMI": {
+        "n": 20,
+        "TP": 1,
+        "FP": 0,
+        "FN": 9,
+        "TN": 10,
+        "precision": 1.0,
+        "recall": 0.1,
+        "f1": 0.182,
+        "accuracy": 0.55,
+        "specificity": 1.0
+      },
+      "all": {
+        "n": 60,
+        "TP": 3,
+        "FP": 0,
+        "FN": 27,
+        "TN": 30,
+        "precision": 1.0,
+        "recall": 0.1,
+        "f1": 0.182,
+        "accuracy": 0.55,
+        "specificity": 1.0
+      }
+    },
+    "T4_flag": {
+      "violence_en__MAMI": {
+        "n": 40,
+        "TP": 3,
+        "FP": 3,
+        "FN": 17,
+        "TN": 17,
+        "precision": 0.5,
+        "recall": 0.15,
+        "f1": 0.231,
+        "accuracy": 0.5,
+        "specificity": 0.85
+      },
+      "objectification_en__MAMI": {
+        "n": 20,
+        "TP": 0,
+        "FP": 0,
+        "FN": 10,
+        "TN": 10,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "accuracy": 0.5,
+        "specificity": 1.0
+      },
+      "shaming_en__MAMI": {
+        "n": 20,
+        "TP": 0,
+        "FP": 0,
+        "FN": 10,
+        "TN": 10,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "accuracy": 0.5,
+        "specificity": 1.0
+      },
+      "Hateful_en_FHM": {
+        "n": 80,
+        "TP": 3,
+        "FP": 5,
+        "FN": 37,
+        "TN": 35,
+        "precision": 0.375,
+        "recall": 0.075,
+        "f1": 0.125,
+        "accuracy": 0.475,
+        "specificity": 0.875
+      },
+      "Hateful_en__MMHS": {
+        "n": 40,
+        "TP": 0,
+        "FP": 0,
+        "FN": 20,
+        "TN": 20,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "accuracy": 0.5,
+        "specificity": 1.0
+      },
+      "toxic_ru__Toxic_Memes_Detection_Dataset": {
+        "n": 40,
+        "TP": 7,
+        "FP": 2,
+        "FN": 13,
+        "TN": 18,
+        "precision": 0.778,
+        "recall": 0.35,
+        "f1": 0.483,
+        "accuracy": 0.625,
+        "specificity": 0.9
+      },
+      "all": {
+        "n": 240,
+        "TP": 13,
+        "FP": 10,
+        "FN": 107,
+        "TN": 110,
+        "precision": 0.565,
+        "recall": 0.108,
+        "f1": 0.181,
+        "accuracy": 0.512,
+        "specificity": 0.917
+      }
+    },
+    "T5_silver": {
+      "hateful": {
+        "n": 60,
+        "TP": 15,
+        "FP": 16,
+        "FN": 6,
+        "TN": 23,
+        "precision": 0.484,
+        "recall": 0.714,
+        "f1": 0.577,
+        "accuracy": 0.633,
+        "specificity": 0.59
+      },
+      "sv_related": {
+        "n": 60,
+        "TP": 1,
+        "FP": 3,
+        "FN": 0,
+        "TN": 56,
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4,
+        "accuracy": 0.95,
+        "specificity": 0.949
+      },
+      "flag": {
+        "n": 60,
+        "TP": 2,
+        "FP": 7,
+        "FN": 0,
+        "TN": 51,
+        "precision": 0.222,
+        "recall": 1.0,
+        "f1": 0.363,
+        "accuracy": 0.883,
+        "specificity": 0.879
+      }
+    }
+  },
+  "T1_hate_excluding_restricted": {
+    "n": 150,
+    "TP": 38,
+    "FP": 33,
+    "FN": 38,
+    "TN": 41,
+    "precision": 0.535,
+    "recall": 0.5,
+    "f1": 0.517,
+    "accuracy": 0.527,
+    "specificity": 0.554
+  },
+  "silver_ids": [
+    "013fb174ac0f9629dd688ec75c70ddc5",
+    "10fa63ddc2eb407ea73979b748d8e323",
+    "14bdb86ba0540b3b295a10a6669cd4dc",
+    "27882847ef51cc783374ee74a6d2cc5f",
+    "293307effe8876eb871776eb72da36ac",
+    "2b65f3788c3a1f619bd63bd00c4e4ce9",
+    "3163d8e7d0a4ab435615d49a868650d4",
+    "33425b9ef1ec04489a6ac4f1a4718317",
+    "35a6844f8af194aad94b3e7e878947f6",
+    "362e71ca19b32b12f97c0987b61b5424",
+    "42652afc344258f7530bee827928f982",
+    "44b23d21de4bfc5930c1b3a1ed1f7a77",
+    "46586e098fcc92858b8838c1a8199ff3",
+    "4d73faebbad69975b64f48bf8fc3ef1d",
+    "53015e7ac957f29e35ed7f0bf193a3a7",
+    "58d218cbc18f93c763357b5f4f60c861",
+    "5c73c18d5d36d897de5cddf3adbc6f87",
+    "5e135f442918c0f2af6052471460d9cb",
+    "647b844af5f4ac220afbac9daef4cedd",
+    "6895b2ed562e4470d24c2306be1f0d91",
+    "726ab516c400326fbc68e82fd0ee148f",
+    "7345a8600aafa96c24df979d7b85f0ca",
+    "73e04ddabfb3dd4ebb779b46d4a3c167",
+    "75e9c61c7b70eeafdbd3c99def610dea",
+    "7a4734367bd926d5520de22a80314535",
+    "7d9570e11725b42db4a55089be334f52",
+    "84691ec23021cfd308644c8687290f26",
+    "8634c69acd32efd23b5c9a767dc30536",
+    "9230d28392eafc752cbf0982ae28ec39",
+    "94b38e0b4a428f31f30d97aa042d972e",
+    "9823f35f9621e848c44069a133762ae6",
+    "a3821d27ddd09974abffbbf40a0eb475",
+    "af9b57df5d2aead903a0f021d0a8156e",
+    "b016d4a7ee018c17f5e696ed3dc6dcef",
+    "b20f0e4ad3b0c9f3006c03099cea39e3",
+    "b6da79411bb49665fd15245a7985f1de",
+    "b7118a5929deef50f82393bdd1c3951c",
+    "b7c5bc7d7f4f62691715c047fde439db",
+    "b817a9269dae3eedcef012c3dc05c2e9",
+    "b9b0096fb2fbd8f6588b007bfd4e6514",
+    "bfd0f2c2495ad76687f4f2e2de81c1d2",
+    "c1329b2fcdc72c45aa6d6b0975def74d",
+    "c38d79aefc141793d6a0baf40edb7420",
+    "c4e1e7e48502c62ea96797878630e0b9",
+    "c54919046e8cdd4aee73d8a7c81047bb",
+    "cbdedecdc28a4d752c38040fae2e41ee",
+    "cf963ae5e8416affbfdfdaf145c60f47",
+    "d1eeae50e2c08bdb0cf3d9479c6f844c",
+    "d8440e4e48dcfa2b579a7876c5c646d9",
+    "e2073b6574b86f7ec4d80a9089aa2d15",
+    "e7a812744aa4ddd9885138ddb93011e7",
+    "e8d15f1880f60e06f201b25eb212af48",
+    "e8e5e28b1d22cf7ad1065bb844ceffb0",
+    "ecbccef6bb68f800627128e47ab357d3",
+    "efc19461735fdd9964aca06774b3bc05",
+    "f24ad0d216016ad073ff1d3f905a37a2",
+    "f4b93e5cd5b1259068d0c52b99e24128",
+    "f79ca4975900dc262edfdc133f531be0",
+    "f940db271523021a25e6eabdb89bb955",
+    "fefe10bf179c9d04bc2a3e932ada952f"
+  ],
+  "silver_missing_prediction": [],
+  "silver_vs_dataset": {
+    "hateful": {
+      "n": 60,
+      "TP": 16,
+      "FP": 5,
+      "FN": 14,
+      "TN": 25,
+      "precision": 0.762,
+      "recall": 0.533,
+      "f1": 0.627,
+      "accuracy": 0.683,
+      "specificity": 0.833
+    },
+    "flag": {
+      "n": 60,
+      "TP": 2,
+      "FP": 0,
+      "FN": 28,
+      "TN": 30,
+      "precision": 1.0,
+      "recall": 0.067,
+      "f1": 0.126,
+      "accuracy": 0.533,
+      "specificity": 1.0
+    }
+  },
+  "counts": {
+    "n_items": 240,
+    "valid": 240,
+    "invalid_json": 0,
+    "timeouts": 0,
+    "server_errors": 0,
+    "refusals": 0,
+    "restricted_escalation": 14,
+    "nsfw_quarantined": 3,
+    "nsfw_quarantined_by_subset": {
+      "violence_en__MAMI": 0,
+      "objectification_en__MAMI": 2,
+      "shaming_en__MAMI": 0,
+      "Hateful_en_FHM": 1,
+      "Hateful_en__MMHS": 0,
+      "toxic_ru__Toxic_Memes_Detection_Dataset": 0
+    },
+    "errors_by_subset": {
+      "violence_en__MAMI": 0,
+      "objectification_en__MAMI": 0,
+      "shaming_en__MAMI": 0,
+      "Hateful_en_FHM": 0,
+      "Hateful_en__MMHS": 0,
+      "toxic_ru__Toxic_Memes_Detection_Dataset": 0
+    }
+  },
+  "throughput": {
+    "total_seconds": 357.7,
+    "images_per_min": 40.3,
+    "workers": 8,
+    "images_per_10_min": 403,
+    "mean_latency_s": 11.78,
+    "max_latency_s": 46.87,
+    "prompt_tokens_mean": 6627,
+    "completion_tokens_mean": 169
+  },
+  "triggered_layer": {
+    "meme": 228,
+    "image": 8,
+    "embedded_text": 4
+  },
+  "run_info": {
+    "model": "Qwen3.5-9B Q8_0 + mmproj-F16 (llama.cpp, V100)",
+    "n_items": 240,
+    "workers": 8,
+    "total_seconds": 357.7,
+    "images_per_min": 40.3,
+    "shots": {
+      "global": [
+        "G02",
+        "G03",
+        "G05",
+        "G06"
+      ],
+      "ru_ua": [
+        "E08",
+        "E12",
+        "G02",
+        "G05"
+      ]
+    },
+    "nsfw_model": "Falconsai/nsfw_image_detection",
+    "nsfw_threshold": 0.7,
+    "seed": 42,
+    "profiles": {
+      "global": "global-0.1/core-1.1+no-approved-entries",
+      "ru_ua": "ru_ua-0.1/core-1.1"
+    }
+  }
+}

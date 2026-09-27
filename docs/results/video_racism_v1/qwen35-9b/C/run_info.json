@@ -1,0 +1,7 @@
+{
+  "variant": "C",
+  "prompt_sha256": "4396e156f031109269240ba38ee216c18f0c6c949a28403687d93d94fb17a52d",
+  "n_segments": 191,
+  "judge_seconds": 177.2,
+  "workers": 8
+}

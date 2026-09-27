@@ -1,5 +1,10 @@
 anthropic>=1.8
 pydantic>=2
 python-dotenv
+pandas
+numpy
+pillow
 telethon
 python-telegram-bot>=21
+pyyaml
+openai>=1.50

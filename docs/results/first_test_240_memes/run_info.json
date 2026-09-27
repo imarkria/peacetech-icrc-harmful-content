@@ -1,0 +1,28 @@
+{
+  "model": "Qwen3.5-9B Q8_0 + mmproj-F16 (llama.cpp, V100)",
+  "n_items": 240,
+  "workers": 8,
+  "total_seconds": 357.7,
+  "images_per_min": 40.3,
+  "shots": {
+    "global": [
+      "G02",
+      "G03",
+      "G05",
+      "G06"
+    ],
+    "ru_ua": [
+      "E08",
+      "E12",
+      "G02",
+      "G05"
+    ]
+  },
+  "nsfw_model": "Falconsai/nsfw_image_detection",
+  "nsfw_threshold": 0.7,
+  "seed": 42,
+  "profiles": {
+    "global": "global-0.1/core-1.1+no-approved-entries",
+    "ru_ua": "ru_ua-0.1/core-1.1"
+  }
+}

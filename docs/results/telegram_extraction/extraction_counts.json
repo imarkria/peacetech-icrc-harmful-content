@@ -1,0 +1,40 @@
+{
+  "stage": "regex candidates only (stage a); embeddings stage abandoned; no ground truth \u2192 no confusion matrix",
+  "corpus_messages_by_side": {
+    "anti_kremlin_opposition": 1391176,
+    "pro_kremlin": 4268621,
+    "ukrainian": 646,
+    "russian": 354
+  },
+  "corpus_messages_total": 5660797,
+  "regex_candidates": 22689,
+  "by_strength": {
+    "strong": 18935,
+    "weak": 3754
+  },
+  "by_pattern": {
+    "F-RU-01": 8610,
+    "F-RU-02": 5485,
+    "F-RU-13": 3018,
+    "F-RU-03": 2998,
+    "F-UK-05": 2001,
+    "F-RU-04": 1387,
+    "F-RU-14": 1200,
+    "F-RU-12": 1192,
+    "F-UK-04": 564,
+    "F-EN-01": 543,
+    "F-RU-10": 509,
+    "F-UK-01": 471,
+    "F-RU-08": 417,
+    "F-UK-02": 289,
+    "F-RU-05": 222,
+    "F-RU-11": 118,
+    "F-UK-07": 104,
+    "F-TR-01": 60,
+    "F-RU-06": 47,
+    "F-RU-09": 22,
+    "F-RU-07": 11,
+    "F-UK-03": 8,
+    "F-UK-06": 4
+  }
+}

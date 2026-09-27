@@ -1,0 +1,373 @@
+{
+  "model": "internvl35-8b",
+  "mode": "text_only",
+  "counts": {
+    "n": 120,
+    "valid": 120,
+    "invalid_json": 0,
+    "timeouts": 0,
+    "server_errors": 0,
+    "refusals": 0,
+    "restricted_possible_minor": 2,
+    "logprobs_missing": 0
+  },
+  "throughput": {
+    "total_seconds": 124.4,
+    "images_per_min": 57.9,
+    "vram_peak_mib": 22900,
+    "workers": 8,
+    "mean_latency_s": 8.2
+  },
+  "sexual": {
+    "n": 120,
+    "TP": 54,
+    "FP": 5,
+    "FN": 6,
+    "TN": 55,
+    "precision": 0.915,
+    "recall": 0.9,
+    "f1": 0.907,
+    "accuracy": 0.908,
+    "specificity": 0.917
+  },
+  "positives_without_keyword": {
+    "n": 10,
+    "detected": 5,
+    "recall": 0.5
+  },
+  "negatives_with_keyword": {
+    "n": 2,
+    "false_positives": 0
+  },
+  "written_scores": {
+    "auroc": 0.906,
+    "distinct_values": 7
+  },
+  "logprob": {
+    "sexual": {
+      "n": 120,
+      "auroc": 0.933,
+      "best_threshold": 0.9562,
+      "tpr_at_best": 0.883,
+      "fpr_at_best": 0.05,
+      "calibration": {
+        "ece": 0.09,
+        "brier": 0.09,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 60,
+            "mean_p": 0.003,
+            "frac_pos": 0.1
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 1,
+            "mean_p": 0.108,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 1,
+            "mean_p": 0.879,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 58,
+            "mean_p": 0.995,
+            "frac_pos": 0.914
+          }
+        ]
+      }
+    },
+    "hate": {
+      "n": 118,
+      "auroc": 0.708,
+      "calibration": {
+        "ece": 0.194,
+        "brier": 0.2,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 66,
+            "mean_p": 0.005,
+            "frac_pos": 0.182
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 11,
+            "mean_p": 0.145,
+            "frac_pos": 0.091
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 8,
+            "mean_p": 0.252,
+            "frac_pos": 0.125
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 5,
+            "mean_p": 0.362,
+            "frac_pos": 0.6
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 6,
+            "mean_p": 0.457,
+            "frac_pos": 0.333
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 1,
+            "mean_p": 0.591,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 4,
+            "mean_p": 0.666,
+            "frac_pos": 0.25
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 1,
+            "mean_p": 0.744,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 1,
+            "mean_p": 0.802,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 15,
+            "mean_p": 0.987,
+            "frac_pos": 0.733
+          }
+        ]
+      }
+    },
+    "misogyny": {
+      "n": 118,
+      "auroc": 0.911,
+      "calibration": {
+        "ece": 0.19,
+        "brier": 0.187,
+        "table": [
+          {
+            "bin": "0.0-0.1",
+            "n": 72,
+            "mean_p": 0.003,
+            "frac_pos": 0.278
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 1,
+            "mean_p": 0.108,
+            "frac_pos": 0.0
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 1,
+            "mean_p": 0.418,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 1,
+            "mean_p": 0.541,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 2,
+            "mean_p": 0.766,
+            "frac_pos": 0.5
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 1,
+            "mean_p": 0.894,
+            "frac_pos": 1.0
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 40,
+            "mean_p": 0.997,
+            "frac_pos": 0.975
+          }
+        ]
+      }
+    }
+  },
+  "by_reference_class": {
+    "positives": {
+      "n": 60,
+      "n_scored": 59,
+      "pct_sexual_violence_ge50": 57.6,
+      "mean_sexual_violence": 37.8,
+      "pct_sexual_harassment_ge50": 78.0,
+      "mean_sexual_harassment": 55.4,
+      "pct_hate_ge50": 10.2,
+      "mean_hate": 12.7,
+      "pct_misogyny_ge50": 47.5,
+      "mean_misogyny": 37.8,
+      "pct_other_violence_ge50": 0.0,
+      "mean_other_violence": 8.1,
+      "pct_sexual_pred": 90.0
+    },
+    "negatives": {
+      "n": 60,
+      "n_scored": 59,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.3,
+      "pct_sexual_harassment_ge50": 3.4,
+      "mean_sexual_harassment": 3.7,
+      "pct_hate_ge50": 18.6,
+      "mean_hate": 15.6,
+      "pct_misogyny_ge50": 16.9,
+      "mean_misogyny": 13.2,
+      "pct_other_violence_ge50": 5.1,
+      "mean_other_violence": 5.6,
+      "pct_sexual_pred": 8.3
+    },
+    "negatives_trap": {
+      "n": 30,
+      "n_scored": 29,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.7,
+      "pct_sexual_harassment_ge50": 6.9,
+      "mean_sexual_harassment": 7.6,
+      "pct_hate_ge50": 27.6,
+      "mean_hate": 22.9,
+      "pct_misogyny_ge50": 31.0,
+      "mean_misogyny": 24.5,
+      "pct_other_violence_ge50": 6.9,
+      "mean_other_violence": 7.9,
+      "pct_sexual_pred": 16.7
+    },
+    "negatives_neutral": {
+      "n": 30,
+      "n_scored": 30,
+      "pct_sexual_violence_ge50": 0.0,
+      "mean_sexual_violence": 0.0,
+      "pct_sexual_harassment_ge50": 0.0,
+      "mean_sexual_harassment": 0.0,
+      "pct_hate_ge50": 10.0,
+      "mean_hate": 8.5,
+      "pct_misogyny_ge50": 3.3,
+      "mean_misogyny": 2.3,
+      "pct_other_violence_ge50": 3.3,
+      "mean_other_violence": 3.3,
+      "pct_sexual_pred": 0.0
+    }
+  },
+  "hate_vs_reference": {
+    "n": 118,
+    "TP": 12,
+    "FP": 10,
+    "FN": 19,
+    "TN": 77,
+    "precision": 0.545,
+    "recall": 0.387,
+    "f1": 0.453,
+    "accuracy": 0.754,
+    "specificity": 0.885
+  },
+  "hate_score_vs_reference": {
+    "n": 118,
+    "TP": 11,
+    "FP": 6,
+    "FN": 20,
+    "TN": 81,
+    "precision": 0.647,
+    "recall": 0.355,
+    "f1": 0.458,
+    "accuracy": 0.78,
+    "specificity": 0.931
+  },
+  "misogyny_vs_reference": {
+    "n": 118,
+    "TP": 42,
+    "FP": 2,
+    "FN": 21,
+    "TN": 53,
+    "precision": 0.955,
+    "recall": 0.667,
+    "f1": 0.785,
+    "accuracy": 0.805,
+    "specificity": 0.964
+  },
+  "misogyny_score_vs_reference": {
+    "n": 118,
+    "TP": 37,
+    "FP": 1,
+    "FN": 26,
+    "TN": 54,
+    "precision": 0.974,
+    "recall": 0.587,
+    "f1": 0.733,
+    "accuracy": 0.771,
+    "specificity": 0.982
+  },
+  "tp_category_or_relation_correct": {
+    "n_tp": 53,
+    "correct": 12,
+    "pct": 22.6
+  },
+  "by_category_recall": {
+    "rape_joke_glorification": {
+      "n": 11,
+      "detected": 11
+    },
+    "denial_minimization": {
+      "n": 7,
+      "detected": 7
+    },
+    "threat_incitement": {
+      "n": 8,
+      "detected": 8
+    },
+    "victim_stigmatisation": {
+      "n": 5,
+      "detected": 4
+    },
+    "collective_accusation": {
+      "n": 7,
+      "detected": 7
+    },
+    "degrading_sexualisation": {
+      "n": 10,
+      "detected": 9
+    },
+    "sexualised_insult": {
+      "n": 10,
+      "detected": 6
+    },
+    "humiliating_objectification": {
+      "n": 2,
+      "detected": 2
+    }
+  },
+  "errors": {
+    "FP": [
+      "sv1-c163",
+      "sv1-c177",
+      "sv1-c201",
+      "sv1-c202",
+      "sv1-c212"
+    ],
+    "FN": [
+      "sv1-c049",
+      "sv1-c126",
+      "sv1-c134",
+      "sv1-c136",
+      "sv1-c135",
+      "sv1-c174"
+    ]
+  }
+}
