@@ -33,11 +33,11 @@ export default function ReviewerLoginPage() {
     return <section className="inner-page">
         <div className="page-container"><Link className="breadcrumb" href="/"><ArrowLeft size={14}/> Back to home</Link>
             <div className="auth-layout">
-                <div className="auth-intro"><span className="eyebrow">ICRC reviewers and trained volunteers</span><h1>Review detected
-                    links.</h1><p>Sign in to review links detected by the system and record a final label.</p>
+                <div className="auth-intro"><span className="eyebrow">ICRC reviewers and trained volunteers</span><h1>Sign in.</h1><p>Reviewers label the links collected from every lane. Trained volunteers send reports
+                    straight to the priority lane.</p>
                     <div className="auth-points"><span className="auth-point"><Check
-                        size={16}/> Review pending links</span><span className="auth-point"><Check size={16}/> See the model category and confidence</span><span
-                        className="auth-point"><Check size={16}/> Record one final label</span></div>
+                        size={16}/> Reviewers: review pending links and record one final label</span><span className="auth-point"><Check size={16}/> Copies of the same content appear once</span><span
+                        className="auth-point"><Check size={16}/> Trained volunteers: report a link with context and urgency</span></div>
                 </div>
                 <form className="auth-card" onSubmit={login}><BadgeCheck className="principle-icon" size={25}/>
                     <h2>Sign in</h2><p className="auth-card-intro">Use the account the ICRC gave you.</p>{error &&

@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS detections (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
     created_at        TEXT NOT NULL,                 -- UTC, ISO 8601
-    source            TEXT,                          -- who sent the item: telegram | volunteer | extension | cli ...
+    source            TEXT,                          -- telegram | apify:<platform> | telegram_bot | community | sample | cli
     url               TEXT,                          -- where the item was seen (never the media itself)
     modality          TEXT NOT NULL CHECK (modality IN ('text', 'image', 'meme', 'video')),
     media_hash        TEXT NOT NULL,                 -- sha256 of the file (or of the text)

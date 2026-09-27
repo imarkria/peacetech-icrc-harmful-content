@@ -35,7 +35,7 @@ Content reaches ICRC reviewers through three lanes. Every copy of the same conte
  ┌──────── harmwatch.intake ────────────────────────────┐                         │
  │ fingerprint → duplicate group → judge once per group │ ◄── harmwatch.screen    │
  │ (analyze(): safety filter, pre-filter, Qwen judge;   │     fetches and judges  │
- │  or the text classifier without a GPU)               │     community reports   │
+ │  or the keyword baseline without a GPU)              │     community reports   │
  │ media: temp download, deleted after judging          │                         │
  └───────────────┬──────────────────────────────────────┘                         │
                  │ harmwatch.publish (POST /api/detections, group key)            │
@@ -60,13 +60,14 @@ Content reaches ICRC reviewers through three lanes. Every copy of the same conte
 | `harmwatch/social.py` | Apify collector for Facebook, Instagram, TikTok and X (search, or one post by URL) |
 | `harmwatch/collector.py`, `bot.py` | Telegram channel reader (text only), and the anonymous community bot |
 | `harmwatch/intake.py`, `dedup.py` | One path for every source: fingerprints, duplicate groups, judge once per group |
-| `harmwatch/detect.py` | Picks the judge: `analyze()` with the local model, or the text classifier |
+| `harmwatch/detect.py` | Picks the judge: `analyze()` with our Qwen model, or the keyword baseline |
 | `harmwatch/analyze.py`, `detections.py` | Safety filter, pre-filter and AI judge for text, images, memes and video; the `detections` table. See [docs/platform/README.md](docs/platform/README.md). |
 | `harmwatch/publish.py`, `screen.py` | Send flagged content groups to the queue; screen community reports |
 | `harmwatch/classify.py`, `triage.py` | Classifier switch (our Qwen model, or the keyword baseline) and the triage buckets |
 | `harmwatch/crsv.py`, `schema.py`, `policy_loader.py`, `lexicon.py` | Full text assessment against `policy/core.md`, prompt assembly, age-indicator checks |
 | `harmwatch/vision.py`, `sv_scores.py`, `safety.py`, `cascade.py`, `prefilter.py`, `video_segments.py` | Image, meme and video judging, explicit-image quarantine, trained pre-filter |
-| `harmwatch/db.py`, `pipeline.py`, `evaluate.py` | Older text-only tables and the classifier evaluation on the samples |
+| `harmwatch/evaluate.py` | Precision and recall of the text classifier on the labelled samples |
+| `harmwatch/db.py`, `pipeline.py` | Older text-only path (`posts`, `classifications`), kept for its tests; the collectors now use intake |
 | `scripts/` | Data preparation, region approval, benchmarks and evaluation, figures |
 | `tests/`, `backend/tests/` | Detection tests (policy rules, safety, duplicates, intake, Apify parsing); API tests (lanes, grouping, screening) |
 | `docs/` | Results ([images](docs/FINAL_IMAGES.md), [cascade](docs/RESULTS_CASCADE.md)), frozen prompts, metrics, presentation pack |

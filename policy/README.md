@@ -31,7 +31,7 @@ Every entry has a `review_by` date.
 ## Selecting a region
 
 ```bash
-REGION=ru_ua python -m harmwatch.pipeline        # or --region ru_ua in the scripts
+REGION=ru_ua python -m harmwatch.seed            # or --region ru_ua: harmwatch.analyze, social, screen, and the scripts
 ```
 
 ## Adding a country

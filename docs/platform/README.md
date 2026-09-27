@@ -72,7 +72,8 @@ item ──► [1] safety filter ──► [2] fast pre-filter ──► [3] AI 
 | Video | `harmwatch/video_segments.py` | Scenes, frames, speech-to-text, on-screen text, per-segment judgement. |
 | **Single entry point** | `harmwatch/analyze.py` | `analyze(item, region)` and `python -m harmwatch.analyze`: runs steps 1-4. |
 | Output table | `harmwatch/detections.py`, `docs/platform/schema.sql` | Creates and fills the table `detections` (CH-5 enforced in code and in the table). |
-| Existing platform tables | `harmwatch/db.py` | `posts`, `classifications`, `assessments`, `decisions` (unchanged). |
+| Intake and duplicates | `harmwatch/intake.py`, `harmwatch/dedup.py` | Every collected post goes through `intake`: fingerprints, duplicate groups, `analyze()` once per group. |
+| Older text tables | `harmwatch/db.py` | `posts`, `classifications`, `assessments`, `decisions`: the earlier text-only path, no longer fed by the collectors. |
 | Model server | `scripts/serve_llm.sh` | Starts llama.cpp with Qwen3.5-9B (text + vision) on port 8080. |
 | Evaluation | `scripts/eval_*.py` | Benchmarks behind every number (images, video, cascade). |
 | Results | `docs/results/`, `docs/presentation/` | Tables, figures (including `figures_public/` for a non-technical audience), slides summary. |
@@ -139,7 +140,7 @@ restricted, or the column does not apply.
 |---|---|
 | `id` | Row number. |
 | `created_at` | When the item was analysed (UTC, ISO 8601). |
-| `source` | Who sent the item: `telegram`, `volunteer`, `extension`, `cli`… (free text given by the caller). |
+| `source` | Where the item came from: `telegram` (collector), `apify:<platform>`, `telegram_bot` and `community` (community reports), `sample`, `cli`… (free text given by the caller). |
 | `url` | Where the item was seen. The media itself is never stored. |
 | `modality` | `text`, `image`, `meme` (image with embedded text) or `video`. |
 | `media_hash` | sha256 of the file (or of the text): to find duplicates without keeping the media. |

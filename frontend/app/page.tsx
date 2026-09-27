@@ -27,7 +27,7 @@ export default function HomePage() {
           </div>
           <div className="public-steps">
             <article><span>01</span><h3>Submit a link</h3><p>Enter the direct URL and, if useful, add a short reason.</p></article>
-            <article><span>02</span><h3>It is reviewed</h3><p>Your report is added to the authorised reviewer queue.</p></article>
+            <article><span>02</span><h3>It is reviewed</h3><p>It is checked automatically, grouped with other reports of the same content, then reviewed by authorised ICRC reviewers.</p></article>
             <article><span>03</span><h3>It may support future models</h3><p>Reports may also support future research and model development.</p></article>
           </div>
         </div>
