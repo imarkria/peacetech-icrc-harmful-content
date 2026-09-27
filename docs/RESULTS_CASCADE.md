@@ -9,6 +9,8 @@
 > Avec le prompt v1 comme juge : F1 0,894 pour la cascade, contre 0,912 pour Qwen seul.
 >
 > Le benchmark contient 50 % de positifs, donc le gain de temps y est forcément faible. En extrapolant le taux de faux positifs du filtre mesuré sur le DEV, on obtiendrait environ ×2,2 à 5 % de prévalence. **C'est une projection, pas une mesure.**
+>
+> **À 10 % de prévalence (579 images : benchmark + négatifs du DEV)**, le filtre envoie 48 % des images à Qwen, bloque 2 positifs sur 60 et **divise le temps par 2,01** (voir la section dédiée).
 
 Le filtre retenu est l'étudiant **I_logreg** : une régression logistique sur les embeddings SigLIP2 de l'image. Il a été choisi **sur le DEV** avant tout contact avec le benchmark. Son seuil vise **95 % de rappel face au professeur**, lui aussi réglé sur le DEV.
 
@@ -30,8 +32,35 @@ Le filtre retenu est l'étudiant **I_logreg** : une régression logistique sur l
 
 **Ce que la distillation apporte** (bonus d). Les mêmes étudiants, entraînés sur les **labels du dataset** (misogyne / haineux) au lieu du professeur, ont une AUROC face à la référence de **0,71 à 0,79**, contre 0,895 à 0,969 avec le professeur. Pour garder 95 % de rappel, ils doivent envoyer 88 à 94 % des images au juge, contre 73 %. Les labels des datasets ne mesurent pas le caractère sexuel : il faut le professeur.
 
+## Test du filtre à 10 % de prévalence
+
+Le benchmark contient 50 % de positifs, ce qui plafonne le gain de temps. Pour mesurer le filtre à une prévalence plus réaliste **sans nouvel appel à Qwen**, j'ai ajouté aux 120 images du benchmark **les 459 négatifs du DEV**. Ces négatifs sont étiquetés par le professeur et n'ont jamais servi à l'entraînement.
+- Total : 579 images, dont **60 positifs (10,4 %)** issus de la référence validée à la main.
+- Le filtre est **figé** : I_logreg, seuil réglé sur le DEV pour 95 % de rappel.
+- Les calculs réutilisent uniquement les embeddings et les étiquettes existants.
+
+| jeu | positifs passés | positifs bloqués | négatifs passés | négatifs bloqués | rappel [IC 95 %] | taux de faux passages [IC 95 %] | envoyé à Qwen | temps par image | gain |
+|---|---|---|---|---|---|---|---|---|---|
+| **579 images (10,4 % positives)** | 58 | **2** | 219 | 300 | **0,967** [0,886-0,991] | 0,422 [0,380-0,465] | **47,8 %** | 0,75 s | **÷2,01** |
+| 120 images du benchmark (50 %) | 58 | 2 | 30 | 30 | 0,967 [0,886-0,991] | 0,500 [0,377-0,623] | 73,3 % | 1,13 s | ÷1,33 |
+
+- **Temps estimé** = temps du filtre (0,027 s par image : embedding SigLIP2 + régression, soit 36,9 images/s mesurées) + part envoyée × 1,51 s (temps de Qwen v3 par image mesuré sur le benchmark), comparé à 1,51 s pour Qwen sur toutes les images.
+- **Positifs bloqués** (les mêmes dans les deux jeux) :
+  - `sv1-c046` : accusation collective ; photo d'une foule, avec un texte qui attribue des abus sexuels sur animaux à un groupe religieux (score 0,088) ;
+  - `sv1-c062` : accusation collective ; photo d'un animal, avec un texte qui moque un groupe national par une plaisanterie de « survivante de viol » (score 0,090).
+
+  Dans les deux cas, le sens est porté par le texte, alors que le filtre ne voit que l'image.
+- **Lecture :** à 10 % de prévalence, le filtre envoie un peu moins de la moitié des images au juge complet et **divise le temps par 2**, pour **2 positifs perdus sur 60**. Le gain reste plafonné par le taux de faux passages, d'environ 42 % : le filtre image laisse passer beaucoup de négatifs, surtout des photos de femmes sans contenu sexuel.
+
+**Limites propres à ce test :**
+- **Les 459 négatifs du DEV sont étiquetés par Qwen, pas vérifiés à l'œil.** Quelques « négatifs » pourraient être des positifs manqués par Qwen, et inversement.
+- **Le seuil et le choix de l'étudiant ont été faits sur ce même DEV.** Le taux de faux passages mesuré sur ses négatifs (0,42) est donc possiblement un peu optimiste. Sur les 60 négatifs du benchmark, jamais vus, il est de 0,50.
+- Les 60 positifs sont ceux du benchmark : l'IC du rappel reste large (0,886-0,991).
+- Un essai sur un flux de 1 000 mèmes jamais utilisés avait été lancé : filtre passé (27,7 % envoyés au seuil 95 %), mais jugement Qwen arrêté à 210 sur 1 000 sur décision de méthode. **Ce flux n'est pas utilisé comme résultat.**
+
 ## Figures
 
+- `docs/figures/cascade_filter_10pct_confusion.png` : matrices du filtre à 10,4 % et à 50 % de prévalence.
 - `docs/figures/cascade_confusion_qwen_vs_cascade.png` : matrices de Qwen seul et de la cascade, côte à côte.
 - `docs/figures/cascade_recall_vs_sent.png` : rappel en fonction de la part d'images envoyées à Qwen, pour les étudiants T, I et I+T, avec les points de fonctionnement.
 - `docs/figures/cascade_time_per_image.png` : temps par image (filtre, Qwen seul, cascade mesurée, cascade projetée).

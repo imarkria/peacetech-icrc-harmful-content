@@ -544,6 +544,318 @@ def cmd_figures(args):
     print("figures written to", out)
 
 
+STREAM = DATA / "stream"
+STREAM_N = 1000
+
+
+def used_hashes() -> tuple[set[str], dict[str, int]]:
+    """sha256 + pHash of everything already used: pool (kept and excluded), the 265 benchmark candidates (incl. the
+    120 test images and the 57 ambiguous) and the 240 memes of the abandoned first test."""
+    from PIL import Image
+
+    sha, ph = set(), {}
+    for r in load(POOL) + load(EXCLUDED):
+        sha.add(r["sha256"])
+        ph[r["pid"]] = int(r["phash"], 16)
+    for c in load(BENCH / "sv_images_v1_candidates.jsonl"):
+        sha.add(c["sha256"])
+        ph[c["cid"]] = phash(Image.open(ROOT / c["image"]))
+    for r in load(ROOT / "data" / "images" / "memelens" / "sample.jsonl"):
+        sha.add(r["sha256"])
+        ph["s_" + r["id"]] = phash(Image.open(ROOT / r["image"]))
+    return sha, ph
+
+
+def cmd_stream_build(args):
+    """1000 never-used MemeLens memes drawn uniformly (seed 42) from the same subsets, safety + age rule applied."""
+    import pyarrow.parquet as pq
+    from PIL import Image
+
+    from harmwatch.lexicon import age_indicators
+    from harmwatch.safety import ImageSafety
+
+    (STREAM / "images").mkdir(parents=True, exist_ok=True)
+    used_sha, used_ph = used_hashes()
+    union = [(key, it) for key, rows in strata().items() for it in rows]
+    rng = random.Random(SEED)
+    rng.shuffle(union)
+    draw = union[:int(STREAM_N * 1.8)]
+    by_file: dict[str, list] = {}
+    for order, (key, (sub, f, i)) in enumerate(draw):
+        by_file.setdefault(f, []).append((order, key, sub, i))
+    items = {}
+    for f, wanted in by_file.items():
+        t = pq.read_table(f, columns=["id", "image", "text", "label"])
+        for order, key, sub, i in wanted:
+            r = t.slice(i, 1).to_pylist()[0]
+            items[order] = {"stratum": key, "subset": sub, "dataset_id": r["id"], "text": r["text"] or "",
+                            "dataset_label": r["label"], "bytes": r["image"]["bytes"]}
+        del t
+    safety = ImageSafety()
+    kept, excluded, hashes = [], [], {}
+    for order in range(len(draw)):
+        if len(kept) == STREAM_N:
+            break
+        it = items[order]
+        raw = it.pop("bytes")
+        sha = hashlib.sha256(raw).hexdigest()
+        img = Image.open(io.BytesIO(raw)).convert("RGB")
+        h = phash(img)
+        sid = f"s{order:05d}"
+        reason = None
+        if sha in used_sha or near_duplicates({sid: h}, used_ph):
+            reason = "already_used_or_near_copy"
+        elif near_duplicates({sid: h}, hashes):
+            reason = "stream_near_duplicate"
+        elif age_indicators(it["text"]):
+            reason = "age_indicator_in_text"
+        else:
+            d = safety.check(img)
+            if d.quarantine:
+                reason = "explicit_quarantine"
+        if reason:
+            excluded.append({"sid": sid, "stratum": it["stratum"], "reason": reason})
+            continue
+        img.thumbnail((768, 768))
+        img.save(STREAM / "images" / f"{sid}.jpg", "JPEG", quality=90)
+        hashes[sid] = h
+        kept.append({"sid": sid, **it, "sha256": sha, "phash": f"{h:016x}"})
+    (STREAM / "stream.jsonl").write_text("\n".join(json.dumps(k, ensure_ascii=False) for k in kept) + "\n")
+    (STREAM / "excluded.jsonl").write_text("\n".join(json.dumps(e) for e in excluded) + "\n")
+    from collections import Counter
+    print(len(kept), "kept ·", dict(Counter(e["reason"] for e in excluded)), "· by subset", dict(Counter(k["subset"] for k in kept)))
+
+
+def cmd_stream_filter(args):
+    """Student filter on the stream: SigLIP2 image embedding + I_logreg (threshold for DEV recall 95 %), timed."""
+    import joblib
+    import numpy as np
+    import torch
+    from PIL import Image
+
+    from harmwatch.cascade import ImageEmbedder
+
+    tm = json.loads((RESULTS / "train_metrics.json").read_text())
+    best = tm["best_student"]
+    info = tm["students"][best]
+    if info["kind"] != "I":
+        sys.exit(f"best student {best} is not image-only: extend this command")
+    rows = load(STREAM / "stream.jsonl")
+    ie = ImageEmbedder()
+    clf = joblib.load(STUDENTS / f"{best}.joblib")
+    ie([Image.new("RGB", (64, 64))])  # warm-up (CUDA kernels), not timed
+    torch.cuda.synchronize()
+    t0 = time.time()
+    emb = np.concatenate([ie([Image.open(STREAM / "images" / f"{r['sid']}.jpg") for r in rows[i:i + 64]])
+                          for i in range(0, len(rows), 64)])
+    s = clf.predict_proba(emb)[:, 1]
+    torch.cuda.synchronize()
+    total = time.time() - t0
+    th = info["thresholds"]
+    np.savez(STREAM / "stream_filter.npz", sids=np.array([r["sid"] for r in rows]), image_emb=emb, scores=s)
+    out = {"student": best, "thresholds": th, "seconds_total": round(total, 2), "images": len(rows),
+           "images_per_second": round(len(rows) / total, 1),
+           "sent_fraction": {k: round(float((s >= v).mean()), 3) for k, v in th.items()}}
+    (STREAM / "filter_run.json").write_text(json.dumps(out, indent=2))
+    print(json.dumps(out))
+
+
+def cmd_stream_judge(args):
+    """Reference: Qwen3.5-9B with sv_prompt_v3 frozen on ALL stream memes (resumable), wall time measured."""
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    from PIL import Image
+
+    from scripts.eval_sv_benchmark import check_prompt, make_scorer
+
+    scorer, _ = make_scorer(args.api_model, True, "v3")
+    check_prompt(scorer, "v3")
+    out_path = STREAM / "judge_v3.jsonl"
+    done = {r["sid"] for r in load(out_path)}
+    todo = [r for r in load(STREAM / "stream.jsonl") if r["sid"] not in done]
+    lock, f = threading.Lock(), open(out_path, "a", encoding="utf-8")
+    t0 = time.time()
+
+    def one(r):
+        res = scorer.assess({"id": r["sid"], "image": Image.open(STREAM / "images" / f"{r['sid']}.jpg"), "text": r["text"],
+                             "lang": "en", "modality": "meme" if r["text"].strip() else "image"})
+        a = res["assessment"]
+        rec = {"sid": r["sid"], "error": res["error"], "seconds": round(res["seconds"], 2)}
+        if a:
+            rec.update(sexual=a.sexual, possible_minor=a.possible_minor, p_sexual=(a.p_true or {}).get("sexual"),
+                       category=a.category, reason=a.reason)
+        with lock:
+            f.write(json.dumps(rec) + "\n")
+            f.flush()
+    with ThreadPoolExecutor(args.workers) as pool:
+        list(pool.map(one, todo))
+    f.close()
+    wall = time.time() - t0
+    runs = load(STREAM / "judge_runs.jsonl") + [{"n": len(todo), "wall_seconds": round(wall, 1), "workers": args.workers}]
+    (STREAM / "judge_runs.jsonl").write_text("\n".join(json.dumps(x) for x in runs) + "\n")
+    print(f"judged {len(todo)} in {wall / 60:.1f} min ({60 * len(todo) / max(wall, 1):.1f} img/min)")
+
+
+def wilson(k: int, n: int, z: float = 1.96) -> list[float]:
+    if n == 0:
+        return [None, None]
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return [round(c - h, 3), round(c + h, 3)]
+
+
+def cmd_stream_score(args):
+    """Filter vs Qwen on the stream (Qwen = reference): confusion, precision, recall, prevalence, share sent,
+    real time factor with CIs; projection at 1 / 5 / 10 % prevalence from the measured TPR / FPR."""
+    import numpy as np
+
+    from harmwatch.cascade import confusion
+
+    F = np.load(STREAM / "stream_filter.npz")
+    fr = json.loads((STREAM / "filter_run.json").read_text())
+    judge = {r["sid"]: r for r in load(STREAM / "judge_v3.jsonl")}
+    runs = load(STREAM / "judge_runs.jsonl")
+    j_per_img = sum(r["wall_seconds"] for r in runs) / sum(r["n"] for r in runs)
+    f_per_img = fr["seconds_total"] / fr["images"]
+    rows = {r["sid"]: r for r in load(STREAM / "stream.jsonl")}
+    sids, scores = list(F["sids"]), F["scores"]
+    ok = [i for i, sid in enumerate(sids) if judge.get(sid) and judge[sid].get("error") is None and "sexual" in judge[sid]]
+    # possible_minor = escalation: it must reach the judge, so it counts as positive (sexual = True after the hard rule)
+    y = np.array([bool(judge[sids[i]]["sexual"]) for i in ok])
+    s = scores[ok]
+    out = {"n_stream": len(sids), "n_judged_ok": len(ok), "judge_errors": len(sids) - len(ok),
+           "possible_minor": sum(bool(judge[sids[i]].get("possible_minor")) for i in ok),
+           "prevalence": round(float(y.mean()), 4), "prevalence_ci95": wilson(int(y.sum()), len(y)),
+           "filter_seconds_per_image": round(f_per_img, 4), "judge_seconds_per_image": round(j_per_img, 3),
+           "by_subset": {}, "thresholds": {}}
+    from collections import Counter
+    for sub, n in Counter(rows[sids[i]]["subset"] for i in ok).items():
+        pos = sum(1 for i in ok if rows[sids[i]]["subset"] == sub and judge[sids[i]]["sexual"])
+        out["by_subset"][sub] = {"n": n, "judge_sexual": pos}
+    rng = np.random.default_rng(SEED)
+    for k, t in fr["thresholds"].items():
+        sent = s >= t
+        c = confusion(y, sent)
+        tp, fn, fp, tn = c["TP"], c["FN"], c["FP"], c["TN"]
+        speed = lambda sn: j_per_img / (f_per_img + sn * j_per_img)  # noqa: E731
+        boot = []
+        for _ in range(2000):
+            b = rng.integers(0, len(y), len(y))
+            boot.append(speed(float(sent[b].mean())))
+        tpr, fpr = tp / max(tp + fn, 1), fp / max(fp + tn, 1)
+        out["thresholds"][k] = {
+            **c, "recall_ci95": wilson(tp, tp + fn), "sent_fraction": round(float(sent.mean()), 4),
+            "sent_ci95": wilson(int(sent.sum()), len(sent)), "fpr": round(fpr, 4), "fpr_ci95": wilson(fp, fp + tn),
+            "real_time_factor": round(speed(float(sent.mean())), 2),
+            "real_time_factor_ci95": [round(float(np.percentile(boot, 2.5)), 2), round(float(np.percentile(boot, 97.5)), 2)],
+            "projection": {f"{int(p * 100)}%": {"sent": round(tpr * p + fpr * (1 - p), 3),
+                                                "speedup": round(speed(tpr * p + fpr * (1 - p)), 2),
+                                                "positives_lost_per_1000": round(1000 * p * (1 - tpr), 1)}
+                           for p in (0.01, 0.05, 0.10)},
+            "missed": [{"sid": sids[i], "subset": rows[sids[i]]["subset"], "score": round(float(scores[i]), 4),
+                        "judge_category": judge[sids[i]].get("category"), "judge_reason": judge[sids[i]].get("reason")}
+                       for i, ok_i in zip(ok, (~sent) & y) if ok_i]}
+    (RESULTS / "stream_metrics.json").write_text(json.dumps(out, indent=2))
+    c = out["thresholds"]["95"]
+    print(json.dumps({k: out[k] for k in ("n_judged_ok", "prevalence", "prevalence_ci95", "possible_minor", "by_subset",
+                                          "filter_seconds_per_image", "judge_seconds_per_image")}))
+    print(json.dumps({k: v for k, v in c.items() if k != "missed"}, indent=1))
+    print("missed:", len(c["missed"]))
+
+
+def cmd_filter_test(args):
+    """Frozen filter (best student, threshold for DEV recall 95 %) at ~10 % prevalence, from EXISTING embeddings and
+    labels only (no judge call): 120 benchmark images (hand-validated reference: 60 / 60) + the DEV negatives
+    (teacher labels, never used for training). Same measures on the 120 alone for comparison."""
+    import joblib
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from matplotlib.colors import LinearSegmentedColormap
+
+    from harmwatch.cascade import confusion
+
+    tm = json.loads((RESULTS / "train_metrics.json").read_text())
+    best = tm["best_student"]
+    info = tm["students"][best]
+    t = info["thresholds"]["95"]
+    clf = joblib.load(STUDENTS / f"{best}.joblib")
+    E = np.load(EMB)
+    feats_b = {"T": E["bench_text"], "I": E["bench_image"], "IT": np.concatenate([E["bench_image"], E["bench_text"]], 1)}
+    ref = {b["item_id"]: b for b in load(BENCH / "sv_images_v1.jsonl")}
+    bids = list(E["bench_ids"])
+    sb = clf.predict_proba(feats_b[info["kind"]])[:, 1]
+    yb = np.array([bool(ref[i]["reference"]["sexual"]) for i in bids])
+    feats, y, _, part, pids = training_table()
+    dev_neg = (part == "dev") & ~y
+    sd = clf.predict_proba(feats[info["kind"]][dev_neg])[:, 1]
+    fr = json.loads((STREAM / "filter_run.json").read_text()) if (STREAM / "filter_run.json").exists() else None
+    f_s = fr["seconds_total"] / fr["images"] if fr else json.loads((DATA / "embed_timing.json").read_text())["bench_seconds"] / 120
+    J = 1.51  # Qwen3.5-9B v3, seconds per image measured on the benchmark (8 parallel requests)
+
+    def measure(scores, labels, label):
+        sent = scores >= t
+        c = confusion(labels, sent)
+        tp, fn, fp, tn = c["TP"], c["FN"], c["FP"], c["TN"]
+        frac = float(sent.mean())
+        return {"set": label, "n": int(len(labels)), "positives": int(labels.sum()), "prevalence": round(float(labels.mean()), 3),
+                "positives_passed_TP": tp, "positives_blocked_FN": fn, "negatives_passed_FP": fp, "negatives_blocked_TN": tn,
+                "recall": c["recall"], "recall_ci95": wilson(tp, tp + fn),
+                "false_pass_rate": round(fp / max(fp + tn, 1), 3), "false_pass_rate_ci95": wilson(fp, fp + tn),
+                "sent_fraction": round(frac, 3), "sent_ci95": wilson(int(sent.sum()), len(sent)),
+                "time_per_image_cascade_s": round(f_s + frac * J, 3), "time_per_image_qwen_s": J,
+                "speedup": round(J / (f_s + frac * J), 2), "confusion": c}
+
+    s_all, y_all = np.concatenate([sb, sd]), np.concatenate([yb, np.zeros(len(sd), bool)])
+    out = {"student": best, "threshold_dev_recall_95": t, "filter_seconds_per_image": round(f_s, 4),
+           "judge_seconds_per_image": J,
+           "mix": measure(s_all, y_all, f"120 benchmark + {len(sd)} DEV negatives"),
+           "benchmark_only": measure(sb, yb, "120 benchmark"),
+           "blocked_positives": [{"item_id": i, "category": ref[i]["reference"]["category"],
+                                  "reason": ref[i]["reference"]["reason"], "score": round(float(v), 4)}
+                                 for i, v, yy in zip(bids, sb, yb) if yy and v < t]}
+    (RESULTS / "filter_test_10pct.json").write_text(json.dumps(out, indent=2))
+
+    INK, SURF = "#0b0b0b", "#fcfcfb"
+    cmap = LinearSegmentedColormap.from_list("b", ["#f4f8fd", "#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"])
+    fig, axes = plt.subplots(1, 2, figsize=(8, 3.6), facecolor=SURF)
+    for ax, key, title in zip(axes, ("mix", "benchmark_only"),
+                              (f"{out['mix']['n']} images · {out['mix']['prevalence'] * 100:.1f} % positive",
+                               "120 benchmark images · 50 % positive")):
+        m = out[key]
+        v = [[m["positives_passed_TP"], m["positives_blocked_FN"]], [m["negatives_passed_FP"], m["negatives_blocked_TN"]]]
+        vmax = max(max(r) for r in v)
+        ax.imshow(np.log1p(v), cmap=cmap, vmin=0, vmax=np.log1p(vmax))
+        for i, row in enumerate(v):
+            for j, val in enumerate(row):
+                tag = [["passed", "blocked"], ["passed", "blocked"]][i][j]
+                ax.text(j, i, f"{tag}\n{val}", ha="center", va="center", fontsize=12, fontweight="bold",
+                        color="#ffffff" if np.log1p(val) > 0.6 * np.log1p(vmax) else INK)
+        ax.set_xticks([0, 1], ["sent to Qwen", "blocked by filter"], fontsize=8)
+        ax.set_yticks([0, 1], ["sexual (60)", f"not sexual ({m['n'] - 60})"], fontsize=8, rotation=90, va="center")
+        ax.set_title(f"{title}\nrecall {m['recall']:.3f} · sent {m['sent_fraction'] * 100:.0f} % · x{m['speedup']}",
+                     fontsize=9, loc="left", fontweight="bold")
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+    fig.text(0.01, -0.02, "Filter I_logreg, threshold frozen on DEV (recall 95 %). Colour = log count. "
+             "DEV negatives labelled by Qwen (not checked by hand).", fontsize=7, color="#52514e")
+    fig.tight_layout()
+    fig.savefig(ROOT / "docs" / "figures" / "cascade_filter_10pct_confusion.png", dpi=160, bbox_inches="tight",
+                facecolor=SURF)
+    plt.close(fig)
+    for k in ("mix", "benchmark_only"):
+        m = out[k]
+        print(k, {x: m[x] for x in ("n", "prevalence", "positives_passed_TP", "positives_blocked_FN", "negatives_passed_FP",
+                                    "negatives_blocked_TN", "recall", "recall_ci95", "false_pass_rate",
+                                    "false_pass_rate_ci95", "sent_fraction", "speedup")})
+    print("blocked positives:", out["blocked_positives"], "· filter s/img", out["filter_seconds_per_image"])
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -557,9 +869,18 @@ def main():
     sub.add_parser("train")
     sub.add_parser("evaluate")
     sub.add_parser("figures")
+    sub.add_parser("stream-build")
+    sub.add_parser("stream-filter")
+    sj = sub.add_parser("stream-judge")
+    sj.add_argument("--api-model", default="qwen3.5-9b")
+    sj.add_argument("--workers", type=int, default=8)
+    sub.add_parser("stream-score")
+    sub.add_parser("filter-test")
     args = ap.parse_args()
     {"pool": cmd_pool, "label": cmd_label, "label-report": cmd_label_report, "embed": cmd_embed, "train": cmd_train,
-     "evaluate": cmd_evaluate, "figures": cmd_figures}[args.cmd](args)
+     "evaluate": cmd_evaluate, "figures": cmd_figures, "stream-build": cmd_stream_build,
+     "stream-filter": cmd_stream_filter, "stream-judge": cmd_stream_judge, "stream-score": cmd_stream_score,
+     "filter-test": cmd_filter_test}[args.cmd](args)
 
 
 if __name__ == "__main__":
