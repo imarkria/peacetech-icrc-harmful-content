@@ -1,13 +1,14 @@
-"""Load the synthetic sample posts into the database and classify them.
+"""Run the synthetic sample posts through intake (duplicate groups + judge), like collected posts.
 
     python -m harmwatch.seed
 """
 
 import json
+from collections import Counter
 from pathlib import Path
 
-from harmwatch import db
-from harmwatch.pipeline import classify_pending
+from harmwatch.detections import db_path
+from harmwatch.intake import Post, ingest
 
 SAMPLES = Path(__file__).resolve().parent.parent / "samples" / "sample_posts.json"
 
@@ -17,16 +18,15 @@ def load_samples() -> list[dict]:
 
 
 def main():
-    with db.connect() as conn:
-        added = 0
-        for p in load_samples():
-            post_id = db.add_post(
-                conn, source="sample", text=p["text"], channel=p["channel"], side=p["side"],
-                url=f"https://example.org/samples/{p['id']}", views=p["views"], forwards=p["forwards"],
-            )
-            added += post_id is not None
-        print(f"Added {added} sample posts. Classifying…")
-        print(f"Classified {classify_pending(conn)} posts. Database: {db.DB_PATH}")
+    stats = Counter()
+    for p in load_samples():
+        post = Post(platform="sample", post_id=p["id"], text=p["text"], reach=p["views"],
+                    url=f"https://example.org/samples/{p['id']}")
+        result = ingest(post, source="sample")
+        stats["new" if result.new else "already seen"] += 1
+        if result.detection:
+            stats[result.detection["route"]] += 1
+    print(", ".join(f"{k} {v}" for k, v in stats.items()) + f". Database: {db_path()}")
 
 
 if __name__ == "__main__":

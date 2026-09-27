@@ -1,47 +1,35 @@
-from harmwatch import db, publish
-from harmwatch.schema import Classification
-from harmwatch.triage import ESCALATE, HARMFUL, NOT_HARMFUL, POTENTIAL
+import json
+
+from harmwatch import publish
 
 
-def _classification(**overrides) -> Classification:
-    data = dict(harm_types=["threat_incitement"], tone="serious", claim_status="no_claim", victims=["group"],
-                harm_potential=3, confidence="high", summary="Threat against a group.", rationale="Future tense.")
-    return Classification(**(data | overrides))
-
-
-def _item(**overrides) -> dict:
-    data = dict(id=7, url="https://t.me/chan/1", source="telegram", bucket=HARMFUL,
-                classified_at="2026-09-27T10:00:00+00:00", result=_classification(), text="raw post text")
+def row(**overrides):
+    data = dict(id=7, group_key="g-1", url="https://t.me/chan/1", source="telegram", route="priority_review",
+                priority="high", category="threat_incitement", summary="Threat against a group.",
+                sexual_violence=None, sexual_harassment=None, created_at="2026-09-27T10:00:00+00:00",
+                full_result_json=json.dumps({"confidence": "high"}))
     return data | overrides
 
 
-def test_payload_carries_summary_not_post_text():
-    payload = publish.to_detection(_item())
-    assert payload["external_id"] == "7"
-    assert payload["predicted_category"] == "sexual_violence"
-    assert payload["confidence"] == 0.9
-    assert payload["source"] == "SCRAP"
-    assert "Threat against a group." in payload["context"]
-    assert "raw post text" not in payload["context"]
+def test_payload():
+    p = publish.to_detection(row())
+    assert p["external_id"] == "s7" and p["group_key"] == "g-1" and p["priority"] == "high"
+    assert p["confidence"] == 0.9 and p["source"] == "SCRAP"
+    assert p["context"] == "Priority review (threat_incitement). Threat against a group."
 
 
-def test_volunteer_posts_are_public_reports():
-    assert publish.to_detection(_item(source="volunteer"))["source"] == "PUBLIC"
+def test_local_judge_probability_is_used_when_available():
+    assert publish.to_detection(row(full_result_json=json.dumps({"p_sexual": 0.8731})))["confidence"] == 0.873
 
 
-def test_posts_without_web_link_are_skipped():
-    assert publish.to_detection(_item(url=None)) is None
-    assert publish.to_detection(_item(url="sample://s01")) is None
+def test_community_sightings_are_public_reports():
+    assert publish.to_detection(row(source="telegram_bot"))["source"] == "PUBLIC"
 
 
-def test_escalated_and_not_harmful_posts_are_never_published(tmp_path, monkeypatch):
-    monkeypatch.setattr(db, "DB_PATH", tmp_path / "hw.db")
-    conn = db.connect()
-    for n, bucket in enumerate([HARMFUL, POTENTIAL, ESCALATE, NOT_HARMFUL]):
-        post_id = db.add_post(conn, source="telegram", text=f"post {n}", channel="c", url=f"https://t.me/c/{n}")
-        db.save_classification(conn, post_id, "keywords", _classification(), bucket, 1.0)
-    assert {i["bucket"] for i in db.unpublished(conn, publish.PUBLISHED_BUCKETS)} == {HARMFUL, POTENTIAL}
+def test_explicit_media_warns_the_reviewer():
+    p = publish.to_detection(row(route="explicit_alert", priority="urgent", summary=None, category=None))
+    assert "Do not open the link without precautions" in p["context"]
 
-    first = db.unpublished(conn, publish.PUBLISHED_BUCKETS)[0]
-    db.mark_published(conn, first["id"], "hw-1")
-    assert len(db.unpublished(conn, publish.PUBLISHED_BUCKETS)) == 1
+
+def test_sightings_without_web_link_are_skipped():
+    assert publish.to_detection(row(url=None)) is None

@@ -11,3 +11,5 @@ openai>=1.50
 imagehash       # harmwatch/cascade.py
 matplotlib      # scripts/make_*.py
 pytest
+apify-client     # harmwatch/social.py
+httpx            # media downloads
