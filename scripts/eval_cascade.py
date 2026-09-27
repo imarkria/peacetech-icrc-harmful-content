@@ -295,43 +295,71 @@ def training_table():
     return feats, y, yd, part, [r["pid"] for r in rows]
 
 
+BUDGET = 0.5  # "reasonable" operating point: at most half of the images sent to the judge
+MIN_DEV_RECALL = 0.90
+
+
 def cmd_train(args):
+    """Students T / I / IT × (logreg, MLP) × balancing (class weights vs 50/50 undersampling), regularisation by CV on
+    TRAIN only; the balancing option is chosen on DEV (AUROC, then recall at the 50 % budget); thresholds for recall
+    95 / 97 / 99 % vs the teacher on DEV. The benchmark is never touched here."""
     import joblib
     import numpy as np
     from sklearn.metrics import roc_auc_score
 
-    from harmwatch.cascade import threshold_for_recall, train_student
+    from harmwatch.cascade import recall_at_budget, threshold_for_recall, train_student
 
     feats, y, yd, part, _ = training_table()
     tr, dv = part == "train", part == "dev"
     STUDENTS.mkdir(parents=True, exist_ok=True)
-    out = {"n_train": int(tr.sum()), "n_dev": int(dv.sum()), "teacher_positive_rate_train": round(float(y[tr].mean()), 3),
-           "students": {}}
+    out = {"n_train": int(tr.sum()), "n_dev": int(dv.sum()), "teacher_positive_train": int(y[tr].sum()),
+           "teacher_positive_dev": int(y[dv].sum()), "budget": BUDGET, "candidates": {}, "students": {}}
     for kind in KINDS:
         for model in ("logreg", "mlp"):
-            for target_name, target in (("teacher", y), ("dataset", yd)):
-                if target_name == "dataset" and model == "mlp":
-                    continue
-                name = f"{kind}_{model}" + ("" if target_name == "teacher" else "_datasetlabels")
+            best = None
+            for balance in ("weight", "undersample"):
                 t0 = time.time()
-                clf = train_student(feats[kind][tr], target[tr], model)
-                fit_s = time.time() - t0
+                clf, info = train_student(feats[kind][tr], y[tr], model, balance)
                 s = clf.predict_proba(feats[kind][dv])[:, 1]
-                # thresholds always chosen against the TEACHER on DEV (the cascade must keep the judge's positives)
-                th = {f"{int(t * 100)}": threshold_for_recall(s, y[dv], t) for t in TARGETS}
-                out["students"][name] = {
-                    "kind": kind, "model": model, "target": target_name, "fit_seconds": round(fit_s, 1),
-                    "dev_auroc_vs_teacher": round(roc_auc_score(y[dv], s), 3),
-                    "thresholds": th,
-                    "dev_sent_fraction": {k: round(float((s >= v).mean()), 3) for k, v in th.items()},
-                }
-                joblib.dump(clf, STUDENTS / f"{name}.joblib")
-                print(name, out["students"][name]["dev_auroc_vs_teacher"], out["students"][name]["dev_sent_fraction"], flush=True)
+                auroc = roc_auc_score(y[dv], s)
+                rec_budget, _ = recall_at_budget(s, y[dv], BUDGET)
+                cand = {"balance": balance, **info, "fit_seconds": round(time.time() - t0, 1),
+                        "dev_auroc_vs_teacher": round(auroc, 3), "dev_recall_at_budget": round(rec_budget, 3)}
+                out["candidates"][f"{kind}_{model}_{balance}"] = cand
+                if best is None or (auroc, rec_budget) > (best[1]["dev_auroc_vs_teacher"], best[1]["dev_recall_at_budget"]):
+                    best = (clf, cand, s)
+            clf, cand, s = best
+            name = f"{kind}_{model}"
+            th = {f"{int(t * 100)}": threshold_for_recall(s, y[dv], t) for t in TARGETS}
+            out["students"][name] = {"kind": kind, "model": model, "target": "teacher", **cand, "thresholds": th,
+                                     "dev_sent_fraction": {k: round(float((s >= v).mean()), 3) for k, v in th.items()}}
+            joblib.dump(clf, STUDENTS / f"{name}.joblib")
+            print(name, cand["balance"], cand["best_params"], "AUROC", cand["dev_auroc_vs_teacher"],
+                  "recall@50%", cand["dev_recall_at_budget"], "sent", out["students"][name]["dev_sent_fraction"], flush=True)
+    # bonus (d): the same student trained on the DATASET labels (misogynous / hateful) instead of the teacher
+    for kind in KINDS:
+        clf, info = train_student(feats[kind][tr], yd[tr], "logreg", "weight")
+        s = clf.predict_proba(feats[kind][dv])[:, 1]
+        th = {f"{int(t * 100)}": threshold_for_recall(s, y[dv], t) for t in TARGETS}  # still measured vs the teacher
+        out["students"][f"{kind}_logreg_datasetlabels"] = {
+            "kind": kind, "model": "logreg", "target": "dataset", "balance": "weight", **info, "thresholds": th,
+            "dev_auroc_vs_teacher": round(roc_auc_score(y[dv], s), 3),
+            "dev_recall_at_budget": round(recall_at_budget(s, y[dv], BUDGET)[0], 3),
+            "dev_sent_fraction": {k: round(float((s >= v).mean()), 3) for k, v in th.items()}}
+        joblib.dump(clf, STUDENTS / f"{kind}_logreg_datasetlabels.joblib")
+    teacher_students = {k: v for k, v in out["students"].items() if v["target"] == "teacher"}
+    best_name = max(teacher_students, key=lambda k: (teacher_students[k]["dev_auroc_vs_teacher"],
+                                                     teacher_students[k]["dev_recall_at_budget"]))
+    out["best_student"] = best_name
+    out["stop"] = teacher_students[best_name]["dev_recall_at_budget"] < MIN_DEV_RECALL
     (RESULTS / "train_metrics.json").write_text(json.dumps(out, indent=2))
+    print(f"best student: {best_name} · DEV recall at {int(BUDGET * 100)} % sent = "
+          f"{teacher_students[best_name]['dev_recall_at_budget']}" + ("  → STOP (< 90 %)" if out["stop"] else ""))
 
 
 def cmd_evaluate(args):
-    """Benchmark sv_images_v1 (reference validated by hand): students alone, simulated cascade, judge alone."""
+    """Benchmark sv_images_v1 (reference validated by hand), never used before this step: students alone, simulated
+    cascade with the v3 AND v1 judge predictions already computed (no new judge run), judge alone."""
     import joblib
     import matplotlib
 
@@ -348,62 +376,172 @@ def cmd_evaluate(args):
     feats = {"T": E["bench_text"], "I": E["bench_image"], "IT": np.concatenate([E["bench_image"], E["bench_text"]], 1)}
     ref = {b["item_id"]: b["reference"] for b in load(BENCH / "sv_images_v1.jsonl")}
     yref = np.array([bool(ref[i]["sexual"]) for i in ids])
-    v3 = {p["item_id"]: p for p in load(ROOT / "results" / "sv_benchmark_v3" / "qwen35-9b" / "image_text" / "predictions.jsonl")}
-    judge = np.array([bool(v3[i]["prediction"]["sexual"]) for i in ids])
-    v3_info = json.loads((ROOT / "results" / "sv_benchmark_v3" / "qwen35-9b" / "image_text" / "run_info.json").read_text())
-    judge_s_per_img = v3_info["total_seconds"] / v3_info["n_items"]  # measured, 8 parallel requests
+    judges = {}
+    for pv, folder in (("v3", "sv_benchmark_v3"), ("v1", "sv_benchmark")):
+        d = ROOT / "results" / folder / "qwen35-9b" / "image_text"
+        preds = {p["item_id"]: p for p in load(d / "predictions.jsonl")}
+        info = json.loads((d / "run_info.json").read_text())
+        judges[pv] = {"decision": np.array([bool(preds[i]["prediction"]["sexual"]) for i in ids]),
+                      "s_per_img": info["total_seconds"] / info["n_items"]}
     tm = json.loads((RESULTS / "train_metrics.json").read_text())
     timing = json.loads((DATA / "embed_timing.json").read_text())
-    emb_s_per_img = timing["bench_seconds"] / timing["bench_n"]  # text + image embeddings, measured on the benchmark
-    m = {"judge_alone_v3": {**confusion(yref, judge), "seconds_per_image": round(judge_s_per_img, 3),
-                            "note": "v3 was tuned after analysing this set: indicative"},
-         "embedding_seconds_per_image": round(emb_s_per_img, 4), "students": {}}
-    RESULTS.mkdir(parents=True, exist_ok=True)
+    emb_s = timing["bench_seconds"] / timing["bench_n"]
+    m = {"judge_alone": {pv: {**confusion(yref, j["decision"]), "seconds_per_image": round(j["s_per_img"], 3)}
+                         for pv, j in judges.items()},
+         "embedding_seconds_per_image": round(emb_s, 4), "students": {}, "best_student": tm["best_student"]}
     curves = {}
     for name, info in tm["students"].items():
         clf = joblib.load(STUDENTS / f"{name}.joblib")
         t0 = time.time()
         s = clf.predict_proba(feats[info["kind"]])[:, 1]
         clf_s = (time.time() - t0) / len(ids)
-        st = {"auroc_vs_reference": round(roc_auc_score(yref, s), 3), "target": info["target"],
-              "throughput_images_per_s": round(1 / (emb_s_per_img + clf_s), 1), "alone": {}, "cascade": {}}
+        per_img = emb_s + clf_s
+        st = {"target": info["target"], "auroc_vs_reference": round(roc_auc_score(yref, s), 3),
+              "seconds_per_image": round(per_img, 4), "images_per_second": round(1 / per_img, 1),
+              "alone": {}, "cascade": {pv: {} for pv in judges}}
         for k, t in info["thresholds"].items():
             st["alone"][k] = confusion(yref, s >= t)
-            pred, sent = cascade(s, t, judge)
-            est = len(ids) * (emb_s_per_img + clf_s) + sent.sum() * judge_s_per_img
-            st["cascade"][k] = {**confusion(yref, pred), "sent_fraction": round(float(sent.mean()), 3),
-                                "reference_positives_lost_by_filter": int((yref & ~sent).sum()),
-                                "judge_positives_lost_by_filter": int((judge & ~sent).sum()),
-                                "estimated_seconds": round(est, 1),
-                                "judge_alone_seconds": round(len(ids) * judge_s_per_img, 1),
-                                "speedup": round(len(ids) * judge_s_per_img / est, 2)}
-            if name in ("T_logreg", "I_logreg", "IT_logreg") and k == "95":
-                save_matrix(RESULTS / f"confusion_cascade_{name}_{k}", st["cascade"][k], f"cascade {name} @ recall {k} % (DEV)")
-                save_matrix(RESULTS / f"confusion_student_{name}_{k}", st["alone"][k], f"student {name} alone @ {k} %")
-        order = np.argsort(-s)
-        curves[name] = [(float(sent), float((yref & (s >= s[order[j]])).sum() / yref.sum()))
-                        for j, sent in enumerate(np.arange(1, len(ids) + 1) / len(ids))]
+            for pv, j in judges.items():
+                pred, sent = cascade(s, t, j["decision"])
+                est = len(ids) * per_img + sent.sum() * j["s_per_img"]
+                st["cascade"][pv][k] = {**confusion(yref, pred), "sent_fraction": round(float(sent.mean()), 3),
+                                        "sent_n": int(sent.sum()),
+                                        "reference_positives_lost_by_filter": int((yref & ~sent).sum()),
+                                        "judge_positives_lost_by_filter": int((j["decision"] & ~sent).sum()),
+                                        "estimated_seconds": round(est, 1),
+                                        "judge_alone_seconds": round(len(ids) * j["s_per_img"], 1),
+                                        "speedup": round(len(ids) * j["s_per_img"] / est, 2)}
+        order = np.sort(s)[::-1]
+        curves[name] = [(float((s >= t).mean()), float((yref & (s >= t)).sum() / yref.sum())) for t in order]
         st["scores"] = {i: round(float(v), 4) for i, v in zip(ids, s)}
         m["students"][name] = st
-    save_matrix(RESULTS / "confusion_judge_alone_v3", m["judge_alone_v3"], "Qwen3.5-9B v3 alone (indicative)")
-    fig, ax = plt.subplots(figsize=(5, 4))
-    for name in ("T_logreg", "I_logreg", "IT_logreg"):
-        xs, ys = zip(*curves[name])
-        ax.plot(xs, ys, label=name.replace("_logreg", ""))
-    ax.set_xlabel("fraction of images sent to the judge")
-    ax.set_ylabel("recall of confirmed sexual images (benchmark)")
-    ax.axhline(0.95, ls="--", lw=0.8, color="grey")
-    ax.set_title("student filter: recall vs share sent to Qwen", fontsize=9)
-    ax.legend(fontsize=8)
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    best = tm["best_student"]
+    for pv in judges:
+        save_matrix(RESULTS / f"confusion_judge_alone_{pv}", m["judge_alone"][pv], f"Qwen3.5-9B alone · prompt {pv}")
+        for k in ("95", "97", "99"):
+            save_matrix(RESULTS / f"confusion_cascade_{best}_{pv}_{k}", m["students"][best]["cascade"][pv][k],
+                        f"cascade {best} → Qwen {pv} · DEV recall {k} %")
+    for k in ("95", "97", "99"):
+        save_matrix(RESULTS / f"confusion_student_{best}_{k}", m["students"][best]["alone"][k], f"student {best} alone · {k} %")
+    fig, ax = plt.subplots(figsize=(5.5, 4))
+    for i, name in enumerate(("T_logreg", "I_logreg", "IT_logreg")):
+        if name in curves:
+            xs, ys = zip(*curves[name])
+            ax.plot(xs, ys, lw=2, color=["#2a78d6", "#eb6834", "#1baf7a"][i], label=name.split("_")[0])
+    ax.axhline(0.95, ls="--", lw=0.8, color="#8a8984")
+    ax.set_xlabel("share of benchmark images sent to the judge")
+    ax.set_ylabel("recall of confirmed sexual images")
+    ax.set_title("Student filter on sv_images_v1: recall vs share sent", fontsize=9, loc="left")
+    ax.legend(fontsize=8, frameon=False)
     fig.tight_layout()
-    fig.savefig(RESULTS / "threshold_curve.png", dpi=120)
+    fig.savefig(RESULTS / "threshold_curve.png", dpi=140)
     plt.close(fig)
     (RESULTS / "metrics.json").write_text(json.dumps(m, indent=2))
     for name, st in m["students"].items():
-        c = st["cascade"]["95"]
-        print(f"{name:<28} AUROC {st['auroc_vs_reference']} | alone@95 F1 {st['alone']['95']['f1']} | cascade@95 F1 {c['f1']} "
-              f"sent {c['sent_fraction']} lost(ref) {c['reference_positives_lost_by_filter']} speedup x{c['speedup']} "
-              f"| {st['throughput_images_per_s']} img/s")
+        for pv in ("v3", "v1"):
+            c = st["cascade"][pv]["95"]
+            print(f"{name:<26} {pv} AUROC {st['auroc_vs_reference']} | alone@95 F1 {st['alone']['95']['f1']} | cascade@95 "
+                  f"F1 {c['f1']} sent {c['sent_fraction']} lost {c['reference_positives_lost_by_filter']} x{c['speedup']} "
+                  f"| {st['images_per_second']} img/s")
+
+
+def cmd_figures(args):
+    """Three figures for docs/RESULTS_CASCADE.md (from results/cascade/*.json only; no dataset image)."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    SURF, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e0"
+    SER = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]
+    plt.rcParams.update({"figure.facecolor": SURF, "axes.facecolor": SURF, "savefig.facecolor": SURF, "font.size": 9,
+                         "axes.edgecolor": GRID, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2,
+                         "axes.spines.top": False, "axes.spines.right": False, "axes.titlelocation": "left",
+                         "axes.titleweight": "bold", "legend.frameon": False})
+    m = json.loads((RESULTS / "metrics.json").read_text())
+    proj = json.loads((RESULTS / "prevalence_projection.json").read_text())
+    best = m["best_student"]
+    ref = {b["item_id"]: b["reference"]["sexual"] for b in load(BENCH / "sv_images_v1.jsonl")}
+    out = ROOT / "docs" / "figures"
+    out.mkdir(parents=True, exist_ok=True)
+
+    # 1. confusion: Qwen v3 alone vs cascade (best student @ DEV recall 95 %)
+    from matplotlib.colors import LinearSegmentedColormap
+    cmap = LinearSegmentedColormap.from_list("b", ["#f4f8fd", "#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"])
+    mats = [("Qwen3.5-9B alone (prompt v3)", m["judge_alone"]["v3"]),
+            (f"Cascade: {best} → Qwen v3 (95 %)", m["students"][best]["cascade"]["v3"]["95"])]
+    fig, axes = plt.subplots(1, 2, figsize=(7.4, 3.4))
+    for ax, (title, c) in zip(axes, mats):
+        v = [[c["TP"], c["FN"]], [c["FP"], c["TN"]]]
+        ax.imshow(v, cmap=cmap, vmin=0, vmax=60)
+        for i, (row, tags) in enumerate(zip(v, (("TP", "FN"), ("FP", "TN")))):
+            for j, (val, tag) in enumerate(zip(row, tags)):
+                ax.text(j, i, f"{tag}\n{val}", ha="center", va="center", fontsize=13, fontweight="bold",
+                        color="#ffffff" if val > 33 else INK)
+        ax.set_xticks([0, 1], ["pred: sexual", "pred: not sexual"], fontsize=8)
+        ax.set_yticks([0, 1], ["ref: sexual", "ref: not"], fontsize=8, rotation=90, va="center")
+        ax.set_title(f"{title}\nF1 {c['f1']:.3f}", fontsize=9)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+    fig.tight_layout()
+    fig.savefig(out / "cascade_confusion_qwen_vs_cascade.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+    # 2. recall vs share sent to the judge (benchmark), three students, operating points marked
+    fig, ax = plt.subplots(figsize=(6, 4))
+    for k, name in enumerate(("T_logreg", "I_logreg", "IT_logreg")):
+        sc = m["students"][name]["scores"]
+        ids = list(sc)
+        s, y = np.array([sc[i] for i in ids]), np.array([ref[i] for i in ids])
+        ts = np.sort(s)[::-1]
+        xs = [(s >= t).mean() for t in ts]
+        ys = [(y & (s >= t)).sum() / y.sum() for t in ts]
+        ax.plot(xs, ys, lw=2, color=SER[k], label={"T": "T (text)", "I": "I (image)", "IT": "I+T"}[name.split("_")[0]])
+    for k, off in zip(("95", "97", "99"), ((-30, -22), (-4, -34), (-10, -22))):
+        c = m["students"][best]["cascade"]["v3"][k]
+        rec = (60 - c["reference_positives_lost_by_filter"]) / 60
+        ax.scatter([c["sent_fraction"]], [rec], s=70, color=SER[1], edgecolor=SURF, linewidth=2, zorder=5)
+        ax.annotate(f"{k} %", (c["sent_fraction"], rec), xytext=off, textcoords="offset points", fontsize=8,
+                    color=INK2, arrowprops={"arrowstyle": "-", "color": GRID, "lw": 0.8})
+    ax.plot([0.5, 0.5], [0, 1.02], ls=":", lw=1, color=INK2)
+    ax.text(0.505, 0.3, "50 % of the benchmark\nis positive", fontsize=7, color=INK2)
+    ax.text(0.02, 0.93, f"dots: {best} at DEV recall 95 / 97 / 99 %", fontsize=7, color=INK2)
+    ax.set_xlim(0, 1.0)
+    ax.set_ylim(0, 1.02)
+    ax.grid(color=GRID)
+    ax.set_xlabel("share of images sent to the judge")
+    ax.set_ylabel("recall of confirmed sexual images")
+    ax.set_title("Student filter on sv_images_v1 (120 images)")
+    ax.legend(loc="lower right", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(out / "cascade_recall_vs_sent.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+    # 3. time per image
+    J = m["judge_alone"]["v3"]["seconds_per_image"]
+    c95 = m["students"][best]["cascade"]["v3"]["95"]
+    bars = [("student filter only", m["students"][best]["seconds_per_image"]),
+            ("Qwen3.5-9B on every image", J),
+            ("cascade · benchmark (50 % positive)", c95["estimated_seconds"] / 120),
+            ("cascade · projected at 5 % prevalence", J / proj["95"]["prev_0.05"]["speedup"])]
+    fig, ax = plt.subplots(figsize=(6.6, 2.8))
+    ys = list(range(len(bars)))[::-1]
+    for yi, (lab, v), col in zip(ys, bars, [SER[2], SER[0], SER[1], SER[1]]):
+        ax.barh(yi, v, color=col, height=0.55, edgecolor=SURF, linewidth=2)
+        ax.text(v + 0.03, yi, f"{v:.3f} s", va="center", fontsize=8, color=INK)
+    ax.set_yticks(ys, [b[0] for b in bars])
+    ax.set_xlim(0, J * 1.25)
+    ax.grid(axis="x", color=GRID)
+    ax.set_xlabel("seconds per image (V100, 8 parallel judge requests)")
+    ax.set_title("Time per image")
+    fig.text(0.01, -0.05, "Projection = DEV false-positive rate of the filter (41 %) applied at 5 % prevalence; not measured.",
+             fontsize=7, color=INK2)
+    fig.tight_layout()
+    fig.savefig(out / "cascade_time_per_image.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    print("figures written to", out)
 
 
 def main():
@@ -418,9 +556,10 @@ def main():
     em.add_argument("--keep-images", action="store_true", help="debug only: do not delete the pool images")
     sub.add_parser("train")
     sub.add_parser("evaluate")
+    sub.add_parser("figures")
     args = ap.parse_args()
     {"pool": cmd_pool, "label": cmd_label, "label-report": cmd_label_report, "embed": cmd_embed, "train": cmd_train,
-     "evaluate": cmd_evaluate}[args.cmd](args)
+     "evaluate": cmd_evaluate, "figures": cmd_figures}[args.cmd](args)
 
 
 if __name__ == "__main__":

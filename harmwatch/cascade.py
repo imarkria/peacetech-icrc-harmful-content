@@ -106,18 +106,45 @@ def features(kind: str, text_emb: np.ndarray, image_emb: np.ndarray) -> np.ndarr
 
 # --- students and thresholds ------------------------------------------------------------------------------------
 
-def train_student(X: np.ndarray, y: np.ndarray, kind: str = "logreg", seed: int = 42):
-    """Binary student on the teacher's decision (`y` in {0,1}); returns a fitted sklearn pipeline."""
+def train_student(X: np.ndarray, y: np.ndarray, kind: str = "logreg", balance: str = "weight", seed: int = 42,
+                  cv_folds: int = 5):
+    """Binary student on the teacher's decision (`y` in {0,1}); returns (fitted pipeline, info).
+
+    balance = "weight" (class_weight="balanced") or "undersample" (negatives randomly reduced to 50/50).
+    The regularisation (C for logistic regression, alpha for the MLP) is chosen by stratified cross-validation
+    (ROC AUC) on the data passed in, i.e. on the TRAINING part only.
+    """
     from sklearn.linear_model import LogisticRegression
+    from sklearn.model_selection import GridSearchCV, StratifiedKFold
     from sklearn.neural_network import MLPClassifier
-    from sklearn.pipeline import make_pipeline
+    from sklearn.pipeline import Pipeline
     from sklearn.preprocessing import StandardScaler
 
+    if balance == "undersample":
+        rng = np.random.default_rng(seed)
+        pos, neg = np.flatnonzero(y == 1), np.flatnonzero(y == 0)
+        keep = np.concatenate([pos, rng.choice(neg, size=min(len(neg), len(pos)), replace=False)])
+        X, y = X[keep], y[keep]
+    cw = "balanced" if balance == "weight" else None
     if kind == "logreg":
-        clf = LogisticRegression(C=0.5, max_iter=5000, class_weight="balanced", random_state=seed)
-    else:
-        clf = MLPClassifier(hidden_layer_sizes=(256,), alpha=1e-3, early_stopping=True, max_iter=300, random_state=seed)
-    return make_pipeline(StandardScaler(), clf).fit(X, y)
+        est = LogisticRegression(max_iter=5000, class_weight=cw, random_state=seed)
+        grid = {"clf__C": [1e-4, 3e-4, 1e-3, 3e-3, 1e-2, 0.1, 1.0]}
+    else:  # MLP has no class_weight: weighting falls back to plain training on the (possibly undersampled) set
+        est = MLPClassifier(hidden_layer_sizes=(256,), early_stopping=True, max_iter=300, random_state=seed)
+        grid = {"clf__alpha": [1e-4, 1e-3, 1e-2]}
+    pipe = Pipeline([("scale", StandardScaler()), ("clf", est)])
+    search = GridSearchCV(pipe, grid, scoring="roc_auc", cv=StratifiedKFold(cv_folds, shuffle=True, random_state=seed),
+                          n_jobs=4)
+    search.fit(X, y)
+    return search.best_estimator_, {"best_params": search.best_params_, "cv_auroc": round(float(search.best_score_), 3),
+                                    "n_fit": int(len(y)), "positives_fit": int(y.sum())}
+
+
+def recall_at_budget(scores: np.ndarray, y: np.ndarray, max_sent: float) -> tuple[float, float]:
+    """Best recall reachable when at most `max_sent` of the items are sent to the judge; returns (recall, threshold)."""
+    t = float(np.quantile(scores, 1 - max_sent))
+    sent = scores >= t
+    return float((sent & (y == 1)).sum() / max((y == 1).sum(), 1)), t
 
 
 def threshold_for_recall(scores: np.ndarray, y: np.ndarray, target: float) -> float:
