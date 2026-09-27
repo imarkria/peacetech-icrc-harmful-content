@@ -59,7 +59,7 @@ Every queue item is a `detected_links` row with a `source` (lane) and a `priorit
 | Source | Lane | Enters through | Status on arrival |
 | --- | --- | --- | --- |
 | `SCRAP` | Detection by harmwatch (Apify, Telegram collector) | `POST /api/detections` | `PENDING`, priority from the model |
-| `PUBLIC` | Broader local community, anonymous (web form, extension, Telegram bot) | `POST /api/reports`, or harmwatch for the bot | `SCREENING` while `INGEST_TOKEN` is set, else `PENDING` |
+| `PUBLIC` | Community, anonymous (web form, extension, Telegram bot) | `POST /api/reports`, or harmwatch for the bot | `SCREENING` while `INGEST_TOKEN` is set, else `PENDING` |
 | `VOLUNTEER` | Trained volunteers with an account | `POST /api/volunteer/reports` | `PENDING`, `high` or `urgent` |
 
 Community reports in `SCREENING` wait for `python -m harmwatch.screen`, which fetches the post, judges it and answers with an outcome: `flagged` (queue, model priority), `not_flagged` (queue, priority `none`: human reports are never dropped), `unavailable` (queue, marked "not screened") or `restricted` (`RESTRICTED`: never listed or shown, notes erased). A report still waiting after `SCREENING_TIMEOUT_MINUTES` reaches the queue unscreened. A volunteer report of the same content ends the wait.
