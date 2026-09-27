@@ -10,6 +10,7 @@ Nothing line-by-line is written. A number that was not measured is written "not 
 
 import csv
 import json
+import os
 import shutil
 import zipfile
 from pathlib import Path
@@ -40,6 +41,7 @@ plt.rcParams.update({"figure.facecolor": SURF, "axes.facecolor": SURF, "savefig.
                      "axes.spines.top": False, "axes.spines.right": False, "legend.frameon": False,
                      "axes.grid": True, "grid.color": GRID, "axes.axisbelow": True})
 CREATED: list[Path] = []
+SHOWN: list[dict] = []  # every value printed on a bar chart
 
 
 def J(p: Path):
@@ -122,36 +124,40 @@ def part_images(R, T):
     save(fig, "images_4models_confusions", "sv_images_v1 (60 sexual / 60 not sexual, hand-validated), prompt v1 frozen, "
          "image + text. Same colour scale (0-60) in all four panels.")
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 3.8), sharey=True)
-    yy = list(range(len(rows)))[::-1]
-    for ax, key, ci, title in ((axes[0], "f1", "f1_ci", "F1 · sexual character [95 % CI]"),
-                               (axes[1], "auroc", "auroc_ci", "AUROC · P(sexual) from logprobs [95 % CI]")):
-        for y, r, c in zip(yy, rows, SER):
-            ax.plot(r[ci], [y, y], color=c, lw=3, solid_capstyle="round", alpha=0.55)
-            ax.scatter([r[key]], [y], s=110, color=c, edgecolor=SURF, linewidth=2, zorder=3)
-            ax.text(r[ci][1] + 0.004, y, f"{r[key]:.3f}", va="center", fontsize=10)
-        ax.set_yticks(yy, [r["label"] for r in rows])
-        ax.set_xlim(0.8, 1.02)
-        ax.set_title(title)
-        ax.grid(axis="y", visible=False)
-    save(fig, "images_4models_f1_auroc_ci", "Bootstrap 95 % CIs (2 000 resamples of the 120 images). Axes start at 0.80. "
+    fig, ax = plt.subplots(figsize=(11, 4.6))
+    bars(ax, [r["label"] for r in rows],
+         [("F1 · sexual character", SER[0], [r["f1"] for r in rows], [r["f1_ci"] for r in rows]),
+          ("AUROC · P(sexual) from logprobs", SER[1], [r["auroc"] for r in rows], [r["auroc_ci"] for r in rows])],
+         "Four vision models · F1 and AUROC [95 % CI]", "images_4models_f1_auroc_ci")
+    subtitle(fig, "sv_images_v1 (60 sexual / 60 not sexual), prompt v1 frozen, image + text: the four models score "
+             "within each other's confidence intervals.", y=0.95)
+    save(fig, "images_4models_f1_auroc_ci", "\n\nError bars: bootstrap 95 % CIs (2 000 resamples of the 120 images). "
          "McNemar vs Qwen3.5-9B: p ≥ 0.6 for all → no significant difference.")
 
     # annex: v1 vs v3, image+text vs text only
-    fig, axes = plt.subplots(1, 2, figsize=(13, 3.6))
-    items = []
+    fig, axes = plt.subplots(1, 2, figsize=(15, 4.6), gridspec_kw={"wspace": 0.12})
+    groups, v1, v3, v1ci = [], [], [], []
+    auroc_ci = {"image_text": rows[0]["auroc_ci"], "text_only": None}  # AUROC CI only computed for image + text
     for mode, ml in (("image_text", "image + text"), ("text_only", "text only")):
         for key, kl in (("f1", "F1"), ("auroc", "AUROC")):
-            a = pick(R, experiment="sv_images_v1", model="qwen3.5-9b", prompt="v1", variant=mode, task="sexual")[key]
-            b = pick(R, experiment="sv_images_v1", model="qwen3.5-9b", prompt="v3", variant=mode, task="sexual")[key]
-            items.append((f"{kl} · {ml}", a, b))
-    dumbbell(axes[0], items, "prompt v1 (official)", "prompt v3 (indicative)", "Qwen3.5-9B · prompt v1 vs v3")
-    items = [(lab, pick(R, experiment="sv_images_v1", model=mid, prompt="v1", variant="text_only", task="sexual")["f1"],
-              pick(R, experiment="sv_images_v1", model=mid, prompt="v1", variant="image_text", task="sexual")["f1"])
-             for mid, _, lab in MODELS]
-    dumbbell(axes[1], items, "text only", "image + text", "F1 · what the image adds (prompt v1)")
-    fig.subplots_adjust(wspace=0.55)
-    save(fig, "annex_images_v1_v3_and_text_only", "\n\n\nv3 was tuned after analysing this set's errors: indicative only. "
+            groups.append(f"{kl}\n{ml}")
+            v1.append(pick(R, experiment="sv_images_v1", model="qwen3.5-9b", prompt="v1", variant=mode, task="sexual")[key])
+            v3.append(pick(R, experiment="sv_images_v1", model="qwen3.5-9b", prompt="v3", variant=mode, task="sexual")[key])
+            v1ci.append(sig["qwen35-9b"][mode]["ci95"] if key == "f1" else auroc_ci[mode])
+    bars(axes[0], groups, [("prompt v1 (official)", SER[0], v1, v1ci),
+                           ("prompt v3 (indicative) · CI not available", SER[1], v3, [None] * len(v3))],
+         "Qwen3.5-9B · prompt v1 vs v3", "annex_images_v1_v3_and_text_only", legend_cols=1)
+    labs = [lab for _, _, lab in MODELS]
+    tx = [pick(R, experiment="sv_images_v1", model=mid, prompt="v1", variant="text_only", task="sexual")["f1"] for mid, _, _ in MODELS]
+    it = [pick(R, experiment="sv_images_v1", model=mid, prompt="v1", variant="image_text", task="sexual")["f1"] for mid, _, _ in MODELS]
+    bars(axes[1], labs, [("text only (embedded text)", SER[0], tx, [sig[f]["text_only"]["ci95"] for _, f, _ in MODELS]),
+                         ("image + text", SER[1], it, [sig[f]["image_text"]["ci95"] for _, f, _ in MODELS])],
+         "F1 · what the image adds (prompt v1) [95 % CI]", "annex_images_v1_v3_and_text_only", legend_cols=1)
+    axes[1].tick_params(labelleft=False)
+    subtitle(fig, "Left: the tuned prompt v3 against the frozen v1; right: F1 with the embedded text alone vs with the "
+             "image added, per model.", y=0.95)
+    save(fig, "annex_images_v1_v3_and_text_only", "\n\n\n\nError bars: bootstrap 95 % CIs; " + NO_CI + " (prompt v3; "
+         "AUROC text only). v3 was tuned after analysing this set's errors: indicative only. "
          "50 of 60 positives contain an explicit keyword: the benchmark mostly measures reading the embedded text.")
 
     T.append("## 1. Images: four models, definition v1 (sv_images_v1, 60 / 60, prompt v1 frozen, image + text)\n")
@@ -168,20 +174,37 @@ def part_images(R, T):
     return rows
 
 
-def dumbbell(ax, items, la, lb, title):
-    yy = list(range(len(items)))[::-1]
-    for y, (lab, a, b) in zip(yy, items):
-        ax.plot([a, b], [y, y], color=GRID, lw=4, zorder=1, solid_capstyle="round")
-        ax.scatter([a], [y], s=100, color=SER[0], edgecolor=SURF, linewidth=2, zorder=3, label=la if y == yy[0] else None)
-        ax.scatter([b], [y], s=100, color=SER[1], edgecolor=SURF, linewidth=2, zorder=3, label=lb if y == yy[0] else None)
-        lo, hi = sorted([a, b])
-        ax.text(lo - 0.004, y, f"{lo:.3f}", ha="right", va="center", fontsize=9, color=INK2)
-        ax.text(hi + 0.004, y, f"{hi:.3f}", ha="left", va="center", fontsize=9, color=INK2)
-    ax.set_yticks(yy, [i[0] for i in items])
-    ax.set_xlim(0.84, 1.01)
+NO_CI = "no error bar = CI not available (IC non disponible)"
+
+
+def bars(ax, groups, series, title, tag, legend_cols=None):
+    """Grouped vertical bars on a 0-1 axis, value printed above each bar.
+
+    series = [(label, colour, values, cis)]; cis[i] = [lo, hi] (95 % CI already computed) or None → no error bar.
+    Every printed value is recorded in SHOWN (figure, group, series, value, CI) for the check against ALL_METRICS.csv.
+    """
+    n, x = len(series), np.arange(len(groups))
+    w = 0.8 / n
+    for k, (lab, col, vals, cis) in enumerate(series):
+        xs = x + (k - (n - 1) / 2) * w
+        ax.bar(xs, vals, width=w * 0.9, color=col, edgecolor=SURF, linewidth=1.5, label=lab, zorder=2)
+        for xi, g, v, ci in zip(xs, groups, vals, cis):
+            if ci:
+                ax.errorbar(xi, v, yerr=[[v - ci[0]], [ci[1] - v]], fmt="none", ecolor=INK, elinewidth=1.2,
+                            capsize=4, zorder=3)
+            ax.text(xi, (ci[1] if ci else v) + 0.012, f"{v:.3f}", ha="center", va="bottom", fontsize=9, color=INK)
+            SHOWN.append({"figure": tag, "group": g.replace("\n", " "), "series": lab, "value": v, "ci95": ci})
+    ax.set_xticks(x, groups)
+    ax.set_ylim(0, 1.1)
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.spines["left"].set_bounds(0, 1)
+    ax.grid(axis="x", visible=False)
     ax.set_title(title)
-    ax.grid(axis="y", visible=False)
-    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.14), ncol=2, fontsize=9)
+    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.13), ncol=legend_cols or n, fontsize=9)
+
+
+def subtitle(fig, text, y=1.0):
+    fig.text(0.01, y, text, fontsize=10, color=INK2, ha="left", va="bottom")
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -300,23 +323,15 @@ def part_cascade(R, T):
     ax = axes[1]
     pairs = [("T", "T_logreg", "T_logreg_datasetlabels"), ("I", "I_logreg", "I_logreg_datasetlabels"),
              ("I + T", "IT_logreg", "IT_logreg_datasetlabels")]
-    yy = list(range(len(pairs)))[::-1]
-    for y, (lab, a, b) in zip(yy, pairs):
-        va, vb = cm["students"][a]["auroc_vs_reference"], cm["students"][b]["auroc_vs_reference"]
-        ax.plot([vb, va], [y, y], color=GRID, lw=4, zorder=1)
-        ax.scatter([vb], [y], s=100, color=SER[3], edgecolor=SURF, linewidth=2, zorder=3,
-                   label="trained on dataset labels" if y == yy[0] else None)
-        ax.scatter([va], [y], s=100, color=SER[0], edgecolor=SURF, linewidth=2, zorder=3,
-                   label="distilled from Qwen (teacher)" if y == yy[0] else None)
-        ax.text(vb - 0.01, y, f"{vb:.2f}", ha="right", va="center", fontsize=10)
-        ax.text(va + 0.01, y, f"{va:.2f}", ha="left", va="center", fontsize=10)
-    ax.set_yticks(yy, [p[0] for p in pairs])
-    ax.set_xlim(0.6, 1.02)
-    ax.set_title("Student AUROC on the benchmark")
-    ax.grid(axis="y", visible=False)
-    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.12), ncol=1, fontsize=9)
+    au = lambda n: cm["students"][n]["auroc_vs_reference"]  # noqa: E731
+    bars(ax, [p[0] for p in pairs],
+         [("trained on dataset labels", SER[3], [au(p[2]) for p in pairs], [None] * 3),
+          ("distilled from Qwen (teacher)", SER[0], [au(p[1]) for p in pairs], [None] * 3)],
+         "Student AUROC on the benchmark", "cascade_recall_curve_and_distillation", legend_cols=1)
+    subtitle(fig, "Left: recall of the filter as more images are sent to Qwen; right: students distilled from Qwen "
+             "rank the benchmark better than students trained on the original dataset labels.", y=0.95)
     fig.subplots_adjust(wspace=0.35)
-    save(fig, "cascade_recall_curve_and_distillation")
+    save(fig, "cascade_recall_curve_and_distillation", "\n\n\nRight panel: " + NO_CI + ".")
 
     T.append("## 3. Fast filter / cascade (images)\n")
     T.append("| set | positives passed / blocked | negatives passed / blocked | recall [95 % CI] | false passes | sent to Qwen | time / image | gain |")
@@ -520,6 +535,8 @@ def main():
     for p in CREATED:
         print(p.relative_to(ROOT))
     print("backup:", BACKUP / "presentation_pack_2026-09-27.zip")
+    if os.environ.get("SHOWN_JSON"):  # optional: values printed on the bar charts, for the check against ALL_METRICS.csv
+        Path(os.environ["SHOWN_JSON"]).write_text(json.dumps(SHOWN, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":
