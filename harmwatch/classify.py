@@ -1,6 +1,7 @@
-"""Classifiers: Claude (policy-following) and an offline keyword fallback.
+"""Classifiers: Claude (policy-following), a local open model, and an offline keyword fallback.
 
-CLASSIFIER=claude | keywords | auto (default: claude when ANTHROPIC_API_KEY is set).
+CLASSIFIER=claude | local | keywords | auto (default: claude when ANTHROPIC_API_KEY is set).
+local = llama-server (OpenAI-compatible, LOCAL_LLM_URL) applying policy/ layers for REGION.
 """
 
 import os
@@ -30,9 +31,31 @@ def backend_name() -> str:
 
 def classify(text: str) -> tuple[Classification, str]:
     """Return (classification, backend label)."""
-    if backend_name() == "claude":
-        return classify_claude(text)
-    return classify_keywords(text), "keywords"
+    classification, backend, _ = classify_full(text)
+    return classification, backend
+
+
+def classify_full(text: str):
+    """Return (classification, backend label, CRSVAssessment or None)."""
+    backend = backend_name()
+    if backend == "claude":
+        return (*classify_claude(text), None)
+    if backend == "local":
+        return classify_local(text)
+    return classify_keywords(text), "keywords", None
+
+
+# --- Local open model ---------------------------------------------------------------
+
+def classify_local(text: str):
+    from harmwatch.crsv import assess_text
+    from harmwatch.schema import to_classification
+
+    label = f"local:{os.getenv('LOCAL_LLM_MODEL', 'qwen3.5-9b')}"
+    assessment = assess_text(text)
+    if assessment is None:
+        return _needs_human("The local model returned no valid assessment; review manually."), f"{label} (failed)", None
+    return to_classification(assessment), label, assessment
 
 
 # --- Claude -----------------------------------------------------------------

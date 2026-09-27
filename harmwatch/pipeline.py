@@ -4,14 +4,16 @@
 """
 
 from harmwatch import db
-from harmwatch.classify import classify
+from harmwatch.classify import classify_full
 from harmwatch.triage import priority, triage
 
 
 def classify_post(conn, post) -> str:
-    result, backend = classify(post["text"])
+    result, backend, assessment = classify_full(post["text"])
     bucket = triage(result)
     db.save_classification(conn, post["id"], backend, result, bucket, priority(result, post["views"]))
+    if assessment is not None:
+        db.save_assessment(conn, post["id"], assessment)
     return bucket
 
 

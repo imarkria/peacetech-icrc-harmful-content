@@ -1,0 +1,3602 @@
+[
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T1_hate",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T1_hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     27,
+     13
+    ],
+    [
+     19,
+     21
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T1_hate",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T1_hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     1,
+     19
+    ],
+    [
+     3,
+     17
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T1_hate",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T1_hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     10,
+     10
+    ],
+    [
+     11,
+     9
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T1_hate",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T1_hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     38,
+     42
+    ],
+    [
+     33,
+     47
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T2_misogyny",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T2_misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     16,
+     4
+    ],
+    [
+     6,
+     14
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T2_misogyny",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T2_misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     7,
+     3
+    ],
+    [
+     1,
+     9
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T2_misogyny",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T2_misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     7,
+     3
+    ],
+    [
+     5,
+     5
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T2_misogyny",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T2_misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     30,
+     10
+    ],
+    [
+     12,
+     28
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T3_sv_related",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T3_sv_related",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     2,
+     18
+    ],
+    [
+     0,
+     20
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T3_sv_related",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T3_sv_related",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     1,
+     9
+    ],
+    [
+     0,
+     10
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T3_sv_related",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T3_sv_related",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     3,
+     27
+    ],
+    [
+     0,
+     30
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     3,
+     17
+    ],
+    [
+     3,
+     17
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     0,
+     10
+    ],
+    [
+     0,
+     10
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     0,
+     10
+    ],
+    [
+     0,
+     10
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     3,
+     37
+    ],
+    [
+     5,
+     35
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     0,
+     20
+    ],
+    [
+     0,
+     20
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     7,
+     13
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T4_flag",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T4_flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     13,
+     107
+    ],
+    [
+     10,
+     110
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T5_silver",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T5_silver",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     15,
+     6
+    ],
+    [
+     16,
+     23
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T5_silver",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T5_silver",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "first_test_240_memes|qwen3.5-9b|compact_v0|image_text|T5_silver",
+  "experiment": "first_test_240_memes",
+  "model": "qwen3.5-9b",
+  "prompt": "compact_v0",
+  "variant": "image_text",
+  "task": "T5_silver",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     2,
+     0
+    ],
+    [
+     7,
+     51
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v1|image_text|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     57,
+     3
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v1|image_text|hate",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     20,
+     12
+    ],
+    [
+     7,
+     80
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v1|image_text|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     47,
+     16
+    ],
+    [
+     5,
+     51
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v1|text_only|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     54,
+     6
+    ],
+    [
+     7,
+     53
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v1|text_only|hate",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     17,
+     15
+    ],
+    [
+     6,
+     82
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v1|text_only|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     52,
+     12
+    ],
+    [
+     3,
+     53
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-4b|v1|image_text|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-4b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     57,
+     3
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-4b|v1|image_text|hate",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-4b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     22,
+     10
+    ],
+    [
+     8,
+     77
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-4b|v1|image_text|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-4b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     39,
+     22
+    ],
+    [
+     6,
+     50
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-4b|v1|text_only|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-4b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     11,
+     49
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-4b|v1|text_only|hate",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-4b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     20,
+     12
+    ],
+    [
+     4,
+     80
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-4b|v1|text_only|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-4b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     44,
+     16
+    ],
+    [
+     5,
+     51
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|gemma-4-12b|v1|image_text|sexual",
+  "experiment": "sv_images_v1",
+  "model": "gemma-4-12b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     56,
+     4
+    ],
+    [
+     6,
+     54
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|gemma-4-12b|v1|image_text|hate",
+  "experiment": "sv_images_v1",
+  "model": "gemma-4-12b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     21,
+     11
+    ],
+    [
+     3,
+     84
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|gemma-4-12b|v1|image_text|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "gemma-4-12b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     39,
+     24
+    ],
+    [
+     0,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|gemma-4-12b|v1|text_only|sexual",
+  "experiment": "sv_images_v1",
+  "model": "gemma-4-12b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     52,
+     8
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|gemma-4-12b|v1|text_only|hate",
+  "experiment": "sv_images_v1",
+  "model": "gemma-4-12b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     16,
+     16
+    ],
+    [
+     4,
+     84
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|gemma-4-12b|v1|text_only|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "gemma-4-12b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     28,
+     36
+    ],
+    [
+     1,
+     55
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|internvl3.5-8b|v1|image_text|sexual",
+  "experiment": "sv_images_v1",
+  "model": "internvl3.5-8b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     57,
+     3
+    ],
+    [
+     10,
+     50
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|internvl3.5-8b|v1|image_text|hate",
+  "experiment": "sv_images_v1",
+  "model": "internvl3.5-8b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     23,
+     9
+    ],
+    [
+     22,
+     65
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|internvl3.5-8b|v1|image_text|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "internvl3.5-8b",
+  "prompt": "v1",
+  "variant": "image_text",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     5
+    ],
+    [
+     8,
+     48
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|internvl3.5-8b|v1|text_only|sexual",
+  "experiment": "sv_images_v1",
+  "model": "internvl3.5-8b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     54,
+     6
+    ],
+    [
+     5,
+     55
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|internvl3.5-8b|v1|text_only|hate",
+  "experiment": "sv_images_v1",
+  "model": "internvl3.5-8b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     12,
+     19
+    ],
+    [
+     10,
+     77
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|internvl3.5-8b|v1|text_only|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "internvl3.5-8b",
+  "prompt": "v1",
+  "variant": "text_only",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     42,
+     21
+    ],
+    [
+     2,
+     53
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v3|image_text|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "image_text",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     56,
+     4
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v3|image_text|hate",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "image_text",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     20,
+     12
+    ],
+    [
+     6,
+     81
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v3|image_text|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "image_text",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     56,
+     7
+    ],
+    [
+     7,
+     49
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v3|text_only|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "text_only",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     53,
+     7
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v3|text_only|hate",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "text_only",
+  "task": "hate",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     19,
+     13
+    ],
+    [
+     4,
+     84
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|v3|text_only|misogyny",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "text_only",
+  "task": "misogyny",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     57,
+     7
+    ],
+    [
+     9,
+     47
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "sv_images_v1|qwen3.5-9b|pre-freeze|image_text|sexual",
+  "experiment": "sv_images_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "pre-freeze",
+  "variant": "image_text",
+  "task": "sexual",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     52,
+     8
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "baseline_ru_ua_text|qwen3.5-9b|core v1.3 + ru_ua|text|flag",
+  "experiment": "baseline_ru_ua_text",
+  "model": "qwen3.5-9b",
+  "prompt": "core v1.3 + ru_ua",
+  "variant": "text",
+  "task": "flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     9,
+     0
+    ],
+    [
+     0,
+     7
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "baseline_general_core_only|qwen3.5-9b|core v1.3|text|flag",
+  "experiment": "baseline_general_core_only",
+  "model": "qwen3.5-9b",
+  "prompt": "core v1.3",
+  "variant": "text",
+  "task": "flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     9,
+     0
+    ],
+    [
+     3,
+     10
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "baseline_general_core_only|qwen3.5-9b|core v1.3|text|sexual",
+  "experiment": "baseline_general_core_only",
+  "model": "qwen3.5-9b",
+  "prompt": "core v1.3",
+  "variant": "text",
+  "task": "sexual",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     11,
+     1
+    ],
+    [
+     1,
+     9
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "baseline_general_core_only|qwen3.5-9b|core v1.4|text|flag",
+  "experiment": "baseline_general_core_only",
+  "model": "qwen3.5-9b",
+  "prompt": "core v1.4",
+  "variant": "text",
+  "task": "flag",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     9,
+     0
+    ],
+    [
+     3,
+     10
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "baseline_general_core_only|qwen3.5-9b|core v1.4|text|sexual",
+  "experiment": "baseline_general_core_only",
+  "model": "qwen3.5-9b",
+  "prompt": "core v1.4",
+  "variant": "text",
+  "task": "sexual",
+  "labels": {
+   "positive": "positive",
+   "negative": "negative"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     11,
+     1
+    ],
+    [
+     1,
+     9
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "video_racism_v1|qwen3.5-9b|racism_v1|B|racism",
+  "experiment": "video_racism_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "racism_v1",
+  "variant": "B",
+  "task": "racism",
+  "labels": {
+   "positive": "racist video",
+   "negative": "non-racist video"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     15,
+     0
+    ],
+    [
+     1,
+     14
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "video_racism_v1|qwen3.5-9b|racism_v1|C|racism",
+  "experiment": "video_racism_v1",
+  "model": "qwen3.5-9b",
+  "prompt": "racism_v1",
+  "variant": "C",
+  "task": "racism",
+  "labels": {
+   "positive": "racist video",
+   "negative": "non-racist video"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     15,
+     0
+    ],
+    [
+     2,
+     13
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "safety_explicit_filter|Falconsai ViT|-|threshold 0.3|explicit_image",
+  "experiment": "safety_explicit_filter",
+  "model": "Falconsai ViT",
+  "prompt": "-",
+  "variant": "threshold 0.3",
+  "task": "explicit_image",
+  "labels": {
+   "positive": "explicit at review",
+   "negative": "not explicit"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     0,
+     10
+    ],
+    [
+     0,
+     255
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "safety_explicit_filter|OR(CLIP≥0.9, AdamCodd≥0.7, Falconsai≥0.3)|-|default|explicit_image",
+  "experiment": "safety_explicit_filter",
+  "model": "OR(CLIP≥0.9, AdamCodd≥0.7, Falconsai≥0.3)",
+  "prompt": "-",
+  "variant": "default",
+  "task": "explicit_image",
+  "labels": {
+   "positive": "explicit at review",
+   "negative": "not explicit"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     8,
+     2
+    ],
+    [
+     36,
+     219
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "safety_child_visual|CLIP ViT-L/14 zero-shot|-|threshold 0.7|childlike_appearance",
+  "experiment": "safety_child_visual",
+  "model": "CLIP ViT-L/14 zero-shot",
+  "prompt": "-",
+  "variant": "threshold 0.7",
+  "task": "childlike_appearance",
+  "labels": {
+   "positive": "possible minor at review",
+   "negative": "adult / no person"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     4,
+     21
+    ],
+    [
+     2,
+     238
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "safety_judge_possible_minor|qwen3.5-9b|v3|image_text|possible_minor",
+  "experiment": "safety_judge_possible_minor",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "image_text",
+  "task": "possible_minor",
+  "labels": {
+   "positive": "minor + sexual element",
+   "negative": "minor without sexual element"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     9,
+     9
+    ],
+    [
+     5,
+     3
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|qwen3.5-9b|v3|judge_alone|sexual",
+  "experiment": "cascade_images",
+  "model": "qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "judge_alone",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     56,
+     4
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|qwen3.5-9b|v1|judge_alone|sexual",
+  "experiment": "cascade_images",
+  "model": "qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "judge_alone",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     57,
+     3
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_logreg|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_logreg",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     44,
+     16
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_logreg|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_logreg",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     49,
+     11
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_logreg|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_logreg",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     57,
+     3
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_mlp|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_mlp",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     41,
+     19
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_mlp|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_mlp",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     42,
+     18
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_mlp|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_mlp",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     49,
+     11
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_logreg|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_logreg",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     30,
+     30
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_logreg|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_logreg",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     37,
+     23
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_logreg|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_logreg",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     48,
+     12
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|cascade I_logreg -> qwen3.5-9b|v3|cascade_95|sexual",
+  "experiment": "cascade_images",
+  "model": "cascade I_logreg -> qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "cascade_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     54,
+     6
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|cascade I_logreg -> qwen3.5-9b|v3|cascade_97|sexual",
+  "experiment": "cascade_images",
+  "model": "cascade I_logreg -> qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "cascade_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     54,
+     6
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|cascade I_logreg -> qwen3.5-9b|v3|cascade_99|sexual",
+  "experiment": "cascade_images",
+  "model": "cascade I_logreg -> qwen3.5-9b",
+  "prompt": "v3",
+  "variant": "cascade_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     56,
+     4
+    ],
+    [
+     4,
+     56
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|cascade I_logreg -> qwen3.5-9b|v1|cascade_95|sexual",
+  "experiment": "cascade_images",
+  "model": "cascade I_logreg -> qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "cascade_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     55,
+     5
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|cascade I_logreg -> qwen3.5-9b|v1|cascade_97|sexual",
+  "experiment": "cascade_images",
+  "model": "cascade I_logreg -> qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "cascade_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     55,
+     5
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|cascade I_logreg -> qwen3.5-9b|v1|cascade_99|sexual",
+  "experiment": "cascade_images",
+  "model": "cascade I_logreg -> qwen3.5-9b",
+  "prompt": "v1",
+  "variant": "cascade_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     57,
+     3
+    ],
+    [
+     8,
+     52
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_mlp|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_mlp",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     25,
+     35
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_mlp|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_mlp",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     29,
+     31
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_mlp|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_mlp",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     42,
+     18
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_logreg|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_logreg",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     36,
+     24
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_logreg|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_logreg",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     39,
+     21
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_logreg|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_logreg",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     42,
+     18
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_mlp|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_mlp",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     27,
+     33
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_mlp|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_mlp",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     36,
+     24
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_mlp|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_mlp",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     43,
+     17
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_logreg_datasetlabels|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     53,
+     7
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_logreg_datasetlabels|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     56,
+     4
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student T_logreg_datasetlabels|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student T_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     58,
+     2
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_logreg_datasetlabels|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     49,
+     11
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_logreg_datasetlabels|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     49,
+     11
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student I_logreg_datasetlabels|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student I_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     60,
+     0
+    ],
+    [
+     55,
+     5
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_logreg_datasetlabels|-|student_95|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_95",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     47,
+     13
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_logreg_datasetlabels|-|student_97|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_97",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     47,
+     13
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_images|student IT_logreg_datasetlabels|-|student_99|sexual",
+  "experiment": "cascade_images",
+  "model": "student IT_logreg_datasetlabels",
+  "prompt": "-",
+  "variant": "student_99",
+  "task": "sexual",
+  "labels": {
+   "positive": "sexual character",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     59,
+     1
+    ],
+    [
+     50,
+     10
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_filter_test|filter I_logreg|-|filter_95_10pct|sexual_sent_to_judge",
+  "experiment": "cascade_filter_test",
+  "model": "filter I_logreg",
+  "prompt": "-",
+  "variant": "filter_95_10pct",
+  "task": "sexual_sent_to_judge",
+  "labels": {
+   "positive": "sexual",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     219,
+     300
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_filter_test|filter I_logreg|-|filter_95_50pct|sexual_sent_to_judge",
+  "experiment": "cascade_filter_test",
+  "model": "filter I_logreg",
+  "prompt": "-",
+  "variant": "filter_95_50pct",
+  "task": "sexual_sent_to_judge",
+  "labels": {
+   "positive": "sexual",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     30,
+     30
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ }
+]

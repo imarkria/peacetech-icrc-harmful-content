@@ -1,0 +1,1544 @@
+# Region profile: Russia-Ukraine. Adds meaning to core.md, never removes or overrides it (B3).
+# Only entries with status: approved are loaded. Approve with: python scripts/approve_region.py ru_ua
+# Approved by gmikou for the hackathon (2026-09-26); to be validated by the ICRC / a local partner.
+version: '0.1'
+region: ru_ua
+name: Russia-Ukraine war
+languages:
+- ru
+- uk
+- en
+time_window: 2014-02 to present (full-scale from 2022-02-24)
+heightened_risk_groups:
+- prisoners_of_war
+- civilian_detainees
+- residents_of_occupied_areas
+- children
+- women_in_armed_forces
+- men_and_boys
+- lgbtiq
+- displaced_persons
+- persons_with_disabilities
+owner: gmikou
+approval: Approved by gmikou for the hackathon (2026-09-26); to be validated by the ICRC / a local partner.
+neutrality: Both sides, same rules.
+age_terms:
+  note: 'Moved from children.md CH-2 and lexicon.py (core v1.3). note: words / institutions = terms (* = prefix);
+    age_units = years (a number under 18 is needed); infant_units = days, weeks or months (any number); number_words
+    = ages written in letters; stated_age_phrases and grade_patterns use {n} for the number; not_followed_by lists
+    what makes a number NOT an age ("only 15 minutes"). Raise-only: a match never lowers anything.'
+  ru:
+    words:
+    - ребёнок
+    - дети
+    - девочка
+    - мальчик
+    - школьница
+    - школьник
+    - малолетка
+    - несовершеннолетн*
+    - подросток
+    - ученица
+    - ученик
+    - младенец
+    - малыш*
+    age_units:
+    - лет
+    - года
+    - год
+    - летн*
+    institutions:
+    - детдом
+    - детский дом
+    - интернат
+    number_words:
+      один: 1
+      два: 2
+      три: 3
+      четыре: 4
+      пять: 5
+      шесть: 6
+      семь: 7
+      восемь: 8
+      девять: 9
+      десять: 10
+      одиннадцать: 11
+      двенадцать: 12
+      тринадцать: 13
+      четырнадцать: 14
+      пятнадцать: 15
+      шестнадцать: 16
+      семнадцать: 17
+    stated_age_phrases:
+    - мне {n}
+    - ей {n}
+    - ему {n}
+    infant_units:
+    - месяц*
+    - недел*
+    - дней
+    - дня
+    - день
+    - дневн*
+    grade_patterns:
+    - '{n} класс*'
+    - '{n}-й класс*'
+    - '{n}-го класс*'
+    - '{n}-м класс*'
+    not_followed_by:
+    - минут*
+    - час*
+    - рубл*
+    - '%'
+    - процент*
+    - раз*
+    - штук*
+    - подписчик*
+  uk:
+    words:
+    - дитина
+    - діти
+    - дівчинка
+    - хлопчик
+    - школярка
+    - школяр
+    - неповнолітн*
+    - підліток
+    - учениця
+    - учень
+    - немовля
+    - малюк*
+    age_units:
+    - років
+    - рік
+    - роки
+    - річн*
+    institutions:
+    - дитбудинок
+    - дитячий будинок
+    - інтернат
+    number_words:
+      один: 1
+      два: 2
+      три: 3
+      чотири: 4
+      п'ять: 5
+      шість: 6
+      сім: 7
+      вісім: 8
+      дев'ять: 9
+      десять: 10
+      одинадцять: 11
+      дванадцять: 12
+      тринадцять: 13
+      чотирнадцять: 14
+      п'ятнадцять: 15
+      шістнадцять: 16
+      сімнадцять: 17
+    stated_age_phrases:
+    - мені {n}
+    - їй {n}
+    - йому {n}
+    infant_units:
+    - місяц*
+    - тиж*
+    - днів
+    - дні
+    - день
+    - денн*
+    grade_patterns:
+    - '{n} клас*'
+    - '{n}-й клас*'
+    - '{n}-го клас*'
+    - '{n}-му клас*'
+    not_followed_by:
+    - хвилин*
+    - годин*
+    - гривен*
+    - '%'
+    - відсот*
+    - раз*
+    - штук*
+    - підписник*
+entries:
+- id: RG-GROUP-001
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: Ukrainians
+  refers_to: national group
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-002
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: Russians
+  refers_to: national group
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-003
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: Russian-speaking Ukrainians
+  refers_to: linguistic community
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-004
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: residents of occupied territories
+  refers_to: civilians under occupation
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-005
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: prisoners of war (both sides)
+  refers_to: detainees
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-006
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: women in the armed forces, volunteers, medics
+  refers_to: conflict-linked roles
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-007
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: Crimean Tatars
+  refers_to: ethnic group
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-008
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: internally displaced persons and refugees
+  refers_to: displaced persons
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-009
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: LGBTIQ+ persons
+  refers_to: sexual and gender minorities
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-010
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: deported/transferred children
+  refers_to: children (see children.md CH-3)
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-GROUP-011
+  type: RG-GROUP
+  region: ru_ua
+  language: en
+  value: men of draft age
+  refers_to: civilian men subject to mobilisation
+  meaning: Neutral group reference; identifies a possible AFF-1/AFF-2 target.
+  supports:
+  - AFF-1
+  - AFF-2
+  - AFF-3
+  context_notes: Neutral. Naming a group is never evidence of harm on its own (B3).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-001
+  type: RG-SLUR
+  region: ru_ua
+  language: ru
+  value: хохол / хохлы / хохлушка
+  refers_to: Ukrainians
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-002
+  type: RG-SLUR
+  region: ru_ua
+  language: ru
+  value: укроп / укропы / укры
+  refers_to: Ukrainians
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: 'Ironically reclaimed by some Ukrainian units: check the speaker (FT-SPEAKER).'
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-003
+  type: RG-SLUR
+  region: ru_ua
+  language: ru
+  value: бандеровцы / бандерлоги
+  refers_to: Ukrainians
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-004
+  type: RG-SLUR
+  region: ru_ua
+  language: ru
+  value: нацики (applied to all Ukrainians)
+  refers_to: Ukrainians
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: Only when applied to Ukrainians as a whole.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-005
+  type: RG-SLUR
+  region: ru_ua
+  language: ru
+  value: шлюхи ВСУ / подстилки ВСУ
+  refers_to: women in the Ukrainian armed forces
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: Sexualised slur against servicewomen; often co-occurs with exposure (SV-REL-5).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-006
+  type: RG-SLUR
+  region: ru_ua
+  language: uk
+  value: орки / орчиха
+  refers_to: Russians / Russian soldiers
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: 'Common in mainstream Ukrainian media: flag only with an SV relation and a harm pathway.'
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-007
+  type: RG-SLUR
+  region: ru_ua
+  language: uk
+  value: русня / кацапи / москалі
+  refers_to: Russians
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-008
+  type: RG-SLUR
+  region: ru_ua
+  language: uk
+  value: свинособаки
+  refers_to: Russians / Russian soldiers
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-009
+  type: RG-SLUR
+  region: ru_ua
+  language: uk
+  value: підстилка окупантів
+  refers_to: women accused of relations with occupiers
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: Also used against survivors (stigmatisation, SV-REL-5).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SLUR-010
+  type: RG-SLUR
+  region: ru_ua
+  language: ru
+  value: подстилка оккупантов
+  refers_to: women accused of relations with occupiers
+  meaning: Identity-based slur. Raises Axis 2 (HI-TYPE-04, HP-04) only; never Axis 1 alone.
+  supports:
+  - HI-TYPE-04
+  - HP-04
+  - AFF-1
+  context_notes: Also used against survivors (stigmatisation, SV-REL-5).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - dehumanisation_study (VettyCher)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-001
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: изнасилование / насиловать
+  refers_to: sexual violence
+  meaning: rape
+  supports:
+  - SV-FORM-01
+  - SV-EL-A
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-002
+  type: RG-SVTERM
+  region: ru_ua
+  language: uk
+  value: зґвалтування / ґвалтувати
+  refers_to: sexual violence
+  meaning: rape
+  supports:
+  - SV-FORM-01
+  - SV-EL-A
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-003
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: сексуальное насилие / сексуальные пытки
+  refers_to: sexual violence
+  meaning: sexual violence / sexual torture
+  supports:
+  - SV-FORM-09
+  - SV-FORM-10
+  - SV-EL-A
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-004
+  type: RG-SVTERM
+  region: ru_ua
+  language: uk
+  value: сексуальне насильство / сексуальні катування / СНПК
+  refers_to: sexual violence
+  meaning: sexual violence / sexual torture / conflict-related SV (СНПК)
+  supports:
+  - SV-FORM-09
+  - SV-FORM-10
+  - SV-EL-A
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-005
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: трофей / трофеи (applied to women or captives)
+  refers_to: sexual violence
+  meaning: 'people as spoils: slavery framing'
+  supports:
+  - SV-FORM-02
+  - SV-EL-A
+  context_notes: Only when applied to women or captives, not to equipment.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-006
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: награда / заслуженная награда / «отдых» для бойцов (about women)
+  refers_to: sexual violence
+  meaning: SV presented as a reward
+  supports:
+  - SV-FORM-01
+  - SV-FORM-02
+  - SV-REL-4
+  context_notes: Only when referring to women or captives.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-007
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: пустить по кругу
+  refers_to: sexual violence
+  meaning: gang rape
+  supports:
+  - SV-FORM-01
+  - SV-EL-A
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-008
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: раздели / раздевали догола (about detainees)
+  refers_to: sexual violence
+  meaning: forced nudity
+  supports:
+  - SV-FORM-09
+  - SV-CO-3
+  context_notes: Only about detainees or captives.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-009
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: кастрация / кастрировать (about prisoners)
+  refers_to: sexual violence
+  meaning: sexualised torture of prisoners (documented 2022)
+  supports:
+  - SV-FORM-09
+  - SV-CO-3
+  context_notes: Only about prisoners or detainees.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-010
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: их бабы / их женщины / ваши жёны (in a threat context)
+  refers_to: sexual violence
+  meaning: in-group/out-group sexual threat framing
+  supports:
+  - SV-REL-2
+  - FT-FRAME
+  context_notes: Only in a threat context (future/imperative, us-vs-them).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-011
+  type: RG-SVTERM
+  region: ru_ua
+  language: uk
+  value: їхні жінки / ваші дружини (in a threat context)
+  refers_to: sexual violence
+  meaning: in-group/out-group sexual threat framing
+  supports:
+  - SV-REL-2
+  - FT-FRAME
+  context_notes: Only in a threat context (future/imperative, us-vs-them).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-SVTERM-012
+  type: RG-SVTERM
+  region: ru_ua
+  language: ru
+  value: обесчестить / опозорить (about women of the other side)
+  refers_to: sexual violence
+  meaning: sexual dishonouring threat
+  supports:
+  - SV-FORM-10
+  - SV-EL-A
+  context_notes: Only about women of the other side.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-001
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: Russian armed forces
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-002
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: Ukrainian armed forces (ЗСУ / ВСУ)
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-003
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: Wagner / Africa Corps
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-004
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: Akhmat units
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-005
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: Rosgvardia and FSB (detention, filtration)
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-006
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: SBU and ТЦК
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-ACTOR-007
+  type: RG-ACTOR
+  region: ru_ua
+  language: multi
+  value: Z-milblogger channels (Rybar, WarGonzo, Podolyaka) and "Grey Zone"
+  refers_to: armed actor or affiliate
+  meaning: 'Armed actor: supports conflict link and speaker identification only.'
+  supports:
+  - CONF-1
+  - FT-SPEAKER
+  context_notes: Never a perpetrator verdict (B6-1).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-001
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: Bucha / Irpin / Hostomel (2022)
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-002
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: occupied Kherson region (2022)
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-003
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: Olenivka
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-004
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: Taganrog SIZO-2
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: Documented torture incl. SV of POWs.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-005
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: filtration camps
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-006
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: checkpoints (блокпост)
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: Coercive environment (SV-CO-5).
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-007
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: Mariupol, Izium, Kupiansk, Zaporizhzhia and Donetsk fronts
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-008
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: Kursk region (2024-25)
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: 'Allegations against Ukrainian forces: same rules.'
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PLACE-009
+  type: RG-PLACE
+  region: ru_ua
+  language: multi
+  value: Crimea (since 2014)
+  refers_to: place or event
+  meaning: 'Place/event of the conflict: supports conflict link.'
+  supports:
+  - CONF-2
+  - CONF-4
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-001
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: '"Bucha staged / fake victims"'
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-4
+  - HI-TYPE-02
+  context_notes: Denial.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-002
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: sexualised fakes about Ukrainian servicewomen reusing real photos
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-5
+  - HI-TYPE-02
+  - HI-TYPE-03
+  - HP-02
+  - HP-03
+  context_notes: Set identifiable_person + possible_manipulated_media.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - BBC Sept 2026 investigation (sexualised fakes about Ukrainian servicewomen)
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-003
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: '"Ukrainian/refugee women are prostitutes"'
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-5
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OPORA 2025
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-004
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: '"all Russian soldiers are rapists" / "every Ukrainian soldier rapes"'
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-3
+  context_notes: A specific allegation (unit, person, place, date) = SV-REL-1.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-005
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: encouraging soldiers to rape (e.g. the publicised 2022 intercepted call)
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-2
+  - SV-REL-4
+  - HP-06
+  context_notes: News coverage = B2-3; endorsement/mockery = REL-2/4.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-006
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: mockery of castrated or sexually abused POWs
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-4
+  - HI-TYPE-06
+  context_notes: Content type 6.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - OHCHR Sept 2026 CRSV report
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-007
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: women in occupied areas as "collaborators who got what they wanted"
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-5
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-008
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: '"denazification" as justification'
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-4
+  - HI-TYPE-05
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-009
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: deported children "rescued" / adoption / trafficking claims
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - CH-3
+  context_notes: See children.md.
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  - UN Commission of Inquiry on Ukraine
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-010
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: '"Gayropa" and calls to "punish" LGBT people'
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - HI-TYPE-04
+  context_notes: 'Axis 1 still required: flag only with a sexual-violence relation.'
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-NARRATIVE-011
+  type: RG-NARRATIVE
+  region: ru_ua
+  language: multi
+  value: rape presented as entertainment with 🔥🤣 in anonymous news channels
+  refers_to: narrative
+  meaning: Recurring narrative in this conflict.
+  supports:
+  - SV-REL-4
+  - HP-06
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PRIORITY-001
+  type: RG-PRIORITY
+  region: ru_ua
+  language: multi
+  value: sexual content involving POWs or detainees → High (content type 6)
+  refers_to: priority rule
+  meaning: Raises priority only; never lowers it.
+  supports:
+  - priority:high
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PRIORITY-002
+  type: RG-PRIORITY
+  region: ru_ua
+  language: multi
+  value: exposure of a servicewoman, medic or volunteer → Urgent
+  refers_to: priority rule
+  meaning: Raises priority only; never lowers it.
+  supports:
+  - priority:urgent
+  - HP-03
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PRIORITY-003
+  type: RG-PRIORITY
+  region: ru_ua
+  language: multi
+  value: threats tied to an ongoing offensive or a named town → Urgent
+  refers_to: priority rule
+  meaning: Raises priority only; never lowers it.
+  supports:
+  - priority:urgent
+  - SV-REL-2
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PRIORITY-004
+  type: RG-PRIORITY
+  region: ru_ua
+  language: multi
+  value: same text forwarded by many channels within hours → High
+  refers_to: priority rule
+  meaning: Raises priority only; never lowers it.
+  supports:
+  - priority:high
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-PRIORITY-005
+  type: RG-PRIORITY
+  region: ru_ua
+  language: multi
+  value: any content about deported children → High
+  refers_to: priority rule
+  meaning: Raises priority only; never lowers it.
+  supports:
+  - priority:high
+  - CH-3
+  context_notes: ''
+  status: approved
+  source_cases:
+  - team brief 2026-09-26
+  proposed_by: claude-code (from team brief)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou
+- id: RG-CONTEXT-001
+  type: RG-CONTEXT
+  language: multi
+  value: deported / transferred Ukrainian children (documented; ICC warrants 2023)
+  refers_to: children (formerly children.md CH-3)
+  meaning: Exposure of these children = HI-TYPE-03 + HP-03 + identifiable_person; trafficking claims = SV-REL-3
+    or SV-REL-1 + HI-TYPE-01/02; UN/NGO reporting = B2-3.
+  supports:
+  - HI-TYPE-03
+  - HP-03
+  - SV-REL-3
+  - SV-REL-1
+  - B2-3
+  - CH-1b
+  context_notes: 'Priority: RG-PRIORITY-005. Identities are never repeated.'
+  region: ru_ua
+  status: approved
+  source_cases: &id001
+  - moved from core (core v1.3), text approved by gmikou 2026-09-26
+  proposed_by: gmikou (moved from core)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou (moved from core v1.2, core v1.3)
+- id: RG-STANCE-001
+  type: RG-STANCE
+  language: ru
+  value: говорят / говорят, что
+  refers_to: unsourced rumour marker
+  meaning: 'Unsourced rumour: FT-STANCE unclear, not reports (core v1.1 clarification); SV-REL-1 possible.'
+  supports:
+  - FT-STANCE
+  - SV-REL-1
+  context_notes: ''
+  region: ru_ua
+  status: approved
+  source_cases: *id001
+  proposed_by: gmikou (moved from core)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou (moved from core v1.2, core v1.3)
+- id: RG-STANCE-002
+  type: RG-STANCE
+  language: uk
+  value: кажуть / кажуть, що
+  refers_to: unsourced rumour marker
+  meaning: 'Unsourced rumour: FT-STANCE unclear, not reports (core v1.1 clarification); SV-REL-1 possible.'
+  supports:
+  - FT-STANCE
+  - SV-REL-1
+  context_notes: ''
+  region: ru_ua
+  status: approved
+  source_cases: *id001
+  proposed_by: gmikou (moved from core)
+  approved_by: gmikou
+  created: '2026-09-26'
+  review_by: '2027-03-26'
+  decided: 2026-09-26 by gmikou (moved from core v1.2, core v1.3)

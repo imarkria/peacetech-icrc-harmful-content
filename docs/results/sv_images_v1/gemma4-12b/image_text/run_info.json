@@ -1,0 +1,14 @@
+{
+  "model": "gemma4-12b",
+  "api_model": "gemma-4-12b",
+  "backend": "llama.cpp",
+  "mode": "image_text",
+  "n_items": 120,
+  "workers": 8,
+  "total_seconds": 328.0,
+  "images_per_min": 21.9,
+  "vram_peak_mib": 18506,
+  "prompt_sha256": "ecaefeee7cb18e9883f09e417e5fc20dbb115014b138dd62d26bd506b6445101",
+  "profile": "global-0.1/core-1.2+no-approved-entries",
+  "threshold": 50
+}

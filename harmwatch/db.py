@@ -34,6 +34,13 @@ CREATE TABLE IF NOT EXISTS classifications (
     priority    REAL NOT NULL,
     created_at  TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS assessments (
+    post_id     INTEGER PRIMARY KEY REFERENCES posts(id),
+    region      TEXT NOT NULL,
+    route       TEXT NOT NULL,
+    result      TEXT NOT NULL,          -- CRSVAssessment JSON (policy/core.md)
+    created_at  TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS decisions (
     id          INTEGER PRIMARY KEY,
     post_id     INTEGER NOT NULL REFERENCES posts(id),
@@ -83,6 +90,14 @@ def save_classification(conn, post_id: int, backend: str, c: Classification, buc
     conn.commit()
 
 
+def save_assessment(conn, post_id: int, assessment):
+    conn.execute(
+        "INSERT OR REPLACE INTO assessments VALUES (?,?,?,?,?)",
+        (post_id, assessment.region, assessment.route, assessment.model_dump_json(), now()),
+    )
+    conn.commit()
+
+
 def save_decision(conn, post_id: int, decision: str, note: str, reviewer: str):
     conn.execute(
         "INSERT INTO decisions (post_id, decision, note, reviewer, created_at) VALUES (?,?,?,?,?)",
@@ -111,6 +126,7 @@ def export_decisions(conn) -> list[dict]:
         """
         SELECT p.id, p.channel, p.side, p.text, c.backend, c.result, c.bucket, d.decision, d.note, d.created_at
         FROM decisions d JOIN posts p ON p.id = d.post_id JOIN classifications c ON c.post_id = p.id
+        WHERE c.bucket != 'escalate'  -- CH-5: restricted items never leave in exports or training data
         ORDER BY d.id
         """
     ).fetchall()
