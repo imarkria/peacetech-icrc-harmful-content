@@ -5,5 +5,6 @@
  "video racism: timing.json (extracted from metrics.json)",
  "safety: explicit-filter and childlike-appearance confusions (from safety_scores_sv_v1_candidates.json)",
  "cascade: rows from results/cascade/metrics.json (judge alone, students alone, cascade v1/v3)",
+ "cascade: filter test at 10 % prevalence (from filter_test_10pct.json)",
  "telegram extraction: aggregated counts (from corpus_totals.json + sv_regex_hits.jsonl)"
 ]

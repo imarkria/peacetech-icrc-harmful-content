@@ -1,0 +1,100 @@
+{
+  "student": "I_logreg",
+  "threshold_dev_recall_95": 0.18230441212654114,
+  "filter_seconds_per_image": 0.0271,
+  "judge_seconds_per_image": 1.51,
+  "mix": {
+    "set": "120 benchmark + 459 DEV negatives",
+    "n": 579,
+    "positives": 60,
+    "prevalence": 0.104,
+    "positives_passed_TP": 58,
+    "positives_blocked_FN": 2,
+    "negatives_passed_FP": 219,
+    "negatives_blocked_TN": 300,
+    "recall": 0.967,
+    "recall_ci95": [
+      0.886,
+      0.991
+    ],
+    "false_pass_rate": 0.422,
+    "false_pass_rate_ci95": [
+      0.38,
+      0.465
+    ],
+    "sent_fraction": 0.478,
+    "sent_ci95": [
+      0.438,
+      0.519
+    ],
+    "time_per_image_cascade_s": 0.75,
+    "time_per_image_qwen_s": 1.51,
+    "speedup": 2.01,
+    "confusion": {
+      "n": 579,
+      "TP": 58,
+      "FP": 219,
+      "FN": 2,
+      "TN": 300,
+      "precision": 0.209,
+      "recall": 0.967,
+      "f1": 0.344,
+      "accuracy": 0.618,
+      "specificity": 0.578
+    }
+  },
+  "benchmark_only": {
+    "set": "120 benchmark",
+    "n": 120,
+    "positives": 60,
+    "prevalence": 0.5,
+    "positives_passed_TP": 58,
+    "positives_blocked_FN": 2,
+    "negatives_passed_FP": 30,
+    "negatives_blocked_TN": 30,
+    "recall": 0.967,
+    "recall_ci95": [
+      0.886,
+      0.991
+    ],
+    "false_pass_rate": 0.5,
+    "false_pass_rate_ci95": [
+      0.377,
+      0.623
+    ],
+    "sent_fraction": 0.733,
+    "sent_ci95": [
+      0.648,
+      0.804
+    ],
+    "time_per_image_cascade_s": 1.134,
+    "time_per_image_qwen_s": 1.51,
+    "speedup": 1.33,
+    "confusion": {
+      "n": 120,
+      "TP": 58,
+      "FP": 30,
+      "FN": 2,
+      "TN": 30,
+      "precision": 0.659,
+      "recall": 0.967,
+      "f1": 0.784,
+      "accuracy": 0.733,
+      "specificity": 0.5
+    }
+  },
+  "blocked_positives": [
+    {
+      "item_id": "sv1-c046",
+      "category": "collective_accusation",
+      "reason": "attributes sexual abuse of animals to a religious group",
+      "score": 0.0882
+    },
+    {
+      "item_id": "sv1-c062",
+      "category": "collective_accusation",
+      "reason": "mocks a national group through a bestiality 'rape survivor' joke",
+      "score": 0.0901
+    }
+  ]
+}

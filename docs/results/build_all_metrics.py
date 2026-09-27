@@ -220,12 +220,26 @@ def cascade():
                     f"sent={c['sent_fraction']}; lost={c['reference_positives_lost_by_filter']}/60; "
                     f"speedup={c['speedup']}; time/img={round(c['estimated_seconds'] / 120, 3)}{research}", labels=lab)
     RECOMPUTED.append("cascade: rows from results/cascade/metrics.json (judge alone, students alone, cascade v1/v3)")
+    ft = R / "cascade" / "filter_test_10pct.json"
+    if ft.exists():
+        f = json.loads(ft.read_text())
+        for key, ds in (("mix", "sv_images_v1 (60 pos) + 459 DEV negatives (teacher labels) · 10.4 % positive"),
+                        ("benchmark_only", "sv_images_v1 (60 pos / 60 neg)")):
+            mm = f[key]
+            add("cascade_filter_test", "2026-09-27", "image", ds, f"filter {f['student']}", "-",
+                "filter_95_" + ("10pct" if key == "mix" else "50pct"), "sexual_sent_to_judge",
+                mm["confusion"], None, round(60 / f["filter_seconds_per_image"], 1),
+                f"sent={mm['sent_fraction']}; false_pass={mm['false_pass_rate']}; speedup={mm['speedup']}; "
+                f"time/img={mm['time_per_image_cascade_s']}; DEV negatives labelled by Qwen (not checked by hand); "
+                "threshold chosen on DEV (false-pass rate possibly optimistic); image features: research experiment (B5-4)",
+                labels=("sexual", "not sexual"))
+        RECOMPUTED.append("cascade: filter test at 10 % prevalence (from filter_test_10pct.json)")
 
 
 # --- copy aggregated files ---------------------------------------------------------------------------------------------
 AGGREGATED = ("metrics.json", "run_info.json", "summary.md", "leaderboard.md", "leaderboard.csv", "significance.json",
               "error_consensus.json", "localisation_vs_chance.json", "timing.json", "FINAL_IMAGES.md", "label_stats.json",
-              "train_metrics.json", "prevalence_projection.json")
+              "train_metrics.json", "prevalence_projection.json", "filter_test_10pct.json")
 
 
 def is_matplotlib_png(p: Path) -> bool:

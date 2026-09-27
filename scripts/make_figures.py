@@ -213,6 +213,7 @@ def fig_confusions():
         "safety_explicit_filter|OR(CLIP≥0.9, AdamCodd≥0.7, Falconsai≥0.3)|-|default|explicit_image":
             "Explicit-image filter · retained default",
         "cascade_images|cascade I_logreg -> qwen3.5-9b|v3|cascade_95|sexual": "Cascade I_logreg → Qwen v3 (DEV recall 95 %)",
+        "cascade_filter_test|filter I_logreg|-|filter_95_10pct|sexual_sent_to_judge": "Filter alone · 579 images, 10.4 % positive",
     }
     for c in C:
         if c["id"] not in key:

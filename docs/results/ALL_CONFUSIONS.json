@@ -3526,5 +3526,77 @@
     ]
    ]
   }
+ },
+ {
+  "id": "cascade_filter_test|filter I_logreg|-|filter_95_10pct|sexual_sent_to_judge",
+  "experiment": "cascade_filter_test",
+  "model": "filter I_logreg",
+  "prompt": "-",
+  "variant": "filter_95_10pct",
+  "task": "sexual_sent_to_judge",
+  "labels": {
+   "positive": "sexual",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     219,
+     300
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
+ },
+ {
+  "id": "cascade_filter_test|filter I_logreg|-|filter_95_50pct|sexual_sent_to_judge",
+  "experiment": "cascade_filter_test",
+  "model": "filter I_logreg",
+  "prompt": "-",
+  "variant": "filter_95_50pct",
+  "task": "sexual_sent_to_judge",
+  "labels": {
+   "positive": "sexual",
+   "negative": "not sexual"
+  },
+  "matrix": {
+   "rows": "reference",
+   "cols": "prediction",
+   "values": [
+    [
+     58,
+     2
+    ],
+    [
+     30,
+     30
+    ]
+   ],
+   "order": [
+    [
+     "TP",
+     "FN"
+    ],
+    [
+     "FP",
+     "TN"
+    ]
+   ]
+  }
  }
 ]
